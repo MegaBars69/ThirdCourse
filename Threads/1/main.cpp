@@ -7,55 +7,6 @@
 #include <cmath>
 #include "func.hpp"
 /*
-struct Thread{
-    std::string filename;
-    int thread_id;
-    int total_threads;
-    int count_max;
-};
-
-// Функция для работы потоков
-void* count_max_elements(void* arg) {
-    Thread* data = static_cast<Thread*>(arg);
-    const std::string& filename = data->filename;
-    int& count_max = data->count_max;
-
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        return reinterpret_cast<void*>(-1); // Ошибка открытия файла
-    }
-
-    double number;
-    double max_value = std::numeric_limits<double>::lowest();
-    count_max = 0;
-
-    while (true) {
-        file>>number;
-
-        if (file.fail()) {
-            if (file.eof()) {
-                // Достигнут конец файла
-                break;
-            } 
-            else {
-                // Ошибка ввода (например, неверный тип данных)
-                file.close();
-                return reinterpret_cast<void*>(-2); // Ошибка чтения элемента
-            }
-        }        
-        if (number > max_value) {
-            max_value = number;
-            count_max = 1;
-        } else if (fabs(number-max_value) <= EPSILON) {
-            count_max++;
-        }
-    }
-
-
-    file.close();
-    return nullptr; // Успешное завершение
-}*/
-
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <file1> <file2> ... <fileN>" << std::endl;
@@ -109,5 +60,51 @@ int main(int argc, char* argv[]) {
     delete[] threads;
     delete[] results;
     delete[] thread_data;
+    return 0;
+}
+*/
+int main(int argc, char* argv[])
+{
+    Args* a;
+    if(argc == 1)
+    {
+        printf("Usage %s files ", argv[0]);
+        return 1;
+    }
+
+    int p = argc - 1;
+    a = new Args[p];
+
+    int k;
+    for (k = 0; k < p; k++)
+    {
+        a[k].k = k;
+        a[k].p = p;
+        a[k].filename = argv[k+1];
+    }
+    for (k = 1; k < p; k++)
+    {
+        if (pthread_create(&a[k].tid, nullptr, thread_func, a+k))
+        {
+            std::cerr << "Error creating thread " << k <<std::endl;
+            return 1;
+        }
+    }
+    a[0].tid = pthread_self();
+
+    thread_func(a+0);
+    //reduce_sum(p);
+
+    for (k = 1; k < p; k++)
+    {
+        pthread_join(a[k].tid, nullptr);
+    }
+    
+    if (procces_args(a) == 0)
+    {
+        printf("Result = %lf \n", a[0].res);
+    }
+    
+    delete[] a;
     return 0;
 }
