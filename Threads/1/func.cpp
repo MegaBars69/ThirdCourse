@@ -199,7 +199,6 @@ void* thread_func(void *arg)
     fclose(fp);
 
     a -> error_type = io_status::succes;
-
     reduce_sum(a->p, &a->res, 1);
     
     return nullptr;    
@@ -207,26 +206,22 @@ void* thread_func(void *arg)
 
 int procces_args(Args *a)
 {
-    /*if (a->error_type != io_status :: succes)
-    {*/
+
     for (int i = 0; i < a->p; i++)
     {
         if (a[i].error_type == io_status::error_read )
         {
             printf("Error in file %s \n", a[i].filename);
-            return 1;
+            printf("Result = %d \n", -2);
+            return -2;
         }
         else if (a[i].error_type == io_status::error_open)
         {
             printf("Error opening file %s \n", a[i].filename);
-            return 1;
-        }
-        else if (a[i].error_type == io_status::undef)
-        {
-            printf("Somthing went wrong %s \n", a[i].filename);
-            return 1;
+            printf("Result = %d \n", -1);
+            return -1;
         }
     }
-    //}
+
     return 0;
 }

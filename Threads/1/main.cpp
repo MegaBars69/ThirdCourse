@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
     
     if (procces_args(a) == 0)
     {
-        printf("Result = %lf \n", a[0].res);
+        printf("Result = %d \n", int(a[0].res));
     }
     
     delete[] a;
