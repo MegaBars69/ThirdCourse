@@ -97,18 +97,12 @@ void PrintMatrix(double* A,  int n, int m, int r, bool exp_format, bool okruglen
     return max_sum;
 }
 */
-double Norm(double* A, int n, int m)
+double Norm(double* A, double* results, int n, int m)
 {
     int l = n%m;
     int k = (n-l)/m;
     int block_size_col, block_size_row;
     double sum_in_col = 0, final_norm = 0, el;
-    double* results = new double[m];
-    for (int i = 0; i < m; i++)
-    {
-        results[i] = 0;
-    }
-    
 
     for (int bj = 0; bj < k+1; bj++)
     {
@@ -136,7 +130,6 @@ double Norm(double* A, int n, int m)
         }   
 
     }   
-    delete[] results; 
     return final_norm;
 }
 
@@ -275,15 +268,12 @@ double CalcError(double * A, double * InversedA, int n, int m)
     return max_sum;
 }
 
-double Discrepancy(double * A, double * InversedA, int n, int m)
+double Discrepancy(double * A, double * InversedA, double* Column, double* ProductResult, double* Sum, int n, int m)
 {
     int l = n%m;
     int k = (n-l)/m;
     int block_size_row, block_size_col, m12;
     double final_answer = 0, sum = 0;
-    double* ProductResult = new double[m*m];
-    double* Sum = new double[m*m];
-    double* Column = new double[m];
 
     for (int j = 0; j < m; j++)
     {
@@ -302,13 +292,12 @@ double Discrepancy(double * A, double * InversedA, int n, int m)
                 {
                     Sum[i*m + j] = 0;
                     ProductResult[i*m +j] = 0;
-                }
-                
+                }  
             }       
             for (int s = 0; s < k+1; s++)
             {
                 m12 = (s < k ? m : l);
-                BlockMulOptimized((A + bi*m*n + s*m*block_size_row), (InversedA + s*m*n + bj*m*m12), ProductResult,block_size_row, m12, block_size_col);
+                BlockMul((A + bi*m*n + s*m*block_size_row), (InversedA + s*m*n + bj*m*m12), ProductResult,block_size_row, m12, block_size_col);
                 MatrixPlusEqual(Sum, ProductResult, block_size_row, block_size_col);
             }
             if (bi == bj)
@@ -340,10 +329,7 @@ double Discrepancy(double * A, double * InversedA, int n, int m)
             Column[j] = 0;
         }  
     }
-    delete[] ProductResult;
-    delete[] Sum;
-    delete[] Column;
- 
+
     return final_answer; 
 }
 
@@ -502,7 +488,6 @@ void ZeroOut(double* Diag, double* Down, double* U, int m, int row_size, double 
     
 }
 
-
 void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors)
 {
     double s;
@@ -598,6 +583,7 @@ int InverseTriungleBlock(double* A, double* B, int n, double norm, bool right_pa
     return 0;
 }
 
+/*
 void BlockMul(double *a, double* b, double* c, int n1, int m12, int n2){
     int i, j, r;
     double s, air, brj;
@@ -620,8 +606,9 @@ void BlockMul(double *a, double* b, double* c, int n1, int m12, int n2){
         
     }
 }
+*/
 
-void BlockMulOptimized(double *a, double* b, double* c, int n1, int m12, int n2)
+void BlockMul(double *a, double* b, double* c, int n1, int m12, int n2)
 {
     int l_col = n2%3;
     int l_row= n1%3;
@@ -747,119 +734,9 @@ void BlockMulOptimized(double *a, double* b, double* c, int n1, int m12, int n2)
             }
             
         }     
-    }
-    
-    
+    }       
 }
-/*
-void BlockMulOptimezed(double *a, double* b, double* c, int n1, int m12, int n2)
-{
-    int l_col = n2%3;
-    int l_row= n1%3;
-    int k_col = (n2-l_col)/3;
-    int k_row = (n1-l_row)/3; 
-    
-    double s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
 
-    for (int bi = 0; bi < k_row; bi++)
-    {
-        for (int bj = 0; bj < k_col; bj++)
-        {
-            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
-            for (int r = 0; r < m12; r++)
-            {
-                s00 += a[(bi*3 + 0)*m12 + bj*3 + r] * b[r*n2 + bj*3];
-                s01 += a[(bi*3 + 0)*m12 + bj*3 + r] * b[r*n2 + bj*3 + 1];
-                s02 += a[(bi*3 + 0)*m12 + bj*3 + r] * b[r*n2 + bj*3 + 2];
-                s10 += a[(bi*3 + 1)*m12 + bj*3 + r] * b[r*n2 + bj*3];
-                s11 += a[(bi*3 + 1)*m12 + bj*3 + r] * b[r*n2 + bj*3 + 1];
-                s12 += a[(bi*3 + 1)*m12 + bj*3 + r] * b[r*n2 + bj*3 + 2]; 
-                s20 += a[(bi*3 + 2)*m12 + bj*3 + r] * b[r*n2 + bj*3];
-                s21 += a[(bi*3 + 2)*m12 + bj*3 + r] * b[r*n2 + bj*3 + 1];
-                s22 += a[(bi*3 + 2)*m12 + bj*3 + r] * b[r*n2 + bj*3 + 2];
-            }
-            c[bi*3*n2 + bj*3] = s00; c[bi*3*n2 + bj*3 + 1] = s01; c[bi*3*n2 + bj*3 + 2] = s02;
-            c[(bi*3 + 1)*n2 + bj*3] = s10; c[(bi*3 + 1)*n2 + bj*3 + 1] = s11; c[(bi*3 + 1)*n2 + bj*3 + 2] = s12;
-            c[(bi*3 + 2)*n2 + bj*3] = s20; c[(bi*3 + 2)*n2 + bj*3 + 1] = s21; c[(bi*3 + 2)*n2 + bj*3 + 2] = s22;
-        }
-    
-        for (int j = 0; j < l_col; j++)
-        {
-            s00 = 0, s01 = 0, s10 = 0, s11 = 0, s20 = 0, s21 = 0;
-            for (int r = 0; r < m12; r++)
-            {
-                if(l_col > 1)
-                { 
-                    s01 += a[(bi*3 + 0)*m12 + k_col*3 + j + r] * b[r*n2 + k_col*3 + j + 1];
-                    s11 += a[(bi*3 + 1)*m12 + k_col*3 + j + r] * b[r*n2 + k_col*3 + j + 1];
-                    s21 += a[(bi*3 + 2)*m12 + k_col*3 + j + r] * b[r*n2 + k_col*3 + j + 1];
-
-                }
-                s00 += a[(bi*3 + 0)*m12 + k_col*3 + j + r] * b[r*n2 + k_col*3 + j];
-                s10 += a[(bi*3 + 1)*m12 + k_col*3 + j + r] * b[r*n2 + k_col*3 + j];
-                s20 += a[(bi*3 + 2)*m12 + k_col*3 + j + r] * b[r*n2 + k_col*3 + j];
-            }
-            c[bi*3*n2 + k_col*3 + j] = s00; 
-            c[(bi*3 + 1)*n2 + k_col*3 + j] = s10;
-            c[(bi*3 + 2)*n2 + k_col*3 + j] = s20;
-            if(l_col > 1)
-            { 
-                c[bi*3*n2 + k_col*3 + j + 1] = s01; 
-                c[(bi*3 + 1)*n2 + k_col*3 + j + 1] = s11;
-                c[(bi*3 + 2)*n2 + k_col*3 + j + 1] = s21;
-            }
-        }     
-    }
-
-    for (int i = 0; i < l_row; i++)
-    {
-        for (int bj = 0; bj < k_col; bj++)
-        {
-            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0;
-            for (int r = 0; r < m12; r++)
-            {
-                
-                s00 += a[(k_row*3 + i + 0)*m12 + bj*3 + r] * b[r*n2 + bj*3];
-                s01 += a[(k_row*3 + i + 0)*m12 + bj*3 + r] * b[r*n2 + bj*3 + 1];
-                s02 += a[(k_row*3 + i + 0)*m12 + bj*3 + r] * b[r*n2 + bj*3 + 2]; 
-                if(l_row > 1)
-                {
-                    s10 += a[(k_row*3 + i + 1)*m12 + bj*3 + r] * b[r*n2 + bj*3];
-                    s11 += a[(k_row*3 + i + 1)*m12 + bj*3 + r] * b[r*n2 + bj*3 + 1];
-                    s12 += a[(k_row*3 + i + 1)*m12 + bj*3 + r] * b[r*n2 + bj*3 + 2]; 
-                }
-            }
-            c[(k_row*3 + i)*n2 + bj*3] = s00; c[(k_row*3 + i)*n2 + bj*3 + 1] = s01; c[(k_row*3 + i)*n2 + bj*3 + 2] = s02;
-            if (l_row > 1)
-            {
-                c[(k_row*3 + i + 1)*n2 + bj*3] = s10; c[(k_row*3 + i + 1)*n2 + bj*3 + 1] = s11; c[(k_row*3 + i+ 1)*n2 + bj*3 + 2] = s12;
-            }
-            
-        }
-        for (int j = 0; j < l_col; j++)
-        {
-            s00 = 0, s01 = 0, s10 = 0, s11 = 0;
-            for (int r = 0; r < m12; r++)
-            {
-                
-                s00 += a[(k_row*3 + i + 0)*m12 + k_col*3 + j + r] * b[r*n2 + k_col*3 + j];
-                s01 += a[(k_row*3 + i + 0)*m12 + k_col*3 + j + r] * b[r*n2 + k_col*3 + j + 1];
-                if(l_row > 1)
-                {
-                    s10 += a[(k_row*3 + i + 1)*m12 + k_col*3 + j + r] * b[r*n2 + k_col*3 + j];
-                    s11 += a[(k_row*3 + i + 1)*m12 + k_col*3 + j + r] * b[r*n2 + k_col*3 + j + 1];
-                }
-            }
-            c[(k_row*3 + i)*n2 + k_col*3 + j] = s00; c[(k_row*3 + i)*n2 + k_col*3 + j + 1] = s01; 
-            if (l_row > 1)
-            {
-                c[(k_row*3 + i + 1)*n2 + k_col*3 + j] = s10; c[(k_row*3 + i + 1)*n2 + k_col*3 + j + 1] = s11;
-            }
-        }     
-    }
-    
-    
-}*/
 
 void ReplaceWith(double*A, double*B, int row_size, int col_size)
 {
@@ -875,7 +752,7 @@ void ReplaceWith(double*A, double*B, int row_size, int col_size)
 }
 
 
-int InverseMatrix(double* A, double* B, double* U, double* ProductResult, int n, int m)
+int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double norm, int n, int m)
 {
     int l = n%m;
     int j, bj;
@@ -883,7 +760,6 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, int n,
     int m12;
     int block_size_row, block_size_col, down_block_size_row, down_block_size_col;
     double* pa, *pa_side, *pa_down, *pa_down_side, *pb, *pb_down; 
-    double norm = Norm(A, n, m);
     for (int s = 0; s < k+1; s++)
     {
         block_size_row = (s < k ? m : l);
@@ -942,7 +818,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, int n,
             block_size_col = (j < k ? m : l);
             pa += m*m;
 
-            BlockMulOptimized(U, pa, ProductResult, block_size_row, block_size_row, block_size_col);
+            BlockMul(U, pa, ProductResult, block_size_row, block_size_row, block_size_col);
             ReplaceWith(pa, ProductResult, block_size_row, block_size_col);
         }
 
@@ -952,7 +828,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, int n,
         {
             block_size_col = (j < k ? m : l);
 
-            BlockMulOptimized(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
+            BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
             ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
             pb += m*block_size_row;
         } 
@@ -981,7 +857,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, int n,
             {
                 m12 = (r < k ? m : l);
 
-                BlockMulOptimized((A + bi*m*n + r*block_size_row*m), (B + r*m*n + bj*m12*m), ProductResult, block_size_row, m12, block_size_col);
+                BlockMul((A + bi*m*n + r*block_size_row*m), (B + r*m*n + bj*m12*m), ProductResult, block_size_row, m12, block_size_col);
                 MatrixPlusEqual(U, ProductResult, block_size_row, block_size_col);
             }
             

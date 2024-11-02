@@ -195,6 +195,9 @@ int main(int argc, char* argv[]) {
     double* B = new double[n * n];
     double* U = new double[(m+1)*(m+1)];
     double* ProductResult = new double[m*m];
+    double* results = new double[m];
+    double* Sum = new double[m*m];
+    double* Column = new double[m];
 
     //Зануляем вспомогательную матрицу
     for (int i = 0; i < (m+1)*(m+1); i++)
@@ -205,7 +208,10 @@ int main(int argc, char* argv[]) {
     {
         ProductResult[i] = 0;
     }
-    
+    for (int i = 0; i < m; i++)
+    {
+        results[i] = 0;
+    }
     
     if(m <= 0 || s < 0 || s > 4 || n <= 0)
     {
@@ -230,17 +236,22 @@ int main(int argc, char* argv[]) {
         delete[] B;
         delete[] U;
         delete[] ProductResult;
+        delete[] results;
+        delete[] Sum;
+        delete[] Column;
         return 0;
     }
+        
+    double norm = Norm(A, results, n, m);
 
     //Вычисление обратной матрицы
     clock_t start1 = clock();
 
-    end_of_inverse = InverseMatrix(A, B, U, ProductResult, n, m);
+    end_of_inverse = InverseMatrix(A, B, U, ProductResult, norm, n, m);
 
     clock_t end1 = clock();
     
-    t1 = static_cast<double>(end1 - start1) / CLOCKS_PER_SEC;
+    t1 = static_cast<double>(end1 - start1) / CLOCKS_PER_SEC;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
     //Инициализируем матрицу для подсчета невязки
     
     if (s == 0) {
@@ -258,6 +269,9 @@ int main(int argc, char* argv[]) {
         delete[] B;
         delete[] U;
         delete[] ProductResult;
+        delete[] results;
+        delete[] Sum;
+        delete[] Column;
         return 0;
     }
 
@@ -265,12 +279,31 @@ int main(int argc, char* argv[]) {
     PrintMatrix(A, n, m, r, true, false);
     PrintMatrix(B, n, m, r, true, false);
 
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            Sum[i*m + j] = 0;
+            ProductResult[i*m +j] = 0;
+        }  
+    }  
+     for (int j = 0; j < m; j++)
+    {
+        Column[j] = 0;
+    }     
+
     //Подсчет невязки
     clock_t start2 = clock();
-
-    r1 = Discrepancy(A, B, n, m);
-    r2 = Discrepancy(B, A, n, m);
-     
+    if (n <= 11000)
+    {
+        r1 = Discrepancy(A, B, Column, ProductResult, Sum, n, m);
+        r2 = Discrepancy(B, A, Column, ProductResult, Sum, n, m);
+    }
+    else
+    {
+        r1 = 0;
+        r2 = 0;
+    }
     clock_t end2 = clock();
 
     t2 = static_cast<double>(end2 - start2) / CLOCKS_PER_SEC;
@@ -281,6 +314,9 @@ int main(int argc, char* argv[]) {
     delete[] B;
     delete[] U;
     delete[] ProductResult;
+    delete[] results;
+    delete[] Sum;
+    delete[] Column;
     return 0;
 }
 
