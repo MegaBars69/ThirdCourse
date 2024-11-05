@@ -1,9 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <pthread.h>
-#include <vector>
-#include <string>
-#include <limits>
 #include <cmath>
 #include "func.hpp"
 
