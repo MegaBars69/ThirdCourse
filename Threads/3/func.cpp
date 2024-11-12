@@ -7,75 +7,6 @@
 #include <cmath>
 #include "func.hpp"
 #define EPSILON pow(10, -16)
-/*
-template <typename T>
-void reduce_sum(int p,T* a, int n)
-{
-    static pthread_mutex_t my_mutex = PTHREAD_MUTEX_INITIALIZER;
-    static pthread_cond_t c_in = PTHREAD_COND_INITIALIZER;
-    static pthread_cond_t c_out = PTHREAD_COND_INITIALIZER;
-    static int t_in = 0;
-    static int t_out = 0;
-    static T* r = nullptr;
-    int i;
-    if (p <= 1)
-    {
-        return;
-    }
-
-    pthread_mutex_lock(&my_mutex);
-
-    if (r==nullptr)
-    {
-        r = a;
-    }
-    else
-    {
-        for (i = 0; i < n; i++)
-        {
-            r[i] += a[i];
-        }
-    }
-
-    t_in++;
-
-    if (t_in >= p)
-    {
-        t_out = 0;
-        pthread_cond_broadcast(&c_in);
-    }
-    else
-    {
-        while (t_in < p)
-        {
-            pthread_cond_wait(&c_in, &my_mutex);
-        }
-    }
-
-    if(r != a)
-    {
-        for (i = 0; i < n; i++)
-        {
-            a[i] = r[i];
-        }
-    }
-    t_out++;
-    if (t_out >= p)
-    {
-        t_in = 0;
-        r = nullptr;
-        pthread_cond_broadcast(&c_out);
-    }
-    else
-    {
-        while (t_out < p)
-        {
-            pthread_cond_wait(&c_out, &my_mutex);
-        }
-        
-    }
-    pthread_mutex_unlock(&my_mutex);
-}*/
 
 io_status amount_of_elements(FILE* file, double* Sum, int* Count)
 {
@@ -239,14 +170,12 @@ int procces_results(Args* r, int p)
         {
             if (r[k-1].last_can_be_a_minimum && r[k-1].last <= r[k].first)
             {
-                //std::cout<<k<<" : 1"<<std::endl;
                 amount_of_min++;
             }
             if (k + 1 < p)
             {
                 if (r[k+1].first >= r[k].first && r[k-1].last >= r[k].first && r[k].first < avarage)
                 {          
-                    //std::cout<<k<<" : 2"<<std::endl;      
                     amount_of_min++;
                 }
                 
@@ -262,23 +191,13 @@ int procces_results(Args* r, int p)
         else
         {
             amount_of_min += r[k].amount_of_min;
-            //std::cout<<r[k].amount_of_min<<std::endl;
-            /*if (k == 2)
-            {
-                std::cout<<r[k-1].last<<""<<std::endl;
-                std::cout<<r[k].first_can_be_a_minimum<<""<<std::endl;
-
-                if(r[k].last_can_be_a_minimum) std::cout<<"true "<<std::endl;
-            }*/
             
             if (r[k-1].last_can_be_a_minimum && r[k-1].last <= r[k].first)
             {
-                //std::cout<<k<<" : 3"<<std::endl;
                 amount_of_min++;
             }
             if (r[k].first_can_be_a_minimum && r[k-1].last >= r[k].first)
             {
-                //std::cout<<k<<" : 4"<<std::endl;
                 amount_of_min++;
             }
         }
@@ -339,9 +258,6 @@ void* thread_func(void *arg)
 
     a -> error_type = io_status::succes;
     reduce_sum(a->p, &a->count, 1);
-
-    //reduce_sum(a->p, &a->res, 1);
-    //Second part. Finding avarage
 
     a->error_type = avarage(&a->avarage, &a->sum, &a->count);
     
