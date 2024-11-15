@@ -330,10 +330,10 @@ void* thread_func(void *arg)
     fclose(fp);
 
     a -> error_type = io_status::succes;
-    if (a->k == 0)
+    /*if (a->k == 0)
     {
         std::cout<<a->avarage<<std::endl;
-    }
+    }*/
     //std::cout<<a->amount_of_min<<std::endl;
     reduce_sum<int>(a->p, nullptr, 0);
 
