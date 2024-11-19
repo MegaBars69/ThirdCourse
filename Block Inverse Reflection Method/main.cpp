@@ -221,12 +221,21 @@ int main(int argc, char* argv[]) {
 
     //Инициализируем матрицы А и В
     if (s == 0) {
-        string filename = argv[5];
-        result = ReadMatrixFromFile(filename, A, n, m);
+        if (argc >5)
+        {
+            string filename = argv[5];
+            result = ReadMatrixFromFile(filename, A, n, m);
+        }
+        else
+        {
+            result = -1;
+        }
+        
     } else {
         FormulaMatrixInitialization(A, n, m, s);
     }
     BuildE(B, n, m);
+
 
     //Проверка входного файла
     if (result == -1)
@@ -247,7 +256,7 @@ int main(int argc, char* argv[]) {
     //Вычисление обратной матрицы
     clock_t start1 = clock();
 
-    end_of_inverse = InverseMatrix(A, B, U, ProductResult, norm, n, m);
+    end_of_inverse = InverseMatrix(A, B, U, ProductResult, norm, n, m, s);
 
     clock_t end1 = clock();
     
@@ -292,9 +301,10 @@ int main(int argc, char* argv[]) {
         Column[j] = 0;
     }     
 
+
     //Подсчет невязки
     clock_t start2 = clock();
-    if (n <= 11000)
+    if (n <= 5000)
     {
         r1 = Discrepancy(A, B, Column, ProductResult, Sum, n, m);
         r2 = Discrepancy(B, A, Column, ProductResult, Sum, n, m);
@@ -324,11 +334,11 @@ int main(int argc, char* argv[]) {
 int main()
 {
     int n = 100;
+
     int m = 3;
     int r = n;
     int s = 2;
     double t1 = 0, t2 = 0, r1 = -1, r2 = -1;
-
     double* A = new double[n * n];
     double* B = new double[n * n];
     double* AA = new double[n * n];
@@ -336,6 +346,7 @@ int main()
     double* product_result = new double[m * m];
     double* C = new double[n * n];
     double* D = new double[n * n];
+
 
     double* U = new double[(m+1)*(m+1)];
     int result = 0;

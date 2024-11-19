@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <sstream>
 #include <cmath>
+#include <string.h>
 #include <iomanip>
 #include "algorithm.hpp"
 #define EPSILON pow(10,-16)
@@ -179,6 +180,137 @@ void MatrixMinusEqual(double* A, double* B, int row_size, int col_size)
         }  
     }    
 }
+
+void MinusEqualBlockMul(double* Main, double *a, double* b, int n1, int m12, int n2)
+{
+    int l_col = n2%3;
+    int l_row= n1%3;
+    int k_col = (n2-l_col)/3;
+    int k_row = (n1-l_row)/3; 
+    
+    double s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
+
+    for (int bi = 0; bi < k_row; bi++)
+    {
+        for (int bj = 0; bj < k_col; bj++)
+        {
+            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
+            for (int r = 0; r < m12; r++)
+            {
+                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3];
+                s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s02 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2];
+                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3];
+                s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s12 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3];
+                s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s22 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 2];
+            }
+            Main[bi*3*n2 + bj*3] -= s00; Main[bi*3*n2 + bj*3 + 1] -= s01; Main[bi*3*n2 + bj*3 + 2] -= s02;
+            Main[(bi*3 + 1)*n2 + bj*3] -= s10; Main[(bi*3 + 1)*n2 + bj*3 + 1] -= s11; Main[(bi*3 + 1)*n2 + bj*3 + 2] -= s12;
+            Main[(bi*3 + 2)*n2 + bj*3] -= s20; Main[(bi*3 + 2)*n2 + bj*3 + 1] -= s21; Main[(bi*3 + 2)*n2 + bj*3 + 2] -= s22;
+        }
+        if (l_col != 0)
+        {
+
+            s00 = 0, s01 = 0, s10 = 0, s11 = 0, s20 = 0, s21 = 0;
+            for (int r = 0; r < m12; r++)
+            {
+                if(l_col > 1)
+                { 
+                    s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                    s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                    s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3 + 1];
+
+                }
+                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3];
+                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3];
+                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3];
+            }
+
+            Main[bi*3*n2 + k_col*3] -= s00; 
+            Main[(bi*3 + 1)*n2 + k_col*3] -= s10;
+            Main[(bi*3 + 2)*n2 + k_col*3] -= s20;
+            if(l_col > 1)
+            { 
+                Main[bi*3*n2 + k_col*3 + 1] -= s01; 
+                Main[(bi*3 + 1)*n2 + k_col*3 + 1] -= s11;
+                Main[(bi*3 + 2)*n2 + k_col*3 + 1] -= s21;
+            }
+        }
+            
+    }
+
+    if(l_row != 0)
+    {
+        for (int bj = 0; bj < k_col; bj++)
+        {
+            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0;
+            for (int r = 0; r < m12; r++)
+            {
+                
+                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3];
+                s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s02 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                if(l_row > 1)
+                {
+                    s10 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3];
+                    s11 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
+                    s12 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                }
+            }
+
+            Main[(k_row*3)*n2 + bj*3] -= s00; Main[(k_row*3 )*n2 + bj*3 + 1] -= s01; Main[(k_row*3 )*n2 + bj*3 + 2] -= s02;
+            if (l_row > 1)
+            {
+                Main[(k_row*3  + 1)*n2 + bj*3] -= s10; Main[(k_row*3 + 1)*n2 + bj*3 + 1] -= s11; Main[(k_row*3 + 1)*n2 + bj*3 + 2] -= s12;
+            }
+            
+        }
+        if(l_col != 0)
+        {
+            s00 = 0, s01 = 0, s10 = 0, s11 = 0;
+            for (int r = 0; r < m12; r++)
+            {
+                
+                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 ];
+                if (l_col > 1)
+                {
+                    s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                }
+                if(l_row > 1)
+                {
+                    s10 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 ];
+                }
+                if (l_col > 1 && l_row > 1)
+                {
+                    s11 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                }
+                
+            }
+
+            Main[(k_row*3)*n2 + k_col*3] -= s00;
+            if (l_col>1)
+            {
+                Main[(k_row*3)*n2 + k_col*3 + 1] -= s01;
+            }
+            
+            if (l_row > 1)
+            {
+                Main[(k_row*3 + 1)*n2 + k_col*3] -= s10;
+            }
+            if (l_row > 1 && l_col>1)
+            {
+                Main[(k_row*3 + 1)*n2 + k_col*3 + 1] -= s11;
+            }
+            
+        }     
+    }       
+}
+
+
+
 
 void MatrixPlusEqual(double* A, double* B, int row_size, int col_size)
 {
@@ -374,24 +506,22 @@ int Triungulize(double* A, double* U, int row_num, int col_num, double norm)
     for (int k = 0; k < col_num; k++)
     {
         //Finding vector xk
+        pu = (U + k*row_num);
         sk = 0;
         for (int j = k+1; j < row_num; j++)
         {
             ajk = A[j*col_num + k];
+            pu++;
+            *pu = ajk;
             sk+= ajk*ajk;
         }
         akk = A[k*col_num + k];
         new_diag_el = sqrt(sk + akk*akk);
+        first_in_x = akk - new_diag_el;
         
         pu = (U + k*row_num);
-        *pu = akk - new_diag_el;
-        pu++;
-        for (int i = k+1; i < row_num; i++, pu++)
-        {
-            *pu = A[i*col_num + k];
-        }
-        pu = (U + k*row_num);
-        first_in_x = (*pu);
+        *pu = first_in_x;
+        
         norm_xk = sqrt(sk + first_in_x*first_in_x);
 
         if(!(fabs(norm_xk) < EPSILON*norm))
@@ -401,15 +531,11 @@ int Triungulize(double* A, double* U, int row_num, int col_num, double norm)
                 *pu = (*pu)/norm_xk;
             }
         }
+
         //Applying Reflection
         A[k*col_num + k] = new_diag_el;
-        for (int i = k+1; i < row_num; i++)
-        {
-            A[i*col_num + k] = 0;
-        }
-
+        
         ApplyVector((U + k*row_num), A, row_num, col_num, k, true); 
-
     }
 
     return 0;
@@ -421,26 +547,27 @@ void ZeroOut(double* Diag, double* Down, double* U, int m, int row_size, double 
     double sk, ajk, akk;
     double new_diag_el, norm_xk, first_in_x;
     double* pu;
+    double s;
+    double* px;
     for (int j = 0; j < m; j++)
     {
         sk = 0;
+        pu = (U + j*(row_size+1));
+
         for (int i = 0; i < row_size; i++)
         {
             ajk = Down[i*m + j];
+            pu++;
+            *pu = ajk;
             sk+= ajk*ajk;
         }
         akk = Diag[j*m + j];
         new_diag_el = sqrt(sk + akk*akk);
+        first_in_x = akk - new_diag_el;
         
         pu = (U + j*(row_size+1));
-        *pu = akk - new_diag_el;
-        pu++;
-        for (int i = 0; i < row_size; i++, pu++)
-        {
-            *pu = Down[i*m + j];
-        }
-        pu = (U + j*(row_size+1));
-        first_in_x = (*pu);
+        
+        *pu = first_in_x;
         norm_xk = sqrt(sk + first_in_x*first_in_x);
         
         if(!(fabs(norm_xk) < EPSILON*norm))
@@ -451,61 +578,83 @@ void ZeroOut(double* Diag, double* Down, double* U, int m, int row_size, double 
             {
                 *pu = (*pu)/norm_xk;
             }
-        }
         
-        //Applying Reflection
-        
-        Diag[j*m + j] = new_diag_el;
-        for (int i = 0; i < row_size; i++)
-        {
-            Down[i*m + j] = 0;
-        }
+            //Applying Reflection
             
-        double s;
-        double* px;
-        for (int jj = j+1; jj < m; jj++)
-        {
-            s = 0;
-            px = U + j*(row_size+1);
-            s += (*px) * (Diag[j*m + jj]);
-            px++;
-            for (int i = 0; i < row_size; i++, px++)
+            Diag[j*m + j] = new_diag_el;
+                
+            for (int jj = j+1; jj < m; jj++)
             {
-                s += (*px) * (Down[i*m + jj]);
-            }
-            px = U + j*(row_size+1);
+                s = 0;
+                px = U + j*(row_size+1);
+                s += (*px) * (Diag[j*m + jj]);
+                px++;
+                for (int i = 0; i < row_size; i++, px++)
+                {
+                    s += (*px) * (Down[i*m + jj]);
+                }
+                px = U + j*(row_size+1);
 
-            Diag[j*m + jj]-= 2*s*(*px);
-            px++;
-            
-            for (int i = 0; i < row_size; i++, px++)
-            {
-                Down[i*m + jj]-= 2*s*(*px);
+                Diag[j*m + jj]-= 2*s*(*px);
+                px++;
+                s*=2;
+                
+                for (int i = 0; i < row_size; i++, px++)
+                {
+                    Down[i*m + jj]-= s*(*px);
+                }
+                
             }
-            
         }
     }
     
 }
 
-void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors)
+void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero)
 {
     double s;
     double* pu;
-    for (int vec_num = 0; vec_num < amount_of_vectors; vec_num++)
+    int vec_num = 0, j;
+    for (j = 0; j < col_size; j++)
+    {
+        pu = U + vec_num*(row_size + 1);
+        
+        s = 0;
+
+        s += (*pu) * (Up[vec_num*col_size + j]);
+        if (!down_is_zero)
+        {   
+            for (int i = 0; i < row_size; i++)
+            {
+                pu++;
+                s += (*pu) * (Down[i*col_size + j]);
+            }
+        }
+        s*=2;
+        pu = U + vec_num*(row_size + 1);
+        Up[vec_num*col_size + j] -= s*(*pu);
+        for (int i = 0; i < row_size; i++)
+        {
+            pu++;
+            Down[i*col_size + j] -= s*(*pu);
+        }
+    }           
+    for (vec_num = 1; vec_num < amount_of_vectors; vec_num++)
     {   
-        for (int j = 0; j < col_size; j++)
+        for (j = 0; j < col_size; j++)
         {
             pu = U + vec_num*(row_size + 1);
             
             s = 0;
 
             s += (*pu) * (Up[vec_num*col_size + j]);
+        
             for (int i = 0; i < row_size; i++)
             {
                 pu++;
                 s += (*pu) * (Down[i*col_size + j]);
             }
+        
             s*=2;
             pu = U + vec_num*(row_size + 1);
             Up[vec_num*col_size + j] -= s*(*pu);
@@ -519,20 +668,18 @@ void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int ro
     
 }
 
-int InverseTriungleBlock(double* A, double* B, int n, double norm, bool right_part_to_E)
+int InverseTriungleBlock(double* A, double* B, int n, double norm)
 {
     double* pa = A, *pb = B;
     double diag_el, sum;
-    if(right_part_to_E)
+
+    for (int i = 0; i < n; i++)
     {
-        for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
         {
-            for (int j = 0; j < n; j++)
-            {
-                B[i*n+j] = (i != j ? 0 : 1);
-            }
-            
+            B[i*n+j] = (i != j ? 0 : 1);
         }
+        
     }
     
     for (int i = n-1; i >= 0; i--)
@@ -544,7 +691,6 @@ int InverseTriungleBlock(double* A, double* B, int n, double norm, bool right_pa
         {
             return -1;
         }
-        if(right_part_to_E){*(pa) = 1;}
     
         for (int j = 0; j < n; j++)
         {
@@ -557,8 +703,7 @@ int InverseTriungleBlock(double* A, double* B, int n, double norm, bool right_pa
             *pb = (*pb)/diag_el;
             pb++;
         }
-        
-        
+                
         for (int j = 0; j < n; j++)
         {
             sum = 0;
@@ -567,18 +712,7 @@ int InverseTriungleBlock(double* A, double* B, int n, double norm, bool right_pa
                 sum += A[i*n + s]*B[s*n + j];
             }
             B[i*n+j]-= sum;
-        } 
-        pa = A + i*n + i;
-
-        if (right_part_to_E)
-        {       
-            for (int j = i+1; j < n; j++)
-            {
-                pa++;
-                *pa = 0;
-            }
-        }
-            
+        }   
     }
     return 0;
 }
@@ -589,12 +723,12 @@ void BlockMul(double *a, double* b, double* c, int n1, int m12, int n2){
     double s, air, brj;
 
 
+
     for (i = 0; i < n1; i++)
     {
         for (j = 0;  j < n2; j++)
         {
             s = 0;
-
             for (r = 0; r < m12; r++)
             {
                 air = a[i*m12 + r];
@@ -752,7 +886,7 @@ void ReplaceWith(double*A, double*B, int row_size, int col_size)
 }
 
 
-int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double norm, int n, int m)
+int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double norm, int n, int m, int s)
 {
     int l = n%m;
     int j, bj;
@@ -773,11 +907,17 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
         for (j = s+1, pa_side = pa + block_size_row*m; j < k+1; j++, pa_side += block_size_row*m)
         {
             block_size_col = (j < k ? m : l);
+            //PrintMatrix(A, n, m,n,false, true);
+
             ApplyMatrix(U, pa_side, block_size_row, block_size_col, block_size_row);
+            
+            //PrintMatrix(A, n, m,n,false, true);
+
         }
-        for (j = 0, pb = B + s*m*n; j < k+1; j++, pb += block_size_row*m)
+        for (j = 0, pb = B + s*m*n; j < s + 1; j++, pb += block_size_row*m)
         {
             block_size_col = (j < k ? m : l);
+            
             ApplyMatrix(U, pb, block_size_row, block_size_col, block_size_row);
         }
     
@@ -793,15 +933,19 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
             for (bj = s+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < k+1; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
             {
                 down_block_size_col = (bj < k ? m : l);
+                         
                 ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
+
             }
 
-            for (bj = 0, pb = B + s*m*n, pb_down = B + bi*m*n; bj < k+1; bj++, pb += m*m, pb_down += down_block_size_row*m)
+            for (bj = 0, pb = B + s*m*n, pb_down = B + bi*m*n; bj < bi + 1; bj++, pb += m*m, pb_down += down_block_size_row*m)
             {
                 down_block_size_col = (bj < k ? m : l);
-                ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
+
+                ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, ((s == 0) && (bi > bj)));
             }   
         }  
+
 
         //Fird part
         
@@ -817,17 +961,20 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
         {
             block_size_col = (j < k ? m : l);
             pa += m*m;
+            
+            //PrintMatrix(A, n, m,n,false, true);
 
-            BlockMul(U, pa, ProductResult, block_size_row, block_size_row, block_size_col);
+            BlockMul(U, pa, ProductResult, block_size_row, block_size_row, block_size_col); 
             ReplaceWith(pa, ProductResult, block_size_row, block_size_col);
         }
+
 
         pb = B + s*m*n;
         
         for(int j = 0; j < k+1; j++)
         {
             block_size_col = (j < k ? m : l);
-
+            
             BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
             ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
             pb += m*block_size_row;
@@ -836,33 +983,84 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
 
     //Gauss Backward
     
-    for (int bi = k-1; bi >= 0; bi--)
+    if (s == 0 || s == 4)
     {
-        block_size_row = (bi< k ? m : l);
-
-        for (int bj = 0; bj < k+1; bj++)
+        for (int bi = k-1; bi >= 0; bi--)
         {
-            block_size_col = (bj < k ? m : l);      
-            
-            //Zero down U
-            for (int i = 0; i < m+1; i++)
+            block_size_row = (bi< k ? m : l);
+            //PrintMatrix(A, n, m, n, false, true);
+            for (int bj = 0; bj < k+1; bj++)
             {
-                for (int j = 0; j < m+1; j++)
+                block_size_col = (bj < k ? m : l);      
+                
+                for (int r = bi + 1; r < k+1; r++)
                 {
-                    U[i*(m+1)+j] = 0;
-                } 
-            }
+                    m12 = (r < k ? m : l);
+                
+                    MinusEqualBlockMul(B + bi*m*n + bj*block_size_row*m, A + bi*m*n + r*block_size_row*m, B + r*m*n + bj*m12*m, block_size_row, m12, block_size_col);
+                }
+                
+                //((B + bi*m*n + bj*block_size_row*m), U, block_size_row, block_size_col);
+            } 
+        }
+    }
+    else if (s == 3)
+    {
+        for (int bi = k-1; bi >= 0; bi--)
+        {
+            block_size_row = (bi< k ? m : l);
 
-            for (int r = bi + 1; r < k+1; r++)
+            //PrintMatrix(A, n, m, n, false, true);
+            for (int bj = 0; bj < k+1; bj++)
             {
-                m12 = (r < k ? m : l);
-
-                BlockMul((A + bi*m*n + r*block_size_row*m), (B + r*m*n + bj*m12*m), ProductResult, block_size_row, m12, block_size_col);
-                MatrixPlusEqual(U, ProductResult, block_size_row, block_size_col);
-            }
+                block_size_col = (bj < k ? m : l);      
+                
+                for (int r = bi + 1; r < k+1; r++)
+                {
+                    m12 = (r < k ? m : l);
+                    /*PrintMatrix(B, n, m, n, true, false);
+                    PrintMatrix(A + bi*m*n + r*block_size_row*m, block_size_row, block_size_row,block_size_row, true,false);
+                    PrintMatrix(B + bi*m*n + bj*block_size_row*m, block_size_row, block_size_row,block_size_row, true, false);*/
+                    if (r <= bj+1 || bj == 0)
+                    {
+                        MinusEqualBlockMul(B + bi*m*n + bj*block_size_row*m, A + bi*m*n + r*block_size_row*m, B + r*m*n + bj*m12*m, block_size_row, m12, block_size_col);
+                    }
+                    //PrintMatrix(B, n, m, n, true, false);
+                }
+                
             
-            MatrixMinusEqual((B + bi*m*n + bj*block_size_row*m), U, block_size_row, block_size_col);
-        } 
+                //((B + bi*m*n + bj*block_size_row*m), U, block_size_row, block_size_col);
+            } 
+        }
+    }
+    
+    else
+    {
+        for (int bi = k-1; bi >= 0; bi--)
+        {
+            block_size_row = (bi< k ? m : l);
+
+            //PrintMatrix(A, n, m, n, false, true);
+            for (int bj = 0; bj < k+1; bj++)
+            {
+                block_size_col = (bj < k ? m : l);      
+                int upper = min(k+1,bj+1);
+                for (int r = bi + 1; r < upper; r++)
+                {
+                    m12 = (r < k ? m : l);
+                    /*PrintMatrix(B, n, m, n, true, false);
+                    PrintMatrix(A + bi*m*n + r*block_size_row*m, block_size_row, block_size_row,block_size_row, true,false);
+                    PrintMatrix(B + bi*m*n + bj*block_size_row*m, block_size_row, block_size_row,block_size_row, true, false);*/
+                
+                    MinusEqualBlockMul(B + bi*m*n + bj*block_size_row*m, A + bi*m*n + r*block_size_row*m, B + r*m*n + bj*m12*m, block_size_row, m12, block_size_col);
+                    
+                    //PrintMatrix(B, n, m, n, true, false);
+                }
+                
+            
+                //((B + bi*m*n + bj*block_size_row*m), U, block_size_row, block_size_col);
+            } 
+        }
     }
     
     return 0;
