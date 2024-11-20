@@ -970,7 +970,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
 
 
         pb = B + s*m*n;
-        
+         
     
         for(int j = 0; j < k+1; j++)
         {
