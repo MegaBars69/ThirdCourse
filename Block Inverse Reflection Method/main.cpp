@@ -204,10 +204,14 @@ int main(int argc, char* argv[]) {
     {
         U[i] = 0;
     }
-    for (int i = 0; i < m*m; i++)
+    for (int i = 0; i < m; i++)
     {
-        ProductResult[i] = 0;
-    }
+        for (int j = 0; j < m; j++)
+        {
+            Sum[i*m + j] = 0;
+            ProductResult[i*m +j] = 0;
+        }  
+    } 
     for (int i = 0; i < m; i++)
     {
         results[i] = 0;
@@ -256,7 +260,7 @@ int main(int argc, char* argv[]) {
     //Вычисление обратной матрицы
     clock_t start1 = clock();
 
-    end_of_inverse = InverseMatrix(A, B, U, ProductResult, norm, n, m, s);
+    end_of_inverse = InverseMatrix(A, B, U, ProductResult, Sum, norm, n, m, s);
 
     clock_t end1 = clock();
     
@@ -269,7 +273,7 @@ int main(int argc, char* argv[]) {
     } else {
         FormulaMatrixInitialization(A, n, m, s);
     }
-
+     
     if (end_of_inverse != 0)
     {    
         PrintMatrix(A, n, m, r, true, false);
@@ -304,7 +308,7 @@ int main(int argc, char* argv[]) {
 
     //Подсчет невязки
     clock_t start2 = clock();
-    if (n <= 5000)
+    if (n <= 11000)
     {
         r1 = Discrepancy(A, B, Column, ProductResult, Sum, n, m);
         r2 = Discrepancy(B, A, Column, ProductResult, Sum, n, m);

@@ -886,7 +886,7 @@ void ReplaceWith(double*A, double*B, int row_size, int col_size)
 }
 
 
-int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double norm, int n, int m, int s)
+int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int S)
 {
     int l = n%m;
     int j, bj;
@@ -971,19 +971,27 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
 
         pb = B + s*m*n;
         
+    
         for(int j = 0; j < k+1; j++)
         {
             block_size_col = (j < k ? m : l);
+            if ((S == 0 || S == 4) || ((S == 3) && (j == 0)) || (j + 1 >= s))
+            {
+                BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
+                ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
+            }
+            else
+            {
+                ReplaceWith(pb, ZeroMatrix, block_size_row, block_size_col);
+            }
             
-            BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
-            ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
             pb += m*block_size_row;
         } 
     }
 
     //Gauss Backward
     
-    if (s == 0 || s == 4)
+    if (S == 0 || S == 4)
     {
         for (int bi = k-1; bi >= 0; bi--)
         {
@@ -1004,7 +1012,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
             } 
         }
     }
-    else if (s == 3)
+    else if (S == 3)
     {
         for (int bi = k-1; bi >= 0; bi--)
         {
@@ -1044,7 +1052,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
             for (int bj = 0; bj < k+1; bj++)
             {
                 block_size_col = (bj < k ? m : l);      
-                int upper = min(k+1,bj+1);
+                int upper = min(k+1,bj+2);
                 for (int r = bi + 1; r < upper; r++)
                 {
                     m12 = (r < k ? m : l);
