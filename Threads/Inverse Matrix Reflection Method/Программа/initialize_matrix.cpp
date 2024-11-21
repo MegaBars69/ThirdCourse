@@ -159,7 +159,7 @@ void BuildE(double* B, int n, int m, int p, int K) {
     int k = (n-l)/m;
     int max_col, max_row;
 
-    for (int bi = K*m; bi < k+1; bi += p*m)
+    for (int bi = K; bi < k+1; bi += p)
     {
         max_col = (bi<k ? m : l);
         for (int bj = 0; bj < k+1; bj++)
@@ -176,8 +176,8 @@ void BuildE(double* B, int n, int m, int p, int K) {
             }
         }
         
-    }   
-    //reduce_sum(p);
+    }
+    reduce_sum<int>(p);
 }
 
 void FormulaMatrixInitialization(double* A, int n, int m, int s, int p, int K) {
@@ -187,7 +187,7 @@ void FormulaMatrixInitialization(double* A, int n, int m, int s, int p, int K) {
     int col_block_size, row_block_size;
 
 
-    for (int bi = K*m; bi < k+1; bi += p*m)
+    for (int bi = K; bi < k+1; bi += p)
     {
         col_block_size = (bi<k ? m : l);
         for (int bj = 0; bj < k+1; bj++)
@@ -207,8 +207,7 @@ void FormulaMatrixInitialization(double* A, int n, int m, int s, int p, int K) {
             }    
         }    
     }
-    //reduce_sum(p);
-
+    reduce_sum<int>(p);
 }
 
 

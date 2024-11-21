@@ -73,7 +73,7 @@ void reduce_sum(int p,T* a = nullptr, int n = 0)
     pthread_mutex_unlock(&my_mutex);
 }
 
-void PrintMatrix(double* A,  int n, int m, int r, int p, bool exp_format = false, bool okruglenie = false);
+void PrintMatrix(double* A,  int n, int m, int r, int p, int K = 0, bool full = true, bool exp_format = false, bool okruglenie = false);
 
 enum class io_status
 {
@@ -85,7 +85,7 @@ enum class io_status
 class Args{
     public:
         int p = 0;
-        int thr_n = 0;
+        int k = 0;
         pthread_t tid = 0;
         double cpu_time = 0;
         double cpu_time_of_all_threads = 0;
@@ -97,8 +97,11 @@ class Args{
         double* B = nullptr; 
         double* U = nullptr;
         double* ProductResult = nullptr;
+        double* ZeroMatrix = nullptr;
 
-        std::string name = nullptr;
+        double norm = 0;
+
+        std::string name = "";
 
         int n = 0; //Matrix dim
         int m = 0; //Block dim
@@ -109,18 +112,24 @@ class Args{
 
         void PrintAll() const
         {
-            printf("Number of thread: %d \n", thr_n);
+            printf("Number of thread: %d \n", k);
             printf("p: %d \n", p);
             printf("n: %d \n", n);
             printf("M: %d \n", M);
             printf("r: %d \n", r);
             printf("s: %d \n", s);
+            std::cout<<"norm: "<<norm<<std::endl;
 
-            PrintMatrix(A, n, m, r, p);
-            PrintMatrix(B, n, m, r, p);
+            PrintMatrix(A, n, m, r, p, k, false);
+            PrintMatrix(B, n, m, r, p, k, false);
+            PrintMatrix(U, m, 1, m, p);
         }
-        
+        //Args();
 };
+
+void FirstStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int s);
+void SecondStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int s);
+
 double get_cpu_time();
 double get_fun_time();
 void* thread_func(void *arg);

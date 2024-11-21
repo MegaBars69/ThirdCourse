@@ -326,19 +326,27 @@ int main(int argc, char* argv[]) {
     */
 
     Args* a;
-    double* A, *B, **U, **ProductResult;
+    double* A, *B, **U, **ProductResult, **ZeroMatrix;
     double el;
     int i = 0, k;
-    int n = atoi(argv[1]);
-    int m = atoi(argv[2]);
-    int r = atoi(argv[3]);
-    int p = atoi(argv[4]);
-    int s = atoi(argv[5]);
-    std::string filename = argv[6];
-
-    if(argc == 1)
+    int n,m,r,s,p;
+    if (argc >=6)
     {
-        printf("Usage ./a.out n p r s filename\n");
+        n = atoi(argv[1]);
+        m = atoi(argv[2]);
+        r = atoi(argv[4]);
+        p = atoi(argv[3]);
+        s = atoi(argv[5]);
+    }
+    else
+    {
+        printf("Usage ./a.out n m p r s filename\n");
+    }
+    //std::string filename = argv[6];
+
+    if(argc < 6)
+    {
+        printf("Usage ./a.out n m p r s filename\n");
         return 1;
     }
 
@@ -348,7 +356,7 @@ int main(int argc, char* argv[]) {
         printf(" p > 0 \n");
         return 4;
     }
-    
+
     if (p > 0)
     {
         a = new Args[p];
@@ -358,10 +366,12 @@ int main(int argc, char* argv[]) {
             B = new double[n*n];
             U = new double*[p];
             ProductResult = new double*[p];
+            ZeroMatrix = new double*[p];
             for (int i = 0; i < p; i++)
             {
                 U[i] = new double[(m+1)*(m+1)];
                 ProductResult[i] = new double[m*m];
+                ZeroMatrix[i] = new double[m*m];
             }
         }
         
@@ -371,23 +381,27 @@ int main(int argc, char* argv[]) {
         printf(" p >=0");
         return 4;
     }        
-
     //Обработка массива. Распределение памяти.
     for (k = 0; k < p; k++)
     {
-        a[k].thr_n = k;
+        a[k].s = s;
+        a[k].r = r;
+        a[k].k = k;
         a[k].p = p;
+ 
         a[k].n = n;
-        
-        a[k].name = filename;
+        a[k].m = m;
+
+        if (s == 0 && argc == 7)
+        {
+            a[k].name = argv[6];
+        }
 
         a[k].A = A;
         a[k].B = B;
         a[k].U = U[k];
         a[k].ProductResult = ProductResult[k];
-        
-        a[k].s = s;
-        a[k].r = r;
+        a[k].ZeroMatrix = ZeroMatrix[k];
     }
 
     //Запуск потоков.
