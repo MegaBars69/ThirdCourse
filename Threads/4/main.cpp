@@ -8,11 +8,9 @@ int main(int argc, char* argv[])
 {
     Args* a;
     double *array = nullptr, *pa = nullptr;
-    FILE *fp = fopen(argv[3], "r");
-    double el;
-    int i = 0, k;
+    int k = 0;
 
-    if(argc == 1)
+    if(argc < 4)
     {
         printf("RESULT :");
 
@@ -49,57 +47,6 @@ int main(int argc, char* argv[])
         return 4;
     }        
 
-
-    if(fp == nullptr)
-    {
-        printf("RESULT %2d:",p);
-
-        printf("Can't open %s \n",argv[2]);
-        delete[] array;
-        return 1;
-    }
-
-    //Чтение массива
-    while (true) 
-    {
-        int res = fscanf(fp, "%lf", &el);
-        if(res == EOF)
-        {  
-            if(i != n)
-            {
-                printf("RESULT %2d:",p);
-
-                printf("To few elements in file(<n)\n");
-                delete[] array;
-                return 3;
-            }
-            break;
-        }
-        else if (res== 0)
-        {
-            printf("RESULT %2d:",p);
-
-            printf("Problem with reading an element \n");
-            
-            delete[] array;
-            return 2;
-        }
-
-        if (i > n)
-        {
-            printf("RESULT %2d:",p);
-
-            printf("To many elements in file(>n)\n");
-            delete[] array;
-            return 3;
-        }
-        else
-        {
-            array[i] = el;
-            i++;
-        }
-    
-    }
     a = new Args[p];
     pa = array;
     //Обработка массива. Распределение памяти.
@@ -109,6 +56,7 @@ int main(int argc, char* argv[])
         a[k].p = p;
         a[k].n = n;
         a[k].l = l;
+        a[k].name = argv[3];
         a[k].m = (k < p-1 ? m : m+l);
         if (k > 0)
         {

@@ -10,6 +10,9 @@
 #include <sys/resource.h>
 #include <cmath>
 #include "func.hpp"
+#include <sys/resource.h>
+#include <sys/sysinfo.h>
+
 #define EPSILON pow(10, -16)
 
 void UpdateElements(Args* a)
@@ -117,10 +120,80 @@ double get_cpu_time()
     return buf.ru_utime.tv_sec + buf.ru_utime.tv_usec/1e6;
 }
 
+//Чтение массива
+int read_array(char* name, int n, double* array, int p)
+{
+    double el;
+    int i = 0;
+    FILE *fp = fopen(name, "r");
+    if(fp == nullptr)
+    {
+        printf("RESULT %2d:",p);
+
+        printf("Can't open file \n");
+        delete[] array;
+        return 1;
+    }
+    while (true) 
+    {
+        int res = fscanf(fp, "%lf", &el);
+        if(res == EOF)
+        {  
+            if(i != n)
+            {
+                printf("RESULT %2d:",p);
+
+                printf("To few elements in file(<n)\n");
+                delete[] array;
+                return 3;
+            }
+            break;
+        }
+        else if (res== 0)
+        {
+            printf("RESULT %2d:",p);
+
+            printf("Problem with reading an element \n");
+            
+            delete[] array;
+            return 2;
+        }
+
+        if (i > n)
+        {
+            printf("RESULT %2d:",p);
+
+            printf("To many elements in file(>n)\n");
+            delete[] array;
+            return 3;
+        }
+        else
+        {
+            array[i] = el;
+            i++;
+        }
+    
+    }
+    return 0;
+}
 void* thread_func(void *arg)
 {
     Args *a = (Args *)arg;
     double t = 0;
+    int k = a->k;
+
+    cpu_set_t cpu;
+    CPU_ZERO(&cpu);
+    //int n_cpus = get_nprocs();
+    //int cpu_id = n_cpus - 1 -(k%n_cpus);
+    pthread_t tid = a->tid;
+    pthread_setaffinity_np(tid, sizeof(cpu), &cpu);
+
+    if (k == 0)
+    {
+        read_array(a->name, a->n, a->array, a->p);
+    }
+    
 
     t = get_cpu_time();
     UpdateElements(a);
@@ -128,7 +201,9 @@ void* thread_func(void *arg)
     printf("%lf \n", t);
 
     a->cpu_time_of_thread = t;
-    //reduce_sum(a->p, &a->cpu_time_of_all_threads, 1);
+    a->cpu_time_of_all_threads = t;
+
+    reduce_sum(a->p, &a->cpu_time_of_all_threads, 1);
   
     reduce_sum(a->p, &a->amount_of_changed, 1);
 

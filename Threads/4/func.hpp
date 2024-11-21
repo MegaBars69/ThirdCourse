@@ -89,6 +89,7 @@ class Args{
         double cpu_time_of_all_threads = 0;
 
         double* array = nullptr;
+        char* name = nullptr;
         int m = 0;
         int l = 0;
 
