@@ -84,8 +84,10 @@ class Args{
         int p = 0;
         int k = 0;
         int n = 0;
-    
         pthread_t tid = 0;
+        double cpu_time_of_thread = 0;
+        double cpu_time_of_all_threads = 0;
+
         double* array = nullptr;
         int m = 0;
         int l = 0;
@@ -101,6 +103,9 @@ class Args{
             std::cout << "p: " << p << std::endl;
             std::cout << "k: " << k << std::endl;
             std::cout << "n: " << n << std::endl;
+            printf("cpu time of thread: %8.2e \n", cpu_time_of_thread);
+            printf("cpu time of all threads: %8.2e \n", cpu_time_of_all_threads);
+
             std::cout << "tid: " << tid << std::endl;
             
             // Печатаем массив, если он не нулевой
@@ -115,7 +120,7 @@ class Args{
             }
 
             std::cout << "m: " << m << std::endl;
-            std::cout << "amount_of_changed: " << amount_of_changed << std::endl;
+            std::cout << "amount of changed: " << amount_of_changed << std::endl;
 
             std::cout << "pan: " << pan << std::endl;
             std::cout << "na0: " << na0 << std::endl;

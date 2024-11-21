@@ -14,12 +14,13 @@ int main(int argc, char* argv[])
 
     if(argc == 1)
     {
+        printf("RESULT :");
+
         printf("Usage ./a.out p n filename\n");
         return 1;
     }
     int n = atoi(argv[2]);
     int p = atoi(argv[1]); 
-    printf("RESULT %2d:",p);
 
     if (p > n)
     {
@@ -27,6 +28,8 @@ int main(int argc, char* argv[])
     }
     if (p <= 0)
     {
+        printf("RESULT %2d:",p);
+
         printf(" p > 0 \n");
         return 4;
     }
@@ -40,6 +43,8 @@ int main(int argc, char* argv[])
     }
     else
     {
+        printf("RESULT %2d:",p);
+
         printf(" n >=0");
         return 4;
     }        
@@ -47,6 +52,8 @@ int main(int argc, char* argv[])
 
     if(fp == nullptr)
     {
+        printf("RESULT %2d:",p);
+
         printf("Can't open %s \n",argv[2]);
         delete[] array;
         return 1;
@@ -60,6 +67,8 @@ int main(int argc, char* argv[])
         {  
             if(i != n)
             {
+                printf("RESULT %2d:",p);
+
                 printf("To few elements in file(<n)\n");
                 delete[] array;
                 return 3;
@@ -68,6 +77,8 @@ int main(int argc, char* argv[])
         }
         else if (res== 0)
         {
+            printf("RESULT %2d:",p);
+
             printf("Problem with reading an element \n");
             
             delete[] array;
@@ -76,12 +87,17 @@ int main(int argc, char* argv[])
 
         if (i > n)
         {
+            printf("RESULT %2d:",p);
+
             printf("To many elements in file(>n)\n");
             delete[] array;
             return 3;
         }
-        array[i] = el;
-        i++;
+        else
+        {
+            array[i] = el;
+            i++;
+        }
     
     }
     a = new Args[p];
@@ -131,12 +147,14 @@ int main(int argc, char* argv[])
         pthread_join(a[k].tid, nullptr);
     }
     
-    /*for (k = 0; k < p; k++)
+    for (k = 0; k < p; k++)
     {
         a[k].PrintAll();
-    }*/
-    
-    
+    }
+
+
+    printf("RESULT %2d:",p);
+
     for (int i = 0; i < n; i++)
     {
         printf(" %8.2e", array[i]);

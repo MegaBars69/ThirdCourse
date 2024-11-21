@@ -4,6 +4,10 @@
 #include <vector>
 #include <string>
 #include <limits>
+#include <time.h>
+#include <sys/time.h>
+#include <unistd.h> 
+#include <sys/resource.h>
 #include <cmath>
 #include "func.hpp"
 #define EPSILON pow(10, -16)
@@ -105,15 +109,30 @@ void UpdateElements(Args* a)
     a->amount_of_changed = result; 
 }
 
+double get_cpu_time()
+{
+    struct rusage buf;
+    getrusage(RUSAGE_THREAD, &buf);
+
+    return buf.ru_utime.tv_sec + buf.ru_utime.tv_usec/1e6;
+}
 
 void* thread_func(void *arg)
 {
     Args *a = (Args *)arg;
+    double t = 0;
 
+    t = get_cpu_time();
     UpdateElements(a);
+    t = get_cpu_time() - t;
+    printf("%lf \n", t);
 
+    a->cpu_time_of_thread = t;
+    //reduce_sum(a->p, &a->cpu_time_of_all_threads, 1);
+  
     reduce_sum(a->p, &a->amount_of_changed, 1);
 
     return nullptr;    
 }
+
 
