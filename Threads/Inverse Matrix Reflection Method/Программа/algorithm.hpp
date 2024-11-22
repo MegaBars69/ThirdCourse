@@ -73,7 +73,7 @@ void reduce_sum(int p,T* a = nullptr, int n = 0)
     pthread_mutex_unlock(&my_mutex);
 }
 
-void PrintMatrix(double* A,  int n, int m, int r, int p, int K = 0, bool full = true, bool exp_format = false, bool okruglenie = false);
+void PrintMatrix(double* A,  int n, int m, int r, int p = 0, int K = 0, bool full = true, bool exp_format = false, bool okruglenie = false);
 
 enum class io_status
 {
@@ -108,27 +108,41 @@ class Args{
         int M = 0; //Amount of block strings
         int r = 0; //Amount of printing elements
         int s = 0;
+
+        int cur_str = 0;
+        int nomer_v_okne = 0;
         
 
         void PrintAll() const
         {
             printf("Number of thread: %d \n", k);
+            printf("n: %d \n", n);            
             printf("p: %d \n", p);
-            printf("n: %d \n", n);
+            printf("m: %d \n", m);
             printf("M: %d \n", M);
             printf("r: %d \n", r);
             printf("s: %d \n", s);
-            std::cout<<"norm: "<<norm<<std::endl;
+            printf("cur_str: %d \n", cur_str);
+            printf("cpu time: %lf \n", cpu_time);
+          std::cout<<"norm: "<<norm<<std::endl;
 
+            printf("MATRIX A \n");
             PrintMatrix(A, n, m, r, p, k, false);
+
+            printf("MATRIX B \n");
             PrintMatrix(B, n, m, r, p, k, false);
-            PrintMatrix(U, m, 1, m, p);
+
+            printf("MATRIX U \n");
+            PrintMatrix(U, m, 1, m);
         }
         //Args();
 };
 
-void FirstStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int s);
-void SecondStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int s);
+void FirstStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int s, Args *a);
+int SecondStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int s, Args* aA);
+int SecondStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, Args* aA);
+
+int InverseMatrixParallel(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int M);
 
 double get_cpu_time();
 double get_fun_time();
