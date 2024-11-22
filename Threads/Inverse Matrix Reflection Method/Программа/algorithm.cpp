@@ -1125,9 +1125,9 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
             cout<<"Matrix is singular"<<endl;
             aA->res = 1;
         } 
-        //PrintMatrix(U, m, m, m);
+        PrintMatrix(U, m, m, m);
         
-        /*for (int j = shag+1; j < k+1; j++)
+        for (int j = shag+1; j < k+1; j++)
         {
             block_size_col = (j < k ? m : l);
             pa += m*m;
@@ -1152,9 +1152,9 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
             
             pb += m*block_size_row;
         } 
-        */
+        
     }
-    
+    /*
     else
     {
         memset(U, 0, m*m*sizeof(double));
@@ -1168,33 +1168,45 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
     reduce_sum<double>(p, U, m*m);
     
 
-    pa = A + shag*m*n + shag*block_size_row*m;
-    pa += m*m;
+    pa = A + shag*m*n + (aA->cur_str + 1)*block_size_row*m;
 
-    for (int j = shag + K + 1; j < k+1; j += p, pa += p*m*m)
+    
+    for (int j = shag + K + 1 ; j < k+1; j += p, pa += p*m*m)
     {
         block_size_col = (j < k ? m : l);
         
-        //PrintMatrix(A, n, m,n,false, true);
+        if (K == 1)
+        {
+            PrintMatrix(A, n, m,n,false, true);
+        }
 
         BlockMul(U, pa, ProductResult, block_size_row, block_size_row, block_size_col); 
         ReplaceWith(pa, ProductResult, block_size_row, block_size_col);
+        if (K == 1)
+        {
+            PrintMatrix(A, n, m,n,false, true);
+        }
     }
 
-    pb = B + shag*m*n;
+    pb = B + shag*m*n + K*m*block_size_row;
         
     for(int j = K; j < k+1; j += p, pb += p*m*block_size_row)
     {
         block_size_col = (j < k ? m : l);
+        if (K == 1)
+        {
+            PrintMatrix(B, n, m,n,false, true);
+        }
         
         BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
         ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
-    } 
-    
 
-    reduce_sum<int>(p);
-    
-    
+        if (K == 1)
+        {
+            PrintMatrix(B, n, m,n,false, true);
+        }
+    } 
+    */
     return 0;
 }
 
@@ -1206,7 +1218,7 @@ void ThirdStep(double* A, double* B, double* U, double* ProductResult, double* Z
     int m12;
     int block_size_row, block_size_col, down_block_size_row, down_block_size_col;
     
-    for(int bi = K +p*(a->cur_str); bi >= 0; bi -= p)
+    for (int bi = k-1; bi >= 0; bi--)
     {
         block_size_row = (bi< k ? m : l);
         //PrintMatrix(A, n, m, n, false, true);
@@ -1224,6 +1236,25 @@ void ThirdStep(double* A, double* B, double* U, double* ProductResult, double* Z
             //((B + bi*m*n + bj*block_size_row*m), U, block_size_row, block_size_col);
         } 
     }
+    /*
+    for(int bi = K + p*(a->cur_str - 1); bi >= 0; bi -= p)
+    {
+        block_size_row = (bi< k ? m : l);
+        //PrintMatrix(A, n, m, n, false, true);
+        for (int bj = 0; bj < k+1; bj++)
+        {
+            block_size_col = (bj < k ? m : l);      
+            
+            for (int r = bi + 1; r < k+1; r++)
+            {
+                m12 = (r < k ? m : l);
+            
+                MinusEqualBlockMul(B + bi*m*n + bj*block_size_row*m, A + bi*m*n + r*block_size_row*m, B + r*m*n + bj*m12*m, block_size_row, m12, block_size_col);
+            }
+            
+            //((B + bi*m*n + bj*block_size_row*m), U, block_size_row, block_size_col);
+        } 
+    }*/
 }
 
 
@@ -1343,7 +1374,10 @@ void* thread_func(void *arg)
         }
         a->nomer_v_okne = (((a->nomer_v_okne-1)%p) + p)%p;
     }
-    ThirdStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, a);
+    if (k == 0)
+    {
+        ThirdStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, a);
+    }
     
     t = get_cpu_time() - t;
     
