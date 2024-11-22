@@ -121,7 +121,7 @@ double get_cpu_time()
 }
 
 //Чтение массива
-int read_array(char* name, int n, double* array, int p)
+io_status read_array(char* name, int n, double* array, int p)
 {
     double el;
     int i = 0;
@@ -132,7 +132,7 @@ int read_array(char* name, int n, double* array, int p)
 
         printf("Can't open file \n");
         delete[] array;
-        return 1;
+        return io_status::error_open;
     }
     while (true) 
     {
@@ -145,7 +145,7 @@ int read_array(char* name, int n, double* array, int p)
 
                 printf("To few elements in file(<n)\n");
                 delete[] array;
-                return 3;
+                return io_status::error_few_el;
             }
             break;
         }
@@ -156,16 +156,16 @@ int read_array(char* name, int n, double* array, int p)
             printf("Problem with reading an element \n");
             
             delete[] array;
-            return 2;
+            return io_status::error_read;
         }
 
-        if (i > n)
+        if (i >= n)
         {
             printf("RESULT %2d:",p);
 
             printf("To many elements in file(>n)\n");
             delete[] array;
-            return 3;
+            return io_status::error_many_el;
         }
         else
         {
@@ -174,13 +174,13 @@ int read_array(char* name, int n, double* array, int p)
         }
     
     }
-    return 0;
+    return io_status::succes;
 }
 void* thread_func(void *arg)
 {
     Args *a = (Args *)arg;
     double t = 0;
-    int k = a->k;
+    //int k = a->k;
 
     cpu_set_t cpu;
     CPU_ZERO(&cpu);
@@ -189,16 +189,28 @@ void* thread_func(void *arg)
     pthread_t tid = a->tid;
     pthread_setaffinity_np(tid, sizeof(cpu), &cpu);
 
-    if (k == 0)
+    /*if (k == 0)
     {
-        read_array(a->name, a->n, a->array, a->p);
+        a->reading_file = read_array(a->name, a->n, a->array, a->p);
+    
+        if (a->reading_file != io_status::succes)
+        {
+            a->res = 1;
+        }
     }
     
-
+    reduce_sum<int>(a->p, &a->res, 1);
+    
+    if (a->res > 0)
+    {
+        return nullptr;
+    }*/
+    
     t = get_cpu_time();
+
     UpdateElements(a);
+
     t = get_cpu_time() - t;
-    printf("%lf \n", t);
 
     a->cpu_time_of_thread = t;
     a->cpu_time_of_all_threads = t;

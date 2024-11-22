@@ -75,7 +75,8 @@ enum class io_status
     undef,
     error_open,
     error_read,
-    error_av_doesnt_exist,
+    error_few_el,
+    error_many_el,
     succes
 };
 
@@ -90,6 +91,7 @@ class Args{
 
         double* array = nullptr;
         char* name = nullptr;
+        io_status reading_file = io_status::undef;
         int m = 0;
         int l = 0;
 
@@ -97,7 +99,9 @@ class Args{
         double pan = 0;  //prev array's elements
         double na0 = 0, na1 = 0;  //next array's elemnets
         
-        void PrintAll(void) const 
+        int res = 0;
+
+        void PrintAll(bool with_array = false) const 
         {
             printf("\n");
             std::cout << "Args Data:" << std::endl;
@@ -110,16 +114,18 @@ class Args{
             std::cout << "tid: " << tid << std::endl;
             
             // Печатаем массив, если он не нулевой
-            if (array != nullptr) {
-                std::cout << "array: ";
-                for (int i = 0; i < m; ++i) {
-                    std::cout << array[i] << " "; // Установка точности
+            if(with_array)
+            {
+                if (array != nullptr) {
+                    std::cout << "array: ";
+                    for (int i = 0; i < m; ++i) {
+                        std::cout << array[i] << " "; // Установка точности
+                    }
+                    std::cout << std::endl;
+                } else {
+                    std::cout << "array: nullptr" << std::endl;
                 }
-                std::cout << std::endl;
-            } else {
-                std::cout << "array: nullptr" << std::endl;
             }
-
             std::cout << "m: " << m << std::endl;
             std::cout << "amount of changed: " << amount_of_changed << std::endl;
 
