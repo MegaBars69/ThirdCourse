@@ -497,7 +497,6 @@ int Triungulize(double* A, double* U, int row_num, int col_num, double norm)
         A[k*col_num + k] = new_diag_el;
         
         ApplyVector((U + k*row_num), A, row_num, col_num, k, true); 
-
     }
 
     return 0;
@@ -841,55 +840,55 @@ void FirstStep(double* A, double* B, double* U, double* ProductResult, double* Z
         pa = A + s*m*n + shag*block_size_row*m;
         
         // First part of algorithm
-        /*if (K == 0)
+        if (K == 0)
         {
             PrintMatrix(A, n,m,n,p);
             PrintMatrix(B, n,m,n,p);
-        }*/
+        }
         
         Triungulize(pa, U,block_size_row, block_size_row, norm);
 
-        /*if (K == 0)
+        if (K == 0)
         {
             PrintMatrix(A, n,m,n,p);
             PrintMatrix(B, n,m,n,p);
             PrintMatrix(U, m, m, m, p);
-        }*/
+        }
         
         for (j = shag + 1, pa_side = pa + block_size_row*m; j < k+1; j++, pa_side += block_size_row*m)
         {
             block_size_col = (j < k ? m : l);
             //PrintMatrix(A, n, m,n,false, true);
-            /*if (K == 0)
+            if (K == 0)
             {
                 PrintMatrix(A, n,m,n,p);
-            }*/
+            }
 
             ApplyMatrix(U, pa_side, block_size_row, block_size_col, block_size_row);
             
-            /*if (K == 0)
+            if (K == 0)
             {
                 PrintMatrix(A, n,m,n,p);
-            }*/
+            }
             //PrintMatrix(A, n, m,n,false, true);
 
         }
-        /*if (K == 0)
+        if (K == 0)
         {
             PrintMatrix(A, n,m,n,p);
             PrintMatrix(B, n,m,n,p);
-        }*/
+        }
         for (j = 0, pb = B + s*m*n; j < s + 1; j++, pb += block_size_row*m)
         {
             block_size_col = (j < k ? m : l);
             
             ApplyMatrix(U, pb, block_size_row, block_size_col, block_size_row);
         }
-        /*if (K == 0)
+        if (K == 0)
         {
             PrintMatrix(A, n,m,n,p);
             PrintMatrix(B, n,m,n,p);
-        }*/
+        }
 
         // Second part of algorithm
         
@@ -899,27 +898,45 @@ void FirstStep(double* A, double* B, double* U, double* ProductResult, double* Z
             pa_down = A + bi*m*n + shag*down_block_size_row*m;
 
             ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
-            /*if (K == 0)
+            if (K == 0)
             {
                 std::cout<<"TUTA";
-                PrintMatrix(A, n, m, m, p);
-                PrintMatrix(U, m, m, m, p);
-            }*/
+                PrintMatrix(A, n, m, n, p);
+                PrintMatrix(U, m+1, 1, m+1, p);
+            }
             
 
             for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < k+1; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
             {
                 down_block_size_col = (bj < k ? m : l);
-                            
+                  if (K == 0)
+                {
+                    PrintMatrix(A, n, m, n, p);
+                    PrintMatrix(U, m+1, 1, m+1, p);
+                }          
                 ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
-
+                if (K == 0)
+            {
+                PrintMatrix(A, n, m, n, p);
+            }
             }
 
             for (bj = 0, pb = B + s*m*n, pb_down = B + bi*m*n; bj < bi + 1; bj++, pb += m*m, pb_down += down_block_size_row*m)
             {
                 down_block_size_col = (bj < k ? m : l);
+                if (K == 0)
+            {
+                std::cout<<"TUTA";
+                PrintMatrix(B, n, m, n, p);
+            }
 
                 ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
+
+                if (K == 0)
+            {
+                std::cout<<"TUTA";
+                PrintMatrix(B, n, m, n, p);
+            }
             }   
         }      
     }    
@@ -970,6 +987,7 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
             {
                 PrintMatrix(A, n, m, n);
                 PrintMatrix(B, n, m, n);
+                PrintMatrix(U, m+1, 1,m+1);
             }
 
             for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < k+1; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
@@ -1056,8 +1074,19 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
             {
                 down_block_size_row = (bi < k ? m : l);
                 pa_down = A + bi*m*n + shag*down_block_size_row*m;
+                if (K == 0)
+                {
+                    PrintMatrix(A, n, m, n);
+                    PrintMatrix(B, n, m, n);
+                }
 
                 ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
+
+                if (K == 0)
+                {
+                    PrintMatrix(A, n, m, n);
+                    PrintMatrix(B, n, m, n);
+                }
 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < k+1; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                 {
@@ -1066,13 +1095,22 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
                     ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
 
                 }
-
+                if (K == 0)
+                {
+                    PrintMatrix(A, n, m, n);
+                    PrintMatrix(B, n, m, n);
+                }
                 for (bj = 0, pb = B + s*m*n, pb_down = B + bi*m*n; bj < bi + 1; bj++, pb += m*m, pb_down += down_block_size_row*m)
                 {
                     down_block_size_col = (bj < k ? m : l);
 
                     ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
                 } 
+                if (K == 0)
+                {
+                    PrintMatrix(A, n, m, n);
+                    PrintMatrix(B, n, m, n);
+                }
             }
         }
     }
@@ -1088,7 +1126,35 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
             aA->res = 1;
         } 
         //PrintMatrix(U, m, m, m);
+        
+        /*for (int j = shag+1; j < k+1; j++)
+        {
+            block_size_col = (j < k ? m : l);
+            pa += m*m;
+            
+            //PrintMatrix(A, n, m,n,false, true);
+
+            BlockMul(U, pa, ProductResult, block_size_row, block_size_row, block_size_col); 
+            ReplaceWith(pa, ProductResult, block_size_row, block_size_col);
+        }
+
+
+        pb = B + s*m*n;
+         
+    
+        for(int j = 0; j < k+1; j++)
+        {
+            block_size_col = (j < k ? m : l);
+            
+            BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
+            ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
+
+            
+            pb += m*block_size_row;
+        } 
+        */
     }
+    
     else
     {
         memset(U, 0, m*m*sizeof(double));
@@ -1120,17 +1186,12 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
     for(int j = K; j < k+1; j += p, pb += p*m*block_size_row)
     {
         block_size_col = (j < k ? m : l);
-        /*if ((S == 0 || S == 4) || ((S == 3) && (j == 0)) || (j + 1 >= s))
-        {*/
-            BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
-            ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
-        /*}
-        else
-        {
-            ReplaceWith(pb, ZeroMatrix, block_size_row, block_size_col);
-        }*/
-
+        
+        BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
+        ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
     } 
+    
+
     reduce_sum<int>(p);
     
     
@@ -1144,6 +1205,7 @@ void ThirdStep(double* A, double* B, double* U, double* ProductResult, double* Z
     int k = (n-l)/m;
     int m12;
     int block_size_row, block_size_col, down_block_size_row, down_block_size_col;
+    
     for(int bi = K +p*(a->cur_str); bi >= 0; bi -= p)
     {
         block_size_row = (bi< k ? m : l);
@@ -1240,7 +1302,7 @@ void* thread_func(void *arg)
     
     reduce_sum(p, &a->norm, 1);
 
-    /*
+    
     for (int i = 0; i < p; i++)
     {
         reduce_sum<int>(p);
@@ -1249,7 +1311,7 @@ void* thread_func(void *arg)
             a->PrintAll();
         }
         
-    }*/
+    }
     
     double t;
     int upper_bound = (a->M > (n/p) ? a->M : a->M+1);
