@@ -40,7 +40,6 @@ void ProccesElements(Args* a)
         if(fabs(pa[0]) > EPSILON)
         { 
             prev_q = pa[1]/pa[0]; 
-
             sum += pa[1];
             el_in_sum = 2;
             if (m == 2)
@@ -76,82 +75,96 @@ void ProccesElements(Args* a)
         if(fabs(prev_el) > EPSILON)
         {
             cur_q =  cur_el/prev_el;
-        
-            if (fabs(cur_q - prev_q) < EPSILON)
+            if (fabs(cur_q - 1) > EPSILON)
             {
-                sum += cur_el;
-                el_in_sum++;
-                if (el_in_sum == 2 || (!in_seq && el_in_sum == 3))
-                {
-                    start_of_seq = i-2; // Smth may go wrong
-                    in_seq = true;
-                }              
-            }
-            else if (start_of_seq >= 0 && el_in_sum > 2 && fabs(cur_q - prev_q) > EPSILON)
-            {
-                //End of seq
-                new_el = sum/el_in_sum;
-                for (int j = start_of_seq; j < i ; j++)
-                {
-                    pa[j] = new_el;
-                    amount_of_changed++;
-                }
-                sum = cur_el;
-                el_in_sum = 1;
-                a->all_can_connect = false;
-                in_seq = false;
-            }
-            else if (start_of_seq < 0 && el_in_sum >= 2 && fabs(cur_q - prev_q) > EPSILON)
-            {
-                a->left_can_connect = true;
-                a->left_sum = sum;
-                a->el_in_left_sum = el_in_sum;
-                a->q_left = cur_q;
-                sum = cur_el;
-                el_in_sum = 1;
-                in_seq = false;
-                a->all_can_connect = false;
-            }
-            else
-            {
-                sum = cur_el + prev_el;
-                el_in_sum = 2;
-            }
             
-            if (i == m-1 && (k < p-1) && fabs(cur_q - prev_q) < EPSILON)
-            {
-                a->right_sum = sum ;
-                a->el_in_right_sum = el_in_sum;
-                a->q_right = cur_q;
-            }
-            else if (i == m-1 && (k < p-1))
-            {
-                a->right_sum = sum;
-                a->el_in_right_sum = el_in_sum;
-                a->q_right = cur_q;
-            }
-            else if (i == m-1 && fabs(cur_q - prev_q) < EPSILON && (k == p-1) && start_of_seq >= 0)
-            {
-                /*sum += cur_el;
-                el_in_sum++;*/
-                new_el = sum/el_in_sum;
-                for (int j = start_of_seq; j <= i ; j++)
+                if (fabs(cur_q - prev_q) < EPSILON)
                 {
-                    pa[j] = new_el;
-                    amount_of_changed++;
+                    sum += cur_el;
+                    el_in_sum++;
+                    if (el_in_sum == 2 || (!in_seq && el_in_sum == 3))
+                    {
+                        start_of_seq = i-2; // Smth may go wrong
+                        in_seq = true;
+                    }              
                 }
-                sum = cur_el;
-                el_in_sum = 1;
-                in_seq = false;
-                a->all_can_connect = false; 
-            }
-            else if (i == m-1 && fabs(cur_q - prev_q) < EPSILON && (k == p-1) && start_of_seq < 0)
-            {
-                a->left_can_connect = true;
-                a->left_sum = sum;
-                a->el_in_left_sum = el_in_sum;
-            }
-            
+                else if (start_of_seq >= 0 && el_in_sum > 2 && fabs(cur_q - prev_q) > EPSILON)
+                {
+                    //End of seq
+                    new_el = sum/el_in_sum;
+                    for (int j = start_of_seq; j < i ; j++)
+                    {
+                        pa[j] = new_el;
+                        amount_of_changed++;
+                    }
+                    sum = cur_el;
+                    el_in_sum = 1;
+                    a->all_can_connect = false;
+                    in_seq = false;
+                }
+                else if (start_of_seq < 0 && el_in_sum >= 2 && fabs(cur_q - prev_q) > EPSILON)
+                {
+                    a->left_can_connect = true;
+                    a->left_sum = sum;
+                    a->el_in_left_sum = el_in_sum;
+                    a->q_left = cur_q;
+                    sum = cur_el;
+                    el_in_sum = 1;
+                    in_seq = false;
+                    a->all_can_connect = false;
+                }
+                else
+                {
+                    sum = cur_el + prev_el;
+                    el_in_sum = 2;
+                }
+                
+                if (i == m-1 && (k < p-1) && fabs(cur_q - prev_q) < EPSILON)
+                {
+                    if (fabs(cur_el)> EPSILON && fabs(a->next/cur_el - cur_q) < EPSILON)
+                    {
+                        a->right_sum = sum ;
+                        a->el_in_right_sum = el_in_sum;
+                        a->q_right = cur_q;
+                    }
+                    else
+                    {
+                        new_el = sum/el_in_sum;
+                        for (int j = start_of_seq; j <= i ; j++)
+                        {
+                            pa[j] = new_el;
+                            amount_of_changed++;
+                        }
+                    }
+                }
+                else if (i == m-1 && (k < p-1))
+                {
+                    a->right_sum = sum;
+                    a->el_in_right_sum = el_in_sum;
+                    a->q_right = cur_q;
+                }
+                else if (i == m-1 && fabs(cur_q - prev_q) < EPSILON && (k == p-1) && start_of_seq >= 0)
+                {
+                    /*sum += cur_el;
+                    el_in_sum++;*/
+                    new_el = sum/el_in_sum;
+                    for (int j = start_of_seq; j <= i ; j++)
+                    {
+                        pa[j] = new_el;
+                        amount_of_changed++;
+                    }
+                    sum = cur_el;
+                    el_in_sum = 1;
+                    in_seq = false;
+                    a->all_can_connect = false; 
+                }
+                else if (i == m-1 && fabs(cur_q - prev_q) < EPSILON && (k == p-1) && start_of_seq < 0)
+                {
+                    a->left_can_connect = true;
+                    a->left_sum = sum;
+                    a->el_in_left_sum = el_in_sum;
+                }
+            }    
             
         }
         
@@ -183,7 +196,7 @@ int ProccesResults(Args *a)
         {
             a[i].q_right = a[i].array[0]/a[i].prev;
         }
-
+        
         if (a[i].left_can_connect)
         {
             if (!in_seq)
