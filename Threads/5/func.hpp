@@ -103,14 +103,13 @@ class Args{
         double q = 0;
         double left_sum = 0;
         double right_sum = 0;
-        int el_in_left_sum = 0;
-        int el_in_right_sum = 0;
+        int el_in_left_sum = 1;
+        int el_in_right_sum = 1;
 
         bool left_can_connect = false;
-        bool right_can_connect = false;
-        bool all_is_seq = true;
-        
+        bool all_can_connect = true;
         int res = 0;
+
 
         void PrintAll(bool with_array = false) const 
         {
@@ -142,11 +141,19 @@ class Args{
 
             std::cout << "prev: " << prev << std::endl;
             std::cout << "next: " << next << std::endl;
+            std::cout << "rigth sum: " << right_sum << std::endl;
+            std::cout << "left sum: " << left_sum << std::endl;
+
+            std::cout << "el in rigth sum: " << el_in_right_sum << std::endl;
+            std::cout << "el in left sum: " << el_in_left_sum << std::endl;
+            std::cout << "left can connect: " << left_can_connect << std::endl;
+           
             printf("\n");
         }
         
 };
 void* thread_func(void *arg);
 void ProccesElements(Args* a);
+int ProccesResults(Args *a);
 
 #endif

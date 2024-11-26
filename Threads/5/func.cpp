@@ -21,7 +21,8 @@ void ProccesElements(Args* a)
     int amount_of_changed = 0;
     int m = a->m;
     int k = a->k;
-    double sum = 0;
+    int p = a->p;
+    double sum = pa[0];
     int el_in_sum = 1;
     double cur_q = 0;
     double prev_q = 0;
@@ -33,17 +34,40 @@ void ProccesElements(Args* a)
     if (k > 0 && fabs(a->prev) > EPSILON)
     {
         prev_q = a->q = pa[0]/a->prev;
-        sum = pa[0];
     } 
     if(k == 0 && m >= 2)
     {
-        prev_q = (fabs(pa[0]) < EPSILON ? 0 : pa[1]/pa[0]); 
+        if(fabs(pa[0]) > EPSILON)
+        { 
+            prev_q = pa[1]/pa[0]; 
 
-        sum = pa[0] + pa[1];
-        el_in_sum = 2;
+            sum += pa[1];
+            el_in_sum = 2;
+            if (m == 2)
+            {
+                if (p > 1 && fabs(pa[1]) >EPSILON && fabs(a[0].next/pa[1] - prev_q) < EPSILON)
+                {
+                    a->el_in_right_sum = el_in_sum;
+                    a->right_sum = sum;
+                }
+                else if (p > 1)
+                {
+                    a->el_in_right_sum = 1;
+                    a->right_sum = pa[1];
+                }
+                
+            }
+        }
     }
     
-    for (int i =(k > 0 ? 1 : 2); i < m; i++)
+    if (a->m == 1)
+    {
+        a->left_sum = a->right_sum = pa[0];
+        a->el_in_right_sum = a->el_in_left_sum = 1; 
+        //a->q_right = (fabs(pa[0]) > EPSILON && k < p-1 ? a->next/pa[0] : 0);
+    }
+    
+    for (int i = (k > 0 ? 1 : 2); i < m; i++)
     {
         prev_el = pa[i-1];
         cur_el = pa[i];
@@ -74,10 +98,10 @@ void ProccesElements(Args* a)
                 }
                 sum = cur_el;
                 el_in_sum = 1;
+                a->all_can_connect = false;
                 in_seq = false;
-                a->all_is_seq = false;
             }
-            else if (start_of_seq < 0 && el_in_sum > 2 && fabs(cur_q - prev_q) > EPSILON)
+            else if (start_of_seq < 0 && el_in_sum >= 2 && fabs(cur_q - prev_q) > EPSILON)
             {
                 a->left_can_connect = true;
                 a->left_sum = sum;
@@ -86,7 +110,7 @@ void ProccesElements(Args* a)
                 sum = cur_el;
                 el_in_sum = 1;
                 in_seq = false;
-                a->all_is_seq = false;
+                a->all_can_connect = false;
             }
             else
             {
@@ -94,27 +118,241 @@ void ProccesElements(Args* a)
                 el_in_sum = 2;
             }
             
-            if (i == m-1 && fabs(cur_q - prev_q) < EPSILON)
+            if (i == m-1 && (k < p-1) && fabs(cur_q - prev_q) < EPSILON)
             {
-                a->right_can_connect = true;
+                a->right_sum = sum ;
+                a->el_in_right_sum = el_in_sum;
+                a->q_right = cur_q;
+            }
+            else if (i == m-1 && (k < p-1))
+            {
                 a->right_sum = sum;
                 a->el_in_right_sum = el_in_sum;
                 a->q_right = cur_q;
             }
+            else if (i == m-1 && fabs(cur_q - prev_q) < EPSILON && (k == p-1) && start_of_seq >= 0)
+            {
+                /*sum += cur_el;
+                el_in_sum++;*/
+                new_el = sum/el_in_sum;
+                for (int j = start_of_seq; j <= i ; j++)
+                {
+                    pa[j] = new_el;
+                    amount_of_changed++;
+                }
+                sum = cur_el;
+                el_in_sum = 1;
+                in_seq = false;
+                a->all_can_connect = false; 
+            }
+            else if (i == m-1 && fabs(cur_q - prev_q) < EPSILON && (k == p-1) && start_of_seq < 0)
+            {
+                a->left_can_connect = true;
+                a->left_sum = sum;
+                a->el_in_left_sum = el_in_sum;
+            }
+            
+            
         }
         
         prev_q = cur_q;
+        
     }
 
     a->amount_of_changed = amount_of_changed; 
 }
-/*
-void ProccesResults(Args *a)
+
+int ProccesResults(Args *a)
 {
-    int k = a->k;
+    //int k = a->k;
     int p = a->p;
+    int result = a[0].amount_of_changed; 
+    double sum = 0;
+    int el_in_sum = 0;
+    int start_of_seq = 0;
+    //double prev_q = 0;
+    //double cur_q = 0;
+    double new_el = 0;
+    bool in_seq = false;
     
-}*/
+    for (int i = 1; i < p; i++)
+    {
+        a[i].PrintAll(true);
+
+        if (a[i].m == 1 && i >= 1 && fabs(a[i].prev) > EPSILON)
+        {
+            a[i].q_right = a[i].array[0]/a[i].prev;
+        }
+
+        if (a[i].left_can_connect)
+        {
+            if (!in_seq)
+            {
+                in_seq = true;
+                start_of_seq = i-1;
+            }
+            if (fabs(a[i].q_left - a[i-1].q_right) <= EPSILON)
+            {
+                sum += a[i-1].right_sum;
+                el_in_sum += a[i-1].el_in_right_sum;
+            }
+            else
+            {
+                sum += a[i].prev;
+                el_in_sum++;
+                a[i-1].el_in_right_sum = 1;
+            }
+
+            if (a[i].el_in_left_sum < a[i].m || i == p-1)
+            {
+                sum += a[i].left_sum;
+                el_in_sum += a[i].el_in_left_sum;
+                new_el = sum/el_in_sum;
+                for (int j = start_of_seq;  j < i; j++)
+                {
+                    for (int s = a[j].m - a[j].el_in_right_sum; s < a[j].m; s++)
+                    {
+                        a[j].array[s] = new_el;
+                        result++;
+                    }
+                }
+                for (int s = 0; s < a[i].el_in_left_sum; s++)
+                {
+                    a[i].array[s] = new_el;
+                    result++;
+                }
+                el_in_sum = 0;
+                sum = 0;
+                in_seq = false;
+            } 
+        } 
+          
+        else
+        {
+            if (fabs(a[i].prev) > 0)
+            {
+                if (fabs(a[i].array[0]/a[i].prev - a[i-1].q_right) < EPSILON)
+                {
+                    if (!in_seq)
+                    {
+                        in_seq = true;
+                        start_of_seq = i-1 - (a[i-1].m == 1 ? 1 : 0);
+                        sum += a[i-1].right_sum + (a[i-1].m == 1 ? a[i-1].prev : 0);
+                        el_in_sum += a[i-1].el_in_right_sum + (a[i-1].m == 1 ? 1 : 0);
+                    }
+                    sum += a[i-1].next;
+                    el_in_sum++;
+                    
+                    /*if (a[i-1].m == 2)
+                    {
+                        sum += a[i-1].array[0] + a[i-1].array[1];
+                        el_in_sum += 2; 
+                    }
+                    else if (a[i-1].m == 1)
+                    {
+                        sum += a[i-1].array[0];
+                        el_in_sum += 1;
+                    }*/
+                }
+                else if((in_seq || i == p-1) && el_in_sum >= 1)
+                {
+                    new_el = sum/el_in_sum;
+                    for (int j = start_of_seq;  j < i; j++)
+                    {
+                        for (int s = a[j].m - a[j].el_in_right_sum; s < a[j].m; s++)
+                        {
+                            a[j].array[s] = new_el;
+                            result++;
+                        }
+                    }
+                    el_in_sum = 0;
+                    sum = 0;
+                    in_seq = false;
+                } 
+                
+                
+
+                /*
+                if (a[i].m == 1 && a[i-1].m == 1)
+                {
+                    cur_q = a[i].array[0]/a[i].prev;
+                    
+                    if (fabs(cur_q - prev_q) < EPSILON)
+                    {
+                        if (!in_seq)
+                        {
+                            in_seq = true;
+                            start_of_seq = i-2;
+                            sum += a[i-1].prev;
+                            el_in_sum++;
+                        }
+                        sum += a[i].prev;
+                        el_in_sum++;
+                    }
+                    else if (in_seq)
+                    {
+                        sum += a[i].prev;
+                        el_in_sum++;
+                        new_el = sum/el_in_sum;
+                        
+                        for (int j = start_of_seq;  j < i; j++)
+                        {
+                            for (int s = a[j].m - a[j].el_in_right_sum; s < a[j].m; s++)
+                            {
+                                a[j].array[s] = new_el;
+                                result++;
+                            }
+                        }
+                        in_seq = false;
+                    }
+                    
+                    prev_q = cur_q;
+                }
+                
+                else if(fabs(a[i-1].next/a[i].prev - (a[i-1].m > 1 ? a[i-1].q_right : prev_q)) < EPSILON)
+                {
+                    if (!in_seq)
+                    {
+                        in_seq = true;
+                        start_of_seq = i-2;
+                    }
+                    sum += a[i-1].next + (a[i-1].m > 1 ? 0 : a[i-1].prev);
+                    el_in_sum += 1 + (a[i-1].m > 1 ? 0 : 1);
+                    if (a[i-1].m == 2)
+                    {
+                        sum += a[i-1].array[0] + a[i-1].array[1];
+                        el_in_sum += 2; 
+                    }
+                    else if (a[i-1].m == 1)
+                    {
+                        sum += a[i-1].array[0];
+                        el_in_sum += 1;
+                    }
+                    
+                    
+                }
+                */ 
+                if (a[i].m > 1 && el_in_sum >= 1)
+                {
+                    new_el = sum/el_in_sum;
+                    a[i].array[0] = new_el;
+                    result++;
+                    for (int j = start_of_seq;  j < i; j++)
+                    {
+                        for (int s = a[j].m - a[j].el_in_right_sum; s < a[j].m; s++)
+                        {
+                            a[j].array[s] = new_el;
+                            result++;
+                        }
+                    }
+                    in_seq = false;
+                }
+            }
+          
+        } 
+    }
+    return result;
+}
 
 double get_cpu_time()
 {

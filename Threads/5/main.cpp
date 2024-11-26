@@ -97,21 +97,25 @@ int main(int argc, char* argv[])
         i++;
     }
     //Обработка массива. Распределение памяти.
-    for (k = 0; k < p; k++,pa += m)
+    for (k = 0; k < p; k++,pa += m + (k <= (p-l) ? 0 : 1))
     {
         a[k].k = k;
         a[k].p = p;
         a[k].n = n;
         a[k].l = l;
         a[k].name = argv[3];
-        a[k].m = (k < p-1 ? m : m+l);
+        a[k].m = (k < p-l ? m : m+1);
         if (k > 0)
         {
             a[k].prev = *(pa-1);
         }
-        if (k < p-1)
+        if (k < p-l)
         {
             a[k].next = *(pa + m);
+        }
+        else if (k < p-1)
+        {
+            a[k].next = *(pa + m + 1);
         }
      
         a[k].array = pa;
@@ -130,7 +134,7 @@ int main(int argc, char* argv[])
     }
     a[0].tid = pthread_self();
 
-    thread_func(a+0);
+    thread_func(a+0); 
 
     //Прибиваем потоки молотком.
     for (k = 1; k < p; k++)
@@ -138,7 +142,12 @@ int main(int argc, char* argv[])
         pthread_join(a[k].tid, nullptr);
     }
     
-
+    double res = ProccesResults(a);
+    for (int i = 0; i < p; i++)
+    {
+        a[i].amount_of_changed = res;
+    }
+    
 
     if (a[0].res == 0)
     {
@@ -146,7 +155,7 @@ int main(int argc, char* argv[])
         for (k = 0; k < p; k++)
         {
             a[k].PrintAll(true);
-        }
+        } 
 
         printf("RESULT %2d:",p);
         for (int i = 0; i < n; i++)
