@@ -57,6 +57,12 @@ void ProccesElements(Args* a)
                 
             }
         }
+        else if(m == 2)
+        {
+            a->el_in_right_sum = 1;
+            a->right_sum = pa[1];
+        }
+        
     }
     
     if (a->m == 1)
@@ -127,7 +133,7 @@ void ProccesElements(Args* a)
                         a->el_in_right_sum = el_in_sum;
                         a->q_right = cur_q;
                     }
-                    else
+                    else if (start_of_seq >= 0)
                     {
                         new_el = sum/el_in_sum;
                         for (int j = start_of_seq; j <= i ; j++)
@@ -136,6 +142,13 @@ void ProccesElements(Args* a)
                             amount_of_changed++;
                         }
                     }
+                    else if (start_of_seq < 0)
+                    {
+                        a->left_can_connect = true;
+                        a->left_sum = sum;
+                        a->el_in_left_sum = el_in_sum;
+                    }
+                    
                 }
                 else if (i == m-1 && (k < p-1))
                 {
@@ -216,7 +229,7 @@ int ProccesResults(Args *a)
                 a[i-1].el_in_right_sum = 1;
             }
 
-            if (a[i].el_in_left_sum < a[i].m || i == p-1)
+            if (a[i].el_in_left_sum < a[i].m || i == p-1 || (fabs(a[i].array[a[i].m-1]) > EPSILON && fabs(a[i].next/a[i].array[a[i].m-1] - a[i].q_left)))
             {
                 sum += a[i].left_sum;
                 el_in_sum += a[i].el_in_left_sum;
