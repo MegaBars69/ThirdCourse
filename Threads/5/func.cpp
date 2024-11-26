@@ -48,11 +48,13 @@ void ProccesElements(Args* a)
                 {
                     a->el_in_right_sum = el_in_sum;
                     a->right_sum = sum;
+                    a->q_right = prev_q;
                 }
                 else if (p > 1)
                 {
                     a->el_in_right_sum = 1;
                     a->right_sum = pa[1];
+                    a->q_right = 0;
                 }
                 
             }
@@ -69,6 +71,7 @@ void ProccesElements(Args* a)
     {
         a->left_sum = a->right_sum = pa[0];
         a->el_in_right_sum = a->el_in_left_sum = 1; 
+
         //a->q_right = (fabs(pa[0]) > EPSILON && k < p-1 ? a->next/pa[0] : 0);
     }
     
@@ -147,6 +150,7 @@ void ProccesElements(Args* a)
                         a->left_can_connect = true;
                         a->left_sum = sum;
                         a->el_in_left_sum = el_in_sum;
+                        a->q_left = cur_q;
                     }
                     
                 }
@@ -176,6 +180,7 @@ void ProccesElements(Args* a)
                     a->left_can_connect = true;
                     a->left_sum = sum;
                     a->el_in_left_sum = el_in_sum;
+                    a->q_left = cur_q;
                 }
             }    
             
@@ -253,7 +258,7 @@ int ProccesResults(Args *a)
             } 
         } 
           
-        else
+        else 
         {
             if (fabs(a[i].prev) > 0)
             {

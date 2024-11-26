@@ -147,6 +147,9 @@ class Args{
             std::cout << "el in rigth sum: " << el_in_right_sum << std::endl;
             std::cout << "el in left sum: " << el_in_left_sum << std::endl;
             std::cout << "left can connect: " << left_can_connect << std::endl;
+
+            std::cout << "q right: " << q_right << std::endl;
+            std::cout << "q left: " << q_left << std::endl;
            
             printf("\n");
         }

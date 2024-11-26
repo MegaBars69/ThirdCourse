@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
         delete[] array;
         delete[] a;
 
-        return 1;
+        return 1; 
     }
     while (true) 
     {
