@@ -174,6 +174,13 @@ void ProccesElements(Args* a)
                 {
                     if (fabs(cur_el)> EPSILON && fabs(a->next/cur_el - cur_q) < EPSILON)
                     {
+                        if (start_of_seq < 0)
+                        {
+                            a->left_can_connect = true;
+                            a->left_sum = sum;
+                            a->el_in_left_sum = el_in_sum;
+                            a->q_left = cur_q;
+                        }
                         a->right_sum = sum ;
                         a->el_in_right_sum = el_in_sum;
                         a->q_right = cur_q;
@@ -190,9 +197,9 @@ void ProccesElements(Args* a)
                     else if (start_of_seq < 0)
                     {
                         a->left_can_connect = true;
-                        a->left_sum = sum;
-                        a->el_in_left_sum = el_in_sum;
-                        a->q_left = cur_q;
+                        a->right_sum = a->left_sum = sum;
+                        a->el_in_right_sum = a->el_in_left_sum = el_in_sum;
+                        a->q_right = a->q_left = cur_q;
                     }
                     
                 }
@@ -202,6 +209,14 @@ void ProccesElements(Args* a)
                     {
                         if (fabs(a->next/pa[m-1] - cur_q) < EPSILON)
                         {
+                            if (start_of_seq < 0)
+                            {
+                                a->left_can_connect = true;
+                                a->left_sum = sum;
+                                a->el_in_left_sum = el_in_sum;
+                                a->q_left = cur_q;
+                            }
+                            
                             a->right_sum = sum;
                             a->el_in_right_sum = el_in_sum;
                             a->q_right = cur_q;
@@ -235,8 +250,10 @@ void ProccesElements(Args* a)
                 {
                     a->left_can_connect = true;
                     a->left_sum = sum;
+                    a->right_sum = sum;
+                    a->el_in_right_sum = el_in_sum;
                     a->el_in_left_sum = el_in_sum;
-                    a->q_left = cur_q;
+                    a->q_right = a->q_left = cur_q;
                 }
             }    
             
