@@ -56,22 +56,64 @@ void ProccesElements(Args* a)
                     a->right_sum = pa[1];
                     a->q_right = 0;
                 }
-                
+                return;
             }
         }
         else if(m == 2)
         {
             a->el_in_right_sum = 1;
             a->right_sum = pa[1];
+            return;
         }
         
     }
+    else if (m == 2 && k > 0)
+    {
+        if (fabs(pa[0]) > EPSILON)
+        { 
+            if (fabs(prev_q - pa[1]/pa[0]) < EPSILON)
+            {
+                a->right_sum = a->left_sum = pa[0] + pa[1];
+                a->el_in_right_sum = a->el_in_left_sum = 2;
+                a->left_can_connect = true;
+                a->q_right = a->q_left = pa[1]/pa[0];
+            }
+            else if (k < p-1)
+            {
+                if (fabs(pa[1]) > EPSILON)
+                {
+                    if (fabs(a->next/pa[1] - pa[1]/pa[0])< EPSILON)
+                    {
+                        a->right_sum = pa[0] + pa[1];
+                        a->el_in_right_sum = 2;
+                        a->q_left = a->q_right = pa[1]/pa[0];
+                        a->left_sum = pa[0];
+                        a->el_in_left_sum = 1;
+                    }
+                    
+                }
+                
+            }
+            
+        
+            else
+            {
+                a->right_sum = pa[1];
+                a->left_sum = pa[0];
+                a->el_in_right_sum = a->el_in_left_sum = 1;
+
+                a->q_right = a->q_left = pa[1]/pa[0];
+            }
+        }
+        return;
+    }
     
-    if (a->m == 1)
+    
+    else if (m == 1)
     {
         a->left_sum = a->right_sum = pa[0];
         a->el_in_right_sum = a->el_in_left_sum = 1; 
-
+        return;
         //a->q_right = (fabs(pa[0]) > EPSILON && k < p-1 ? a->next/pa[0] : 0);
     }
     
@@ -156,9 +198,23 @@ void ProccesElements(Args* a)
                 }
                 else if (i == m-1 && (k < p-1))
                 {
-                    a->right_sum = sum;
-                    a->el_in_right_sum = el_in_sum;
-                    a->q_right = cur_q;
+                    if (fabs(pa[m-1] > EPSILON))
+                    {
+                        if (fabs(a->next/pa[m-1] - cur_q) < EPSILON)
+                        {
+                            a->right_sum = sum;
+                            a->el_in_right_sum = el_in_sum;
+                            a->q_right = cur_q;
+                        }
+                        else
+                        {
+                            a->right_sum = cur_el;
+                            a->el_in_right_sum = 1;
+                            a->q_right = cur_q; 
+                        }
+                        
+                    }
+
                 }
                 else if (i == m-1 && fabs(cur_q - prev_q) < EPSILON && (k == p-1) && start_of_seq >= 0)
                 {
@@ -220,24 +276,30 @@ int ProccesResults(Args *a)
             if (!in_seq)
             {
                 in_seq = true;
-                start_of_seq = i-1;
+                start_of_seq = i-1 - (i >= 2 && fabs(a[i-1].prev) > EPSILON && a[i-1].m == 1 && fabs(a[i-2].q_right - a[i-1].q_left) < EPSILON ? 1 : 0);
+                sum += a[i-1].right_sum + (i >= 2 && fabs(a[i-1].prev) > EPSILON && a[i-1].m == 1 && fabs(a[i-2].q_right - a[i-1].q_left) < EPSILON? a[i-1].prev : 0);
+                el_in_sum += a[i-1].el_in_right_sum + (i >= 2 && fabs(a[i-1].prev) > EPSILON && a[i-1].m == 1 && fabs(a[i-2].q_right - a[i-1].q_left) < EPSILON? 1 : 0);
             }
-            if (fabs(a[i].q_left - a[i-1].q_right) <= EPSILON)
+
+            sum += a[i].left_sum;
+            el_in_sum += a[i].el_in_left_sum;
+
+            /*if (fabs(a[i].q_left - a[i-1].q_right) <= EPSILON)
             {
-                sum += a[i-1].right_sum;
-                el_in_sum += a[i-1].el_in_right_sum;
+                sum += a[i-1].right_sum + (a[i-1].m == 1 ? a[i-1].prev : 0);
+                el_in_sum += a[i-1].el_in_right_sum + (a[i-1].m == 1 ? a[i-1].prev : 0);
             }
             else
             {
                 sum += a[i].prev;
                 el_in_sum++;
                 a[i-1].el_in_right_sum = 1;
-            }
+            }*/
 
-            if (a[i].el_in_left_sum < a[i].m || i == p-1 || (fabs(a[i].array[a[i].m-1]) > EPSILON && fabs(a[i].next/a[i].array[a[i].m-1] - a[i].q_left)))
+            if (a[i].el_in_left_sum < a[i].m || (fabs(a[i].array[a[i].m-1]) > EPSILON && fabs(a[i].next/a[i].array[a[i].m-1] - a[i].q_left)))
             {
-                sum += a[i].left_sum;
-                el_in_sum += a[i].el_in_left_sum;
+                /*sum += a[i].left_sum;
+                el_in_sum += a[i].el_in_left_sum;*/
                 new_el = sum/el_in_sum;
                 for (int j = start_of_seq;  j < i; j++)
                 {
@@ -271,21 +333,11 @@ int ProccesResults(Args *a)
                         sum += a[i-1].right_sum + (a[i-1].m == 1 ? a[i-1].prev : 0);
                         el_in_sum += a[i-1].el_in_right_sum + (a[i-1].m == 1 ? 1 : 0);
                     }
-                    sum += a[i-1].next;
-                    el_in_sum++;
+                    sum += a[i].left_sum;
+                    el_in_sum += a[i].el_in_left_sum;
                     
-                    /*if (a[i-1].m == 2)
-                    {
-                        sum += a[i-1].array[0] + a[i-1].array[1];
-                        el_in_sum += 2; 
-                    }
-                    else if (a[i-1].m == 1)
-                    {
-                        sum += a[i-1].array[0];
-                        el_in_sum += 1;
-                    }*/
                 }
-                else if((in_seq || i == p-1) && el_in_sum >= 1)
+                else if(in_seq && el_in_sum >= 1)
                 {
                     new_el = sum/el_in_sum;
                     for (int j = start_of_seq;  j < i; j++)
@@ -301,68 +353,6 @@ int ProccesResults(Args *a)
                     in_seq = false;
                 } 
                 
-                
-
-                /*
-                if (a[i].m == 1 && a[i-1].m == 1)
-                {
-                    cur_q = a[i].array[0]/a[i].prev;
-                    
-                    if (fabs(cur_q - prev_q) < EPSILON)
-                    {
-                        if (!in_seq)
-                        {
-                            in_seq = true;
-                            start_of_seq = i-2;
-                            sum += a[i-1].prev;
-                            el_in_sum++;
-                        }
-                        sum += a[i].prev;
-                        el_in_sum++;
-                    }
-                    else if (in_seq)
-                    {
-                        sum += a[i].prev;
-                        el_in_sum++;
-                        new_el = sum/el_in_sum;
-                        
-                        for (int j = start_of_seq;  j < i; j++)
-                        {
-                            for (int s = a[j].m - a[j].el_in_right_sum; s < a[j].m; s++)
-                            {
-                                a[j].array[s] = new_el;
-                                result++;
-                            }
-                        }
-                        in_seq = false;
-                    }
-                    
-                    prev_q = cur_q;
-                }
-                
-                else if(fabs(a[i-1].next/a[i].prev - (a[i-1].m > 1 ? a[i-1].q_right : prev_q)) < EPSILON)
-                {
-                    if (!in_seq)
-                    {
-                        in_seq = true;
-                        start_of_seq = i-2;
-                    }
-                    sum += a[i-1].next + (a[i-1].m > 1 ? 0 : a[i-1].prev);
-                    el_in_sum += 1 + (a[i-1].m > 1 ? 0 : 1);
-                    if (a[i-1].m == 2)
-                    {
-                        sum += a[i-1].array[0] + a[i-1].array[1];
-                        el_in_sum += 2; 
-                    }
-                    else if (a[i-1].m == 1)
-                    {
-                        sum += a[i-1].array[0];
-                        el_in_sum += 1;
-                    }
-                    
-                    
-                }
-                */ 
                 if (a[i].m > 1 && el_in_sum >= 1)
                 {
                     new_el = sum/el_in_sum;
@@ -378,9 +368,25 @@ int ProccesResults(Args *a)
                     }
                     in_seq = false;
                 }
+                
             }
           
-        } 
+        }
+        if (i == p-1 && in_seq && el_in_sum >= 1)
+        {
+            new_el = sum/el_in_sum;
+            for (int j = start_of_seq;  j <= i; j++)
+            {
+                for (int s = a[j].m - a[j].el_in_right_sum; s < a[j].m; s++)
+                {
+                    a[j].array[s] = new_el;
+                    result++;
+                }
+            }
+            el_in_sum = 0;
+            sum = 0;
+            in_seq = false;
+        }
     }
     return result;
 }
