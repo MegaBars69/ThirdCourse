@@ -132,6 +132,7 @@ int main(int argc, char* argv[])
             std::cerr << "Error creating thread " << k <<std::endl;
             
             delete[] array;
+            delete[] a;
             return 1;
         }
     }
@@ -177,18 +178,26 @@ int main(int argc, char* argv[])
 
         if (a[0].reading_file == io_status::error_read)
         {
+            delete[] array;
+            delete[] a;
             return 2;
         }
         else if (a[0].reading_file == io_status::error_open)
         {
+            delete[] array;
+            delete[] a;
             return 1;
         }
         else  if (a[0].reading_file == io_status::error_few_el)
         {
+            delete[] array;
+            delete[] a;
             return 3;
         }
         else if (a[0].reading_file == io_status::error_few_el)
         {
+            delete[] array;
+            delete[] a;
             return 4;
         }    
     } 
