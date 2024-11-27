@@ -90,6 +90,13 @@ void ProccesElements(Args* a)
                         a->left_sum = pa[0];
                         a->el_in_left_sum = 1;
                     }
+                    else
+                    {
+                        a->right_sum = pa[1];
+                        a->q_left = a->q_right = pa[1]/pa[0];
+                        a->left_sum = pa[0];
+                        a->el_in_right_sum= a->el_in_left_sum = 1;
+                    }
                     
                 }
                 
@@ -293,9 +300,9 @@ int ProccesResults(Args *a)
             if (!in_seq)
             {
                 in_seq = true;
-                start_of_seq = i-1 - (i >= 2 && fabs(a[i-1].prev) > EPSILON && a[i-1].m == 1 && fabs(a[i-2].q_right - a[i-1].q_left) < EPSILON ? 1 : 0);
-                sum += a[i-1].right_sum + (i >= 2 && fabs(a[i-1].prev) > EPSILON && a[i-1].m == 1 && fabs(a[i-2].q_right - a[i-1].q_left) < EPSILON? a[i-1].prev : 0);
-                el_in_sum += a[i-1].el_in_right_sum + (i >= 2 && fabs(a[i-1].prev) > EPSILON && a[i-1].m == 1 && fabs(a[i-2].q_right - a[i-1].q_left) < EPSILON? 1 : 0);
+                start_of_seq = i-1 - (i >= 2 && fabs(a[i-1].prev) > EPSILON && a[i-1].m == 1 && fabs(a[i].prev/a[i-1].prev - a[i].q_left) < EPSILON ? 1 : 0);
+                sum += a[i-1].right_sum + (i >= 2 && fabs(a[i-1].prev) > EPSILON && a[i-1].m == 1 && fabs(a[i].prev/a[i-1].prev - a[i].q_left) < EPSILON? a[i-1].prev : 0);
+                el_in_sum += a[i-1].el_in_right_sum + (i >= 2 && fabs(a[i-1].prev) > EPSILON && a[i-1].m == 1 && fabs(a[i].prev/a[i-1].prev - a[i].q_left) < EPSILON? 1 : 0);
             }
 
             sum += a[i].left_sum;
@@ -383,6 +390,8 @@ int ProccesResults(Args *a)
                             result++;
                         }
                     }
+                    sum = 0;
+                    el_in_sum = 0;
                     in_seq = false;
                 }
                 

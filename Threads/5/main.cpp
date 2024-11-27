@@ -117,8 +117,11 @@ int main(int argc, char* argv[])
         {
             a[k].next = *(pa + m + 1);
         }
-     
+
         a[k].array = pa;
+        a[k].left_sum = *pa;
+        a[k].right_sum = pa[a[k].m-1];
+
     }
 
     //Запуск потоков.
