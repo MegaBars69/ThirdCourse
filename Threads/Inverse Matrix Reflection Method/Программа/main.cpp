@@ -337,12 +337,13 @@ int main(int argc, char* argv[]) {
         r = atoi(argv[4]);
         p = atoi(argv[3]);
         s = atoi(argv[5]);
-        if (p <= 0)
+
+        if (p <= 0 || n <= 0 || m <=0 || r<0)
         {
-            printf(" p > 0 \n");
+            printf("Usage ./a.out n m p r s filename\n");
+           
             return 4;
         }
-
         M = n/p;
         p = (n/m < p ? n/m : p);
         ostatok = n%p;
@@ -350,8 +351,12 @@ int main(int argc, char* argv[]) {
     else
     {
         printf("Usage ./a.out n m p r s filename\n");
+        return 1;
     }
     //std::string filename = argv[6];
+
+    
+    
 
     if(argc < 6)
     {
