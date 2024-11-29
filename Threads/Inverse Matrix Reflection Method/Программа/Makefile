@@ -1,7 +1,7 @@
 CC=g++
-CFLAGS= -O0 -g -fsanitize=thread
+CFLAGS= -O0 -g 
 a.out: main.o initialize_matrix.o algorithm.o
-	g++  main.o initialize_matrix.o algorithm.o -o a.out
+	g++ main.o initialize_matrix.o algorithm.o -o a.out
 main.o : main.cpp
 	g++ $(CFLAGS) -c main.cpp -o main.o 
 initialize_matrix.o: initialize_matrix.cpp

@@ -16,6 +16,7 @@
 
 using namespace std;
 
+
 double get_fun_time()
 {
     struct timeval buf;
@@ -991,14 +992,22 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double* 
     
     reduce_sum<int>(p);
 
-    for (step = 0; step < a-1; step++)
+    for (step = 1; step < a; step++)
     {
         x = pow(2,step);
+        
+        /*if (K == 0)
+        {
+            cout<<endl<<"SHAG: "<<shag<<" | STEP: "<<step<<endl;
+        }*/
         if (Nomer % (2*x) == 1 && (Nomer - 1) < (p - b))
         {
-            bi = x + Nomer + shag + (step > 0 ? 1 : 0);
             if(bi < up_bound && bi < shag + pow(2,a))
             {
+                bi = x + Nomer + shag - 1;
+                /*
+                cout<<"Nomer = "<<Nomer<<" bi = "<<bi+1<<endl;
+                */
                 down_block_size_row = (bi < k ? m : l);
                 pa_down = A + bi*m*n + shag*down_block_size_row*m;
 
@@ -1199,13 +1208,24 @@ void InverseMatrixParallel(Args* a)
     double norm = 0;
 
     for (int i = 0; i < up_bound; i++)
-    {    
+    {   
+        /*
+        for (int i = 0; i < p; i++)
+        {
+            reduce_sum<int>(p);
+            if (i == k)
+            {
+                a->PrintAll();
+            }
+            
+        }
+        */ 
         FirstStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, i, a);
         reduce_sum<int>(p);
-
+        
         SecondStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, i, a);
         
-        reduce_sum<int>(p);
+        reduce_sum<int>(p);   
         
         if (a->res > 0)
         {
@@ -1294,7 +1314,7 @@ void* thread_func(void *arg)
         PrintMatrix(B, n, m, r, p);*/
         norm = Norm(A, ProductResult, n, m);
         a->norm = norm;
-        //a->PrintAll();  
+        //a->PrintAll();    
     }
     
     reduce_sum(p, &a->norm, 1);
@@ -1335,11 +1355,11 @@ void* thread_func(void *arg)
     reduce_sum(p, &a->cpu_time_of_all_threads, 1);
 
     
-    /*if (k == 0)
+    if (k == 0)
     {
         PrintMatrix(A, n, m, r, p, 0, true, true, false);
-        PrintMatrix(B, n, m, r, p, 0, true, true, false);
-    }*/
+        //PrintMatrix(B, n, m, r, p, 0, true, true, false);
+    }
      
     reduce_sum<int>(p);
 

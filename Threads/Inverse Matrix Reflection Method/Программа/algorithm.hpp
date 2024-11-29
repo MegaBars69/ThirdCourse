@@ -122,12 +122,14 @@ class Args{
             printf("M: %d \n", M);
             printf("r: %d \n", r);
             printf("s: %d \n", s);
+            printf("nomer_v_okne: %d \n", nomer_v_okne);
             printf("cur_str: %d \n", cur_str);
             printf("cpu time: %lf \n", cpu_time);
             
             printf("res: %lf \n", res);
 
-          std::cout<<"norm: "<<norm<<std::endl;
+            /*
+            std::cout<<"norm: "<<norm<<std::endl;
 
             printf("MATRIX A \n");
             PrintMatrix(A, n, m, r, p, k, false);
@@ -137,6 +139,7 @@ class Args{
 
             printf("MATRIX U \n");
             PrintMatrix(U, m, 1, m);
+            */
         }
         //Args();
 };
