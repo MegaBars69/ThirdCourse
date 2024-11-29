@@ -896,7 +896,7 @@ void FirstStep(double* A, double* B, double* U, double* ProductResult, double* Z
                 ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
             }   
         }      
-    }    
+    }   
 }
 
 double log2(double x)
@@ -904,7 +904,7 @@ double log2(double x)
     return log(x)/log(2);
 }
 
-int SecondStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int shag, Args* aA)
+void SecondStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int shag, Args* aA)
 {
     int a = int(log2(p));
     int b = p - pow(2, a);
@@ -921,12 +921,14 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
     int s = K + p*(aA->cur_str);
 
     int res = 0;
+    int step;
 
     block_size_row = (s < k ? m : l);
     
     pa = A + s*m*n + shag*block_size_row*m;
 
     int Nomer = aA->nomer_v_okne;
+    
     if (Nomer < b)
     {
         bi = (s + p - b);
@@ -953,8 +955,11 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
             }   
         }
     }
+
     Nomer++;
-    reduce_sum<int>(p);
+
+    reduce_sum(p);
+
     if (Nomer % 2 == 1 && (Nomer - 1) < (p-b))
     {
         bi = s + 1;
@@ -982,14 +987,15 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
  
         }
     }
-        
-    for (int step = 0; step < a-1; step++)
+    
+    reduce_sum(p);
+
+    for (step = 0; step < a-1; step++)
     {
-        reduce_sum<int>(p);
         x = pow(2,step);
         if (Nomer % (2*x) == 1 && (Nomer - 1) < (p - b))
         {
-            bi = x + Nomer + shag;
+            bi = x + Nomer + shag + (step > 0 ? 1 : 0);
             if(bi < up_bound && bi < shag + pow(2,a))
             {
                 down_block_size_row = (bi < k ? m : l);
@@ -1013,6 +1019,8 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
                 } 
             }
         }
+
+        reduce_sum(p);
     }
     
     //Fird part
@@ -1106,7 +1114,6 @@ int SecondStep(double* A, double* B, double* U, double* ProductResult, double* Z
         }
     } 
     */
-    return 0;
 }
 
 void ThirdStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, Args *a)
@@ -1166,6 +1173,60 @@ void ThirdStep(double* A, double* B, double* U, double* ProductResult, double* Z
     
 }
 */
+
+void InverseMatrixParallel(Args* a)
+{
+    double *A = a->A;
+    double *B = a->B;
+    double *U = a->U;
+    double *ProductResult = a->ProductResult;
+    double *ZeroMatrix = a->ZeroMatrix; 
+    int p = a->p;
+    int k = a->k;
+    int s = a->s;
+    int M = a->M;
+    int m = a->m;
+    int n = a->n;
+    int r = a->r;
+    int h;
+    int l = n%m;
+    int up_bound = (l > 0 ? n/m + 1 : n/m);
+
+    double norm = 0;
+
+    for (int i = 0; i < up_bound; i++)
+    {    
+        FirstStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, i, a);
+        reduce_sum(p);
+        /*if(k == 0)
+        {
+            PrintMatrix(A, n, m, r, p, 0, true, true, false);
+            PrintMatrix(B, n, m, r, p, 0, true, true, false);
+        }*/
+
+        SecondStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, i, a);
+        
+        reduce_sum(p, &a->res, 1);
+        /*if(k == 0)
+        {
+            PrintMatrix(A, n, m, r);
+            PrintMatrix(B, n, m, r);
+        }*/
+        if (a->res > 0)
+        {
+            return;
+        }
+        if (k == i%p)
+        {
+            a->cur_str++;
+        }
+        a->nomer_v_okne = (((a->nomer_v_okne-1)%p) + p)%p;
+    }
+    if (k == 0)
+    {
+        ThirdStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, a);
+    }
+}
 
 void* thread_func(void *arg)
 {
@@ -1243,16 +1304,16 @@ void* thread_func(void *arg)
     
     reduce_sum(p, &a->norm, 1);
 
-    /*
+    
     for (int i = 0; i < p; i++)
     {
-        reduce_sum<int>(p);
+        reduce_sum(p);
         if (i == k)
         {
             a->PrintAll();
         }
         
-    }*/
+    }
     
     double t;
     int upper_bound = (a->M > (n/p) ? a->M : a->M+1);
@@ -1261,42 +1322,7 @@ void* thread_func(void *arg)
 
     t = get_cpu_time(); 
  
-    for (int i = 0; i < up_bound; i++)
-    {    
-
-        FirstStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, i, a);
-        
-        /*if(k == 0)
-        {
-            PrintMatrix(A, n, m, r, p, 0, true, true, false);
-            PrintMatrix(B, n, m, r, p, 0, true, true, false);
-        }*/
-
-        reduce_sum<int>(p);
-
-        a->res = SecondStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, i, a);
-        
-        reduce_sum(p, &a->res, 1);
-        
-        /*if(k == 0)
-        {
-            PrintMatrix(A, n, m, r);
-            PrintMatrix(B, n, m, r);
-        }*/
-        if (a->res > 0)
-        {
-            return nullptr;
-        }
-        if (k == i%p)
-        {
-            a->cur_str++;
-        }
-        a->nomer_v_okne = (((a->nomer_v_okne-1)%p) + p)%p;
-    }
-    if (k == 0)
-    {
-        ThirdStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, a);
-    }
+    InverseMatrixParallel(a);
     
     t = get_cpu_time() - t;
     
@@ -1320,202 +1346,14 @@ void* thread_func(void *arg)
         PrintMatrix(B, n, m, r, p, 0, true, true, false);
     }
     
-    reduce_sum<int>(p);
+    reduce_sum(p);
 
     /*delete[] U;
     delete[] ProductResult;*/
 
-    reduce_sum<int>(p);
+    reduce_sum(p);
 
     //reduce_sum(a->p, &a->amount_of_changed, 1);
 
     return nullptr;    
-}
-
-int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int S)
-{
-    int l = n%m;
-    int j, bj;
-    int k = (n-l)/m;
-    int m12;
-    int block_size_row, block_size_col, down_block_size_row, down_block_size_col;
-    double* pa, *pa_side, *pa_down, *pa_down_side, *pb, *pb_down; 
-    for (int s = 0; s < k+1; s++)
-    {
-        block_size_row = (s < k ? m : l);
-        
-        pa = A + s*m*n + s*block_size_row*m;
-        
-        // First part of algorithm
-
-        Triungulize(pa, U,block_size_row, block_size_row, norm);
-
-        for (j = s+1, pa_side = pa + block_size_row*m; j < k+1; j++, pa_side += block_size_row*m)
-        {
-            block_size_col = (j < k ? m : l);
-            //PrintMatrix(A, n, m,n,false, true);
-
-            ApplyMatrix(U, pa_side, block_size_row, block_size_col, block_size_row);
-            
-            //PrintMatrix(A, n, m,n,false, true);
-
-        }
-        for (j = 0, pb = B + s*m*n; j < s + 1; j++, pb += block_size_row*m)
-        {
-            block_size_col = (j < k ? m : l);
-            
-            ApplyMatrix(U, pb, block_size_row, block_size_col, block_size_row);
-        }
-    
-        // Second part of algorithm
-
-        for (int bi = s+1; bi < k+1; bi++)
-        {
-            down_block_size_row = (bi < k ? m : l);
-            pa_down = (A + bi*m*n + s*down_block_size_row*m);
-
-            ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
-
-            for (bj = s+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < k+1; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                         
-                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
-
-            }
-
-            for (bj = 0, pb = B + s*m*n, pb_down = B + bi*m*n; bj < bi + 1; bj++, pb += m*m, pb_down += down_block_size_row*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-
-                ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, ((s == 0) && (bi > bj)));
-            }   
-        }  
-
-
-        //Fird part
-        
-        pa = A + s*m*n + s*block_size_row*m;
-
-        if(InverseTriungleBlock(pa, U, block_size_row, norm) != 0)
-        {
-            cout<<"Matrix is singular"<<endl;
-            return -1;
-        } 
-
-        for (int j = s+1; j < k+1; j++)
-        {
-            block_size_col = (j < k ? m : l);
-            pa += m*m;
-            
-            //PrintMatrix(A, n, m,n,false, true);
-
-            BlockMul(U, pa, ProductResult, block_size_row, block_size_row, block_size_col); 
-            ReplaceWith(pa, ProductResult, block_size_row, block_size_col);
-        }
-
-
-        pb = B + s*m*n;
-         
-    
-        for(int j = 0; j < k+1; j++)
-        {
-            block_size_col = (j < k ? m : l);
-            if ((S == 0 || S == 4) || ((S == 3) && (j == 0)) || (j + 1 >= s))
-            {
-                BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
-                ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
-            }
-            else
-            {
-                ReplaceWith(pb, ZeroMatrix, block_size_row, block_size_col);
-            }
-            
-            pb += m*block_size_row;
-        } 
-    }
-
-    //Gauss Backward
-    
-    if (S == 0 || S == 4)
-    {
-        for (int bi = k-1; bi >= 0; bi--)
-        {
-            block_size_row = (bi< k ? m : l);
-            //PrintMatrix(A, n, m, n, false, true);
-            for (int bj = 0; bj < k+1; bj++)
-            {
-                block_size_col = (bj < k ? m : l);      
-                
-                for (int r = bi + 1; r < k+1; r++)
-                {
-                    m12 = (r < k ? m : l);
-                
-                    MinusEqualBlockMul(B + bi*m*n + bj*block_size_row*m, A + bi*m*n + r*block_size_row*m, B + r*m*n + bj*m12*m, block_size_row, m12, block_size_col);
-                }
-                
-                //((B + bi*m*n + bj*block_size_row*m), U, block_size_row, block_size_col);
-            } 
-        }
-    }
-    else if (S == 3)
-    {
-        for (int bi = k-1; bi >= 0; bi--)
-        {
-            block_size_row = (bi< k ? m : l);
-
-            //PrintMatrix(A, n, m, n, false, true);
-            for (int bj = 0; bj < k+1; bj++)
-            {
-                block_size_col = (bj < k ? m : l);      
-                
-                for (int r = bi + 1; r < k+1; r++)
-                {
-                    m12 = (r < k ? m : l);
-                    /*PrintMatrix(B, n, m, n, true, false);
-                    PrintMatrix(A + bi*m*n + r*block_size_row*m, block_size_row, block_size_row,block_size_row, true,false);
-                    PrintMatrix(B + bi*m*n + bj*block_size_row*m, block_size_row, block_size_row,block_size_row, true, false);*/
-                    if (r <= bj+1 || bj == 0)
-                    {
-                        MinusEqualBlockMul(B + bi*m*n + bj*block_size_row*m, A + bi*m*n + r*block_size_row*m, B + r*m*n + bj*m12*m, block_size_row, m12, block_size_col);
-                    }
-                    //PrintMatrix(B, n, m, n, true, false);
-                }
-                
-            
-                //((B + bi*m*n + bj*block_size_row*m), U, block_size_row, block_size_col);
-            } 
-        }
-    }
-    
-    else
-    {
-        for (int bi = k-1; bi >= 0; bi--)
-        {
-            block_size_row = (bi< k ? m : l);
-
-            //PrintMatrix(A, n, m, n, false, true);
-            for (int bj = 0; bj < k+1; bj++)
-            {
-                block_size_col = (bj < k ? m : l);      
-                int upper = min(k+1,bj+2);
-                for (int r = bi + 1; r < upper; r++)
-                {
-                    m12 = (r < k ? m : l);
-                    /*PrintMatrix(B, n, m, n, true, false);
-                    PrintMatrix(A + bi*m*n + r*block_size_row*m, block_size_row, block_size_row,block_size_row, true,false);
-                    PrintMatrix(B + bi*m*n + bj*block_size_row*m, block_size_row, block_size_row,block_size_row, true, false);*/
-                
-                    MinusEqualBlockMul(B + bi*m*n + bj*block_size_row*m, A + bi*m*n + r*block_size_row*m, B + r*m*n + bj*m12*m, block_size_row, m12, block_size_col);
-                    
-                    //PrintMatrix(B, n, m, n, true, false);
-                }
-                
-            
-                //((B + bi*m*n + bj*block_size_row*m), U, block_size_row, block_size_col);
-            } 
-        }
-    }
-    
-    return 0;
 }
