@@ -12,7 +12,7 @@
 #include <sys/resource.h>
 #include <sys/sysinfo.h>
 #include "algorithm.hpp"
-#define EPSILON pow(10,-16)
+#define EPSILON pow(10,-15)
 
 using namespace std;
 
@@ -30,6 +30,7 @@ double get_cpu_time()
 
     return buf.ru_utime.tv_sec + buf.ru_utime.tv_usec/1e6;
 }
+
 
 void PrintMatrix(double* A,  int n, int m, int r, int p, int K, bool full, bool exp_format, bool okruglenie)
 {
@@ -659,7 +660,7 @@ int InverseTriungleBlock(double* A, double* B, int n, double norm)
         pa = A + i*n + i;
         pb = B + i*n;
         diag_el = *(pa);
-        if (fabs(diag_el) < EPSILON*norm)
+        if (fabs(diag_el) <= EPSILON*norm)
         {
             return -1;
         }
@@ -957,8 +958,8 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double* 
     }
 
     Nomer++;
-
-    reduce_sum(p);
+ 
+    reduce_sum<int>(p);
 
     if (Nomer % 2 == 1 && (Nomer - 1) < (p-b))
     {
@@ -988,7 +989,7 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double* 
         }
     }
     
-    reduce_sum(p);
+    reduce_sum<int>(p);
 
     for (step = 0; step < a-1; step++)
     {
@@ -1020,7 +1021,7 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double* 
             }
         }
 
-        reduce_sum(p);
+        reduce_sum<int>(p);
     }
     
     //Fird part
@@ -1032,35 +1033,38 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double* 
         {
             cout<<"Matrix is singular"<<endl;
             aA->res = 1;
-        } 
-        
-        for (int j = shag+1; j < up_bound; j++)
-        {
-            block_size_col = (j < k ? m : l);
-            pa += m*m;
-            
-            //PrintMatrix(A, n, m,n,false, true);
-
-            BlockMul(U, pa, ProductResult, block_size_row, block_size_row, block_size_col); 
-            ReplaceWith(pa, ProductResult, block_size_row, block_size_col);
         }
+        else
+        {        
+            for (int j = shag+1; j < up_bound; j++)
+            {
+                block_size_col = (j < k ? m : l);
+                pa += m*m;
+                
+                //PrintMatrix(A, n, m,n,false, true);
+
+                BlockMul(U, pa, ProductResult, block_size_row, block_size_row, block_size_col); 
+                ReplaceWith(pa, ProductResult, block_size_row, block_size_col);
+            }
 
 
-        pb = B + s*m*n;
-         
-    
-        for(int j = 0; j < up_bound; j++)
-        {
-            block_size_col = (j < k ? m : l);
+            pb = B + s*m*n;
             
-            BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
-            ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
+        
+            for(int j = 0; j < up_bound; j++)
+            {
+                block_size_col = (j < k ? m : l);
+                
+                BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
+                ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
 
-            
-            pb += m*block_size_row;
-        } 
+                
+                pb += m*block_size_row;
+            } 
+        }
         
     }
+    reduce_sum(p, &aA->res, 1);
     /*
     else
     {
@@ -1197,21 +1201,12 @@ void InverseMatrixParallel(Args* a)
     for (int i = 0; i < up_bound; i++)
     {    
         FirstStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, i, a);
-        reduce_sum(p);
-        /*if(k == 0)
-        {
-            PrintMatrix(A, n, m, r, p, 0, true, true, false);
-            PrintMatrix(B, n, m, r, p, 0, true, true, false);
-        }*/
+        reduce_sum<int>(p);
 
         SecondStep(A, B, U, ProductResult, ZeroMatrix, a->norm, n, m, p, k, i, a);
         
-        reduce_sum(p, &a->res, 1);
-        /*if(k == 0)
-        {
-            PrintMatrix(A, n, m, r);
-            PrintMatrix(B, n, m, r);
-        }*/
+        reduce_sum<int>(p);
+        
         if (a->res > 0)
         {
             return;
@@ -1295,25 +1290,25 @@ void* thread_func(void *arg)
 
     if (k == 0)
     {
-        PrintMatrix(A, n, m, r, p);
-        PrintMatrix(B, n, m, r, p);
+        /*PrintMatrix(A, n, m, r, p);
+        PrintMatrix(B, n, m, r, p);*/
         norm = Norm(A, ProductResult, n, m);
         a->norm = norm;
-        //a->PrintAll();
+        //a->PrintAll();  
     }
     
     reduce_sum(p, &a->norm, 1);
 
-    
+    /*
     for (int i = 0; i < p; i++)
     {
-        reduce_sum(p);
+        reduce_sum<int>(p);
         if (i == k)
         {
             a->PrintAll();
         }
         
-    }
+    }*/
     
     double t;
     int upper_bound = (a->M > (n/p) ? a->M : a->M+1);
@@ -1340,18 +1335,18 @@ void* thread_func(void *arg)
     reduce_sum(p, &a->cpu_time_of_all_threads, 1);
 
     
-    if (k == 0)
+    /*if (k == 0)
     {
         PrintMatrix(A, n, m, r, p, 0, true, true, false);
         PrintMatrix(B, n, m, r, p, 0, true, true, false);
-    }
-    
-    reduce_sum(p);
+    }*/
+     
+    reduce_sum<int>(p);
 
     /*delete[] U;
     delete[] ProductResult;*/
 
-    reduce_sum(p);
+    reduce_sum<int>(p);
 
     //reduce_sum(a->p, &a->amount_of_changed, 1);
 

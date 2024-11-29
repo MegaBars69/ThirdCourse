@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS= -O0 -g -std=c++20
+CFLAGS= -O0 -g -fsanitize=thread
 a.out: main.o initialize_matrix.o algorithm.o
 	g++  main.o initialize_matrix.o algorithm.o -o a.out
 main.o : main.cpp

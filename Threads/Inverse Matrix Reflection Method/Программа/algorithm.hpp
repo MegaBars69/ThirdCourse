@@ -3,17 +3,16 @@
 #include <iostream>
 #include <sys/sysinfo.h>
 #include "initialize_matrix.hpp"
-pthread_barrier_t barrier;
 
-
-void reduce_sum(int p, double* a = nullptr, int n = 0)
+template <typename T>
+void reduce_sum(int p,T* a = nullptr, int n = 0)
 {
     static pthread_mutex_t my_mutex = PTHREAD_MUTEX_INITIALIZER;
     static pthread_cond_t c_in = PTHREAD_COND_INITIALIZER;
     static pthread_cond_t c_out = PTHREAD_COND_INITIALIZER;
     static int t_in = 0;
     static int t_out = 0;
-    static double* r = nullptr;
+    static T* r = nullptr;
     int i;
     if (p <= 1)
     {
@@ -125,6 +124,9 @@ class Args{
             printf("s: %d \n", s);
             printf("cur_str: %d \n", cur_str);
             printf("cpu time: %lf \n", cpu_time);
+            
+            printf("res: %lf \n", res);
+
           std::cout<<"norm: "<<norm<<std::endl;
 
             printf("MATRIX A \n");

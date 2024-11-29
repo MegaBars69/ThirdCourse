@@ -57,7 +57,7 @@ void init_matrix(double *a, int n, int m, int s, int k, int p)
             {
                 a[i2*n + j] = f(i2, j, n, s);
             }
-            
+             
         }
         
     }
