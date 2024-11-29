@@ -14,8 +14,7 @@ int main(int argc, char* argv[])
 {
     Args* a;
     double* A, *B, **U, **ProductResult, **ZeroMatrix;
-    double el;
-    int i = 0, k;
+    int k;
     int n = 0, m = 0, r = 0, s = 0, p = 0, M = 0, ostatok = 0;
     if (argc >=6)
     {
@@ -125,7 +124,7 @@ int main(int argc, char* argv[])
     {
         pthread_join(a[k].tid, nullptr);
     }
-    
+
     /*for (k = 0; k < p; k++)
     {
         a[k].PrintAll();
@@ -133,10 +132,9 @@ int main(int argc, char* argv[])
     
      //Инициализируем матрицу для подсчета невязки
     
-    double result = 0;
     if (s == 0) {
         string filename = argv[6];
-        result = ReadMatrixFromFile(filename, A, n, m);
+        ReadMatrixFromFile(filename, A, n, m);
     } else {
         FormulaMatrixInitialization(A, n, m, s, 1, 0);
     }
@@ -175,6 +173,7 @@ int main(int argc, char* argv[])
         Column[j] = 0;
     }     
 
+    t1 = a[0].cpu_time;
 
     //Подсчет невязки
     clock_t start2 = clock();

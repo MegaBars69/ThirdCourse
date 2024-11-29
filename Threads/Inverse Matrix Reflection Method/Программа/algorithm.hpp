@@ -144,9 +144,9 @@ class Args{
         //Args();
 };
 
-void FirstStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int s, Args *a);
-void SecondStep(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int s, Args* aA);
-
+void FirstStep(double* A, double* B, double* U, double norm, int n, int m, int p, int K, int shag, Args *a);
+void SecondStep(double* A, double* B, double* U, double* ProductResult, double norm, int n, int m, int p, int K, int shag, Args* aA);
+void ThirdStep(double* A, double* B, int n, int m, int p, int K, Args *a);
 void InverseMatrixParallel(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int M);
 
 double get_cpu_time();
