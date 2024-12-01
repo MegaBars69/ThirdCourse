@@ -1,0 +1,372 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+
+\usepackage[
+  a4paper, mag=1000, includefoot,
+  left=1.1cm, right=1.1cm, top=1.2cm, bottom=1.2cm, headsep=0.8cm, footskip=0.8cm
+]{geometry}
+
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage{times}
+\usepackage{mathptmx}
+\usepackage{listings}
+
+\IfFileExists{pscyr.sty}
+{
+  \usepackage{pscyr}
+  \def\rmdefault{ftm}
+  \def\sfdefault{ftx}
+  \def\ttdefault{fer}
+  \DeclareMathAlphabet{\mathbf}{OT1}{ftm}{bx}{it} % bx/it or bx/m
+}
+
+\mathsurround=0.1em
+\clubpenalty=1000%
+\widowpenalty=1000%
+\brokenpenalty=2000%
+\frenchspacing%
+\tolerance=2500%
+\hbadness=1500%
+\vbadness=1500%
+\doublehyphendemerits=50000%
+\finalhyphendemerits=25000%
+\adjdemerits=50000%
+
+
+\begin{document}
+
+\author{Сикерин Данила}
+\title{Метод отражений нахождения обратной матрицы}
+\date{27 сентября 2024г.}
+\maketitle{}
+
+\begin{center}
+{\bfseries Постановка задачи}
+\end{center}
+
+Найти обратную к матрице:
+$$A=
+   \begin{pmatrix}
+     a_{11}& a_{12} &\ldots & a_{1n}\\
+     a_{21}& a_{22} &\ldots & a_{2n}\\
+     \vdots& \vdots &\ddots & \vdots\\
+     a_{n1}& a_{n2} &\ldots & a_{nn}
+    \end{pmatrix}
+$$ 
+\section{Метод хранения}
+Блочный: $A = a_{11}^{11},\ldots,a_{1m}^{11},\ldots, a_{mm}^{11}, a_{11}^{12},\ldots, a_{mm}^{1k}, a_{11}^{1,k+1},\ldots, a_{ml}^{1,k+1},\ldots, a_{ml}^{k,k+1},a_{11}^{k+1,1}, \ldots, a_{ll}^{k+1,k+1}$
+\section{Функции Извлечения, Вставки блоков и Присоединения вектора к блоку}
+Функции Извлечения, Вставки блоков:\\
+Доступ на элемент $a_{11}^{ij}$ блоку $A_{ij}$ достигается обращением к указателю $*(a+(i-1)*(k*m*m + m*l) + (j-1)*(m*m))$ 
+Присоединение вектора к блоку "сверху"
+Присоединям вектор(строчку матрицы) к матрице.
+\begin{lstlisting}
+void ConcatBlockWithVector(double * block, double* vec, double* result,int matrix_size, int vec_size)
+{
+    int i;
+    for (i = 0; i < vec_size; i++)
+    {
+        result[i] = vec[i];
+    }
+    for (i = 0; i < matrix_size; i++)
+    {
+        result[vec_size+i] = block[i];
+    }
+}
+\end{lstlisting}
+
+\section{Формулы алгоритма}
+\begin{center}
+{\bfseries Матрица отражения}
+\end{center}
+Определим матрицу отражения $U(x) = I - 2 x x^{*}$. $U(x)y = y - 2(x,y)x$
+Обозначим $a_{i}$ - i-тый столбец матрицы А,  $A^{(1)} = U(x^{(1)})A$, a $A^{(k)} = U_{k}A^{(k-1)}$, где 
+$$U_{k}=
+   \begin{pmatrix}
+     I_{k-1}&0 \\
+     0& U(x^{(k)})
+    \end{pmatrix}
+$$
+A матрица $A^{(k)}$ имеет вид:
+$$A^{(k-1)}=
+   \begin{pmatrix}
+     \|a_{1}\|& c_{12} &  c_{13} &\ldots & c_{1,k-1} & c_{1,k} & \ldots &  c_{1,n}\\
+     0& \|a_{2}^{(1)}\| &  c_{23} &\ldots & c_{2,k-1} &c_{2,k} & \ldots &  c_{2,n}\\
+     0& 0 & \|a_{3}^{(2)}\| &\ldots & c_{2,k-1 }& c_{3,k} & \ldots &  c_{3,n}\\
+     \vdots& \vdots &\ddots & \vdots\\
+    0& 0&  0 &\ldots &\|a_{1}^{(k-2)}\| \\
+     0& 0&  0 &\ldots & 0 & a_{kk}^{(k-1)} & \ldots & a_{kn}^{(k-1)} \\
+     \ldots \\
+     0& 0&  0 &\ldots & 0 & a_{nk}^{(k-1)} & \ldots & a_{nn}^{(k-1)} \\
+    \end{pmatrix}
+$$
+
+Реализуем функцию Triangulize(матрицы $s\times s$), которая будет возвращать матрицу векторов:
+\\                                                  
+$$U=
+   \begin{pmatrix}
+     x_{1}^{(1)}& 0 & 0 & \ldots & 0\\
+     x_{2}^{(1)}& x_{1}^{(2))} & 0 & \ldots & 0\\
+     x_{3}^{(1)}& x_{2}^{(2)} & x_{1}^{(3)} & \ldots & 0\\
+     \vdots& \vdots &\ddots & \vdots\\
+     x_{s}^{(1)}& x_{s-1}^{(2)} & x_{s-2}^{(3)} &\ldots & x_{1}^{(s)}
+    \end{pmatrix}
+$$
+Где $U(x^{(k)})a_{1}^{(k-1)} = \|a_{1}^{(k-1)}\|e_{1}$ ; $x^{(k)} = \frac{a_{1} - \|a_{1}^{(k-1))}\|e_{1}}{\|a_{1}^{(k-1)} - \|a_{1}^{(k-1)}\|\|}$ , а вектор $e_{1} = (1,0,\ldots  ,0)^{t}$ пространства $\mathbb{R}^{s-k+1}$  
+Mатрицу А будет приводить к треугольному виду:
+$$A^{(s)}=
+   \begin{pmatrix}
+     \|a_{1}\|& c_{12} &  c_{13} &\ldots & c_{1s}\\
+     0& \|a_{2}^{(1)}\| &  c_{23} &\ldots & c_{2s}\\
+     0& 0 & \|a_{3}^{(2)}\| &\ldots & c_{2s}\\
+     \vdots& \vdots &\ddots & \vdots\\
+    0& 0&  0 &\ldots &\|a_{s}^{(s-1)}\|
+    \end{pmatrix}
+$$
+Формулы для вычисления $x^{(k)}$:
+\\
+\begin{equation}
+    s_{k} = \sum\limits_{j = k+1}^n (a_{jk}^{(k-1)})^{2} 
+\end{equation}
+\begin{equation}
+    \|a_{1}^{(k-1)}\| = \sqrt{s_{k} + (a_{kk}^{(k-1)})^{2}}
+\end{equation}
+\begin{equation}
+x^{(k)} = (a_{kk}^{(k-1)} -  \|a_{1}^{(k-1)}\|;\ a_{k+1,k}^{(k-1)}; \ldots;\ a_{n,k}^{(k-1)})^{t}
+\end{equation}
+\begin{equation}
+    \|x^{(k)}\| = \sqrt{s_{k} + (x_{1}^{(k)})^2}
+\end{equation}
+\begin{equation}
+x^{(k)} = \frac{x^{(k)}}{\|x^{(k)}\|}
+\end{equation}
+Формулы для нахождения образа y: \\$U(x)y = y - 2(x,y)x$. Обозначим образ y - вектором z.\\
+$s = \sum\limits_{j = 1}^n {x_{j}}{y_{j}} \;\ z_{i} = y_{i} - 2sx_{i} $\\
+Применение матрицы U(x) к матрице A:\\
+
+\begin{equation}
+    U(x)A = (U(x)a_{1};...; U(x)a_{n})
+\end{equation}
+\begin{equation}
+     s_{i} = \sum\limits_{j = 1}^n {x_{j}}{a_{ji}}\\
+\end{equation}
+\begin{equation}
+    U(x)a_{i} = (a_{1,i} - 2 s_{i} x_{1};...;a_{n,i} - 2 s_{i} x_{n})
+\end{equation}
+
+Применение матрицы $U = U(x^{(1)},...,x^{(n)})$ к матрице A:
+\begin{equation}
+    U*A = U(x^{(1)},...,x^{(n)})A = U_{n} *...* U_{1}A = U_{n} *...* U_{k}A^{(k-1)} \ k = 1,...,n
+\end{equation}
+Рассмотрим $U_{k}A^{(k-1)} $:
+$
+a_{kk}^{(k-1)} = \|a_{k}^{(k-1)}\| \ ; \ a_{rk}^{(k-1)} = 0 \ ; \ r = k+1,...,n \\
+a_{r} = U(x^{(k)})a_{r}\ ;
+$
+\\
+\begin{center}
+{\bfseries Внутренность функции Triangulize}
+\end{center} 
+Получаем матрицу $$A=
+   \begin{pmatrix}
+     a_{11}& a_{12} &\ldots & a_{1m}\\
+     a_{21}& a_{22} &\ldots & a_{2m}\\
+     \vdots& \vdots &\ddots & \vdots\\
+     a_{m1}& a_{m2} &\ldots & a_{mm}
+    \end{pmatrix}
+$$ 
+Находим $\|a_{1}\|$ , находим $x^{(1)}$ Записываем на место $a_{1,1}$ число $\|a^{(1)}\|$, числа $a_{s,1} = 0$, $s = 2,..., m$ ,а на столбцы $a_{i}$ вектора $U(x^{(1)})a_{i}$ $i = 2,...,m $. (по формулам выше). Записываем вектор $x^{(1)}$ в матрицу U. В матрице А, получаем матрицу $A^{(1)}$\\
+
+На к-том ($k = 1,...,m$) шаге cчитаем $\|a_{k}^{(k-1)}\|$ , находим $x^{(k)}$ Записываем на место $a_{k,k}^{(k-1)}$ число $\|a_{k}^{(k-1)} \|$ числа $a_{s,k} = 0$, $s = k+1,..., m$ , а на столбцы $a_{i}^{(k-1)}$ вектора $U(x^{(k)})a_{i}^{(k-1)}$ $i = k+1,...,m$ (по формулам выше). Записываем вектор $x^{(k)}$ в матрицу U. В матрице А, получаем матрицу $A^{(k)}.$
+\begin{center}
+{\bfseries Описание блочного алгоритма}
+\end{center} 
+
+Представим матрицу в виде:
+$$A=
+  \begin{pmatrix} 
+    A_{11}^{m \times m} & A_{12}^{m \times m} & \cdots & A_{1,k}^{m \times m} & A_{1,k+1}^{m \times l} & | & E_{11}^{m \times m} &0 & \cdots &0\\
+    A_{21}^{m \times m} & A_{22}^{m \times m} & \cdots & A_{2,k}^{m \times m} & A_{2,k+1}^{m \times l} & | & 0 & E_{22}^{m \times m} & \cdots & 0\\ 
+    \vdots & \vdots & \ddots & \vdots & \vdots & | & \vdots & \vdots & \ddots & \vdots\\ 
+    A_{k,1}^{m \times m} & A_{k,2}^{m \times m} & \cdots & A_{k,k}^{m \times m} & A_{k,k+1}^{m \times l} & | & 0 & 0 & \cdots& 0\\
+    A_{k+1,1}^{l \times m} & A_{k+1,2}^{l \times m} & \cdots & A_{k+1,k}^{l \times m} & A_{k+1,k+1}^{l \times l} & | & 0 & 0 & \cdots & E_{k+1,k+1}^{l \times l} 
+  \end{pmatrix}
+$$
+
+где m - число на 1 меньше, чем обычно(оставляем возможность загружать в кэш память матрицы размера $(m+1)\times (m+1)$) $n = k*m + l \ ; \ l<m$.
+И обозначим правую часть за блоки B: 
+\begin{equation}
+A=
+  \begin{pmatrix} 
+     A_{11}^{m \times m} & A_{12}^{m \times m} & \cdots & A_{1,k}^{m \times m} & A_{1,k+1}^{m \times l} & | & B_{11}^{m \times m} &  B_{12}^{m \times m} & \cdots & B_{1,k+1}^{m \times l}\\
+    A_{21}^{m \times m} & A_{22}^{m \times m} & \cdots & A_{2,k}^{m \times m} & A_{2,k+1}^{m \times l} & | & B_{21}^{m \times m} &  B_{22}^{m \times m} & \cdots & B_{2,k+1}^{m \times l}\\ 
+    \vdots & \vdots & \ddots & \vdots & \vdots & | & \vdots & \vdots & \ddots & \vdots\\ 
+     A_{k,1}^{m \times m} & A_{k,2}^{m \times m} & \cdots & A_{k,k}^{m \times m} & A_{k,k+1}^{m \times l} & | & B_{k,1}^{m \times m} &  B_{k,2}^{m \times m} & \cdots & B_{k,k+1}^{m \times l}\\
+     A_{k+1,1}^{l \times m} & A_{k+1,2}^{l \times m} & \cdots & A_{k+1,k}^{l \times m} & A_{k+1,k+1}^{l \times l} & | & B_{k+1,1}^{l \times m} &  B_{k+1,2}^{l \times m} & \cdots & B_{k+1,k+1}^{l \times l} 
+  \end{pmatrix}
+\end{equation}
+\\\\
+
+
+{\fontseries{bx}\fontsize{15}{15}\selectfont Шаг 1:}\\\\
+
+
+\hspace{0.25cm} a)Берем блок $A_{1,1}^{m\times m}$ Применяем функцию Triangulize $A_{1,1}^{m\times m} $. получаем матрицу $U^{m\times m}$. \\
+Далее, применяем матрицу $U^{m\times m}$ к блокам $A_{1,j}^{m\times m} \ j = 2,...,k$ \ ; \ $A_{1,k+1}^{m\times l} $ ; $E_{1,1}^{m\times m}$ (Применение матрицы U(x) к нулевому блоку - дает нулевой блок)\\\\
+
+
+\hspace{0.25cm} б)Берем блок $A_{i,1}^{{m\times m}}$ и строчку $d^{(p_{1})} = (a_{p,p};...;a_{p,m}) \ p = 1,...,m$  (p-тая строка $A_{1,1}^{m\times m} $ без $(m-p+1)$ первых элементов) ($i = 2,..., k$). \ и для остатка $A_{k+1,1}^{{l\times m}}$ получаем матрицу $U^{(l+1)\times m}$\\\\
+D = ConcatBlockWithString($A_{i,1}^{{m\times (m-p)}}, \ d^{(p_{1})}$).\\ 
+(в случае остатка D = ConcatBlockWithString($A_{k+1,1}^{{l\times (m-p)}}, \ d^{(p_{1})}$))\\
+$A_{i,1}^{m\times (m-p)} = A_{i,1}^{m\times m}$ - без первых p - столбцов. \ (Для остатка $A_{k+1,1}^{l\times (m-p)} = A_{k+1,1}^{l\times m}$)\\
+ По полученному блоку находим $x^{(p)}$, обнуляющий 1-ый столбец полученной матрицы, и применяем U($x^{(p)}$) к матрице D. После p=m получаем матрицу $U_{i,1}^{(m+1)\times m}$ \ ($U^{(l+1)\times m}$).\\
+$A_{i,1}^{{m\times m}} = 0$\  ($A_{k+1,1}^{{l\times m}} = 0$) занeляем весь блок \\
+Проходимся по всем правым блокам:\\
+\\\\$A_{i,j}^{d^{(p_{j})}} =$  ConcatBlockWithVector($A_{i,j}^{m\times m}$ , $d^{(p_{j})}$) \ ($A_{i,k+1}^{d^{(p_{k+1})}} = $   ConcatBlockWithVector($A_{i,k+1}^{m\times l}$ , $d^{(p_{k+1})}$)) \\
+
+$B_{i,j}^{d^{(p_{j})}} = $ ConcatBlockWithVector($B_{i,j}^{m\times m}$ , $d^{(p_{j})}$) \ 
+($B_{i,k+1}^{d^{(p_{k+1})}} = $   ConcatBlockWithVector($B_{i,k+1}^{m\times l}$ , $d^{(p_{k+1})}$))\\
+
+$A_{i,j}^{(1)} = U_{i,1}^{(m+1)\times m} A_{i,j}^{d^{(p_{j})}} \ \ j = 2,...,k$ ;  $A_{i,k+1}^{(1)} = U_{i,1}^{(m+1)\times l} A_{i, k+1}^{d^{(p_{k})}} \\ B_{i,j}^{(1)} = U_{i,1}^{(m+1)\times m} B_{i,j}^{d^{(p_{j})}} \  j = 2,...,k$ ;  $B_{i,k+1}^{(1)} = U_{i,1}^{(m+1)\times l} B_{i, k+1}^{d^{(p_{k})}} $\\\\
+После 1-го шага матрица будет иметь вид:
+\begin{equation}
+A=
+  \begin{pmatrix} 
+    T_{11}^{m \times m} & A_{12}^{m \times m} & \cdots & A_{1,k}^{m \times m} & A_{1,k+1}^{m \times l} & | & B_{11}^{m \times m} &  B_{12}^{m \times m} & \cdots & B_{1,k+1}^{m \times l}\\
+    0 & A_{22}^{m \times m} & \cdots & A_{2,k}^{m \times m} & A_{2,k+1}^{m \times l} & | & B_{21}^{m \times m} &  B_{22}^{m \times m} & \cdots & B_{2,k+1}^{m \times l}\\ 
+    \vdots & \vdots & \ddots & \vdots & \vdots & | & \vdots & \vdots & \ddots & \vdots\\ 
+    0 & A_{k,2}^{m \times m} & \cdots & A_{k,k}^{m \times m} & A_{k,k+1}^{m \times l} & | & B_{k,1}^{m \times m} &  B_{k,2}^{m \times m} & \cdots & B_{k,k+1}^{m \times l}\\
+    0 & A_{k+1,2}^{l \times m} & \cdots & A_{k+1,k}^{l \times m} & A_{k+1,k+1}^{l \times l} & | & B_{k+1,1}^{l \times m} &  B_{k+1,2}^{l \times m} & \cdots & B_{k+1,k+1}^{l \times l} 
+  \end{pmatrix}
+\end{equation}
+\\ Где, T - треугольная матрица типа $A^{(m)}$ \\\\
+
+{\fontseries{bx}\fontsize{15}{15}\selectfont Шаг s:}\\\\
+
+
+а) Берем блок матрицы  $A_{s,s}^{m\times m} \ s = 1,...,k$\\
+Применяем функцию Triangulize к блоку $A_{s,s}^{m\times m} $ получаем матрицу $U^{m\times m}$. \\
+Далее, применяем матрицу $U^{m\times m}$ к блокам $A_{i,j}^{m\times m} \ ; \ A_{l,k+1}^{m\times l} \ ; \ B_{s,j}^{m\times m}\ B_{s,k+1}^{m\times l} \ j = s+1,...,k$  \\\\
+
+
+б) Берем блок $A_{i,s}^{{m\times m}}$ ($i = s+1,...,k$) и строку $d^{(p_{1})} =(a_{p,p};...;a_{p,m}) \ p = 1,...,m$ (p-тая строчка матрицы $A_{l,l}^{m\times m}$ без первых m-p+1 элементов) \\
+D = ConcatBlockWithString($A_{i,s}^{{m\times (m-p)}}, \ d^{(p_{1})}$).(соеденили) \
+$A_{i,s}^{m\times (m-p)} = A_{i,s}^{m\times m}$ - без первых p - столбцов.\\
+Получаем матрицу $U^{(m+1)\times m}$ и применяем ее к правой части:\\
+$A_{i,j}^{d^{(p_{j})}}$ =  ConcatBlockWithVector($A_{i,j}^{m\times m}$ , $d^{(p_{j})}$) \ ($A_{i,k+1}^{d^{(p_{k+1})}} = $   ConcatBlockWithVector($A_{i,k+1}^{m\times l}$ , $d^{(p_{k+1})}$)) \\
+
+$B_{i,j}^{d^{(p_{j})}} = $ ConcatBlockWithVector($B_{i,j}^{m\times m}$ , $d^{(p_{j})}$) \ 
+($B_{i,k+1}^{d^{(p_{k+1})}} = $   ConcatBlockWithVector($B_{i,k+1}^{m\times l}$ , $d^{(p_{k+1})}$))\\\\
+$A_{i,j}^{(s)} = U_{i,1}^{(m+1)\times m} A_{i,j}^{d^{(p_{j})}} \ \ j = 2,...,k$ $A_{i,k+1}^{(s)} = U_{i,1}^{(m+1)\times l} A_{i, k+1}^{d^{(p_{k})}} \\ B_{i,j}^{(s)} = U_{i,1}^{(m+1)\times m} B_{i,j}^{d^{(p_{j})}} \  j = 2,...,k ;  B_{i,k+1}^{(s)} = U_{i,1}^{(m+1)\times l} B_{i, k+1}^{d^{(p_{k})}} $\\\\
+
+После s-го шага матрица A, имеет вид:
+\begin{equation}
+A=
+  \begin{pmatrix} 
+    T_{11}^{m \times m} & A_{12}^{m \times m} & \cdots & A_{1,k}^{m \times m} & A_{1,k+1}^{m \times l} & | & B_{11}^{m \times m} &  B_{12}^{m \times m} & \cdots & B_{1,k+1}^{m \times l}\\
+    0 & T_{22}^{m \times m} & \cdots & A_{2,k}^{m \times m} & A_{2,k+1}^{m \times l} & | & B_{21}^{m \times m} &  B_{22}^{m \times m} & \cdots & B_{2,k+1}^{m \times l}\\
+    \vdots & \vdots & \ddots & \vdots & \vdots & | & \vdots & \vdots & \ddots & \vdots\\ 
+    0 & 0 & \cdots & T_{k,k}^{m \times m} & A_{k,k+1}^{m \times l} & | & B_{k,1}^{m \times m} &  B_{k,2}^{m \times m} & \cdots & B_{k,k+1}^{m \times l}\\
+    0 & 0 & \cdots & 0 & T_{k+1,k+1}^{l \times l} & | & B_{k+1,1}^{l \times m} &  B_{k+1,2}^{l \times m} & \cdots & B_{k+1,k+1}^{l \times l} 
+  \end{pmatrix}
+\end{equation}
+
+\begin{center}
+{\bfseries Обратный ход}
+\end{center}
+
+Теперь нужно найти обратные матрицы к треугольным матрицам на диагонали и свести матрицу к виду:
+\begin{equation}
+A=
+  \begin{pmatrix} 
+    E_{11}^{m \times m} & A_{12}^{m \times m} & \cdots & A_{1,k}^{m \times m} & A_{1,k+1}^{m \times l} & | & B_{11}^{m \times m} &  B_{12}^{m \times m} & \cdots & B_{1,k+1}^{m \times l}\\
+    0 & E_{22}^{m \times m} & \cdots & A_{2,k}^{m \times m} & A_{2,k+1}^{m \times l} & | & B_{21}^{m \times m} &  B_{22}^{m \times m} & \cdots & B_{2,k+1}^{m \times l}\\
+    \vdots & \vdots & \ddots & \vdots & \vdots & | & \vdots & \vdots & \ddots & \vdots\\ 
+    0 & 0 & \cdots & E_{k,k}^{m \times m} & A_{k,k+1}^{m \times l} & | & B_{k,1}^{m \times m} &  B_{k,2}^{m \times m} & \cdots & B_{k,k+1}^{m \times l}\\
+    0 & 0 & \cdots & 0 & E_{k+1,k+1}^{l \times l} & | & B_{k+1,1}^{l \times m} &  B_{k+1,2}^{l \times m} & \cdots & B_{k+1,k+1}^{l \times l} 
+  \end{pmatrix}
+\end{equation}
+Чтобы найчать обратный ход Гаусса.\\
+A) Находим обратную матрицу к треугольной матрице $T^{n\times n}$: 
+$$T^{n\times n}=
+   \begin{pmatrix}
+     a_{11}& a_{12} &\ldots & a_{1n}\\
+     0& a_{22} &\ldots & a_{2n}\\
+     \vdots& \vdots &\ddots & \vdots\\
+     0& 0 &\ldots & a_{nn}
+    \end{pmatrix}
+$$ 
+Записываем матрицу $T^{n\times n}$ в виде:
+$$T^{n\times n}=
+   \begin{pmatrix}
+     a_{11}& a_{12} &\ldots & a_{1n} & | & 1 & 0 & \ldots \ & 0\\
+     0& a_{22} &\ldots & a_{2n} & | & 0 & 1 & \ldots \ & 0\\
+     \vdots& \vdots &\ddots & \vdots &\vdots& \vdots &\vdots & \ldots & \vdots \\
+     0& 0 &\ldots & a_{nn} & | & 0 & 0 & \ldots \ & 1
+    \end{pmatrix}
+$$ 
+
+Обозначим матрицу справа, за мартицу B:
+$$T^{n\times n}=
+   \begin{pmatrix}
+     a_{11}& a_{12} &\ldots & a_{1n} & | & b_{11} & b_{12} & \ldots \ & b_{1n}\\
+     0& a_{22} &\ldots & a_{2n} & | & b_{21} & b_{22} & \ldots \ & b_{2n}\\
+     \vdots& \vdots &\ddots & \vdots &\vdots& \vdots &\vdots & \ldots & \vdots \\
+     0& 0 &\ldots & a_{nn} & | & b_{n1} & b_{n2} & \ldots \ & b_{nn}
+    \end{pmatrix}
+$$
+Формулы:\\
+$b_{ij} = b_{ij}/a_{ii} \ ; \ a_{ik} = a_{ik}/a_{ii} \ j = 1,...,n \ \ i = 1,...,n; \ k = i+1,...,n\\
+b_{n-1,j} = b_{n-1,j} - a_{n-1,n}b_{nj}\\
+j = 1,...,n \ \ i = 1,...,n\ ; \ b_{ij} = b_{ij} - \sum\limits_{s = i+1}^n {a_{it}}{b_{tj}} $\\
+В итоге финальная матрица $B = T^{-1}$\\\\
+
+Б)Введем вспомогательную блочную мартицу C, куда мы будем записывать получающийся ответ. Преобразуем треугольную матрицу:\\\\
+$ C_{k+1,j}^{l\times m} = (T_{k+1,k+1}^{l\times l})^{-1} * B_{k+1,j}^{l\times m} \ \ j = 1,...,k \ \ C_{k+1,k+1}^{l\times l} = (T_{k+1,k+1}^{l\times l})^{-1} * B_{k+1,k+1}^{l\times l}$\\
+$i = 1,...,k; \ j = i+1,...,k \ \ A_{ij}^{m\times m} = (A_{ii}^{m\times m})^{-1} *A_{ij}^{m\times m} \ , \ A_{i,k+1}^{m\times l} = (A_{ii}^{m\times m})^{-1} * A_{i,k+1}^{m\times l}$;\\
+$s = 1,...,k  \ \ B_{is}^{m\times m} = (A_{ii}^{m\times m})^{-1} * B_{is}^{m\times m} \ , \ B_{i,k+1}^{m\times l} = (A_{ii}^{m\times m})^{-1} * B_{i,k+1}^{m\times l}$ \\\\
+В)Теперь реализуем обратный ход.\\\\
+$j = 1,...,k; \ C_{kj}^{m \times m} = B_{kj}^{m \times m} - A_{k,k+1}^{m \times l}C_{k+1,j}^{l \times m} \\
+C_{k,k+1}^{m \times l} = B_{k,k+1}^{m \times l} - A_{k,k+1}^{m \times l}C_{k+1,k+1}^{l \times l} \\
+i = k - 1,...1 \; \ j = 1,...,k \; C_{ij}^{m \times m} = B_{ij}^{m \times m} - \sum\limits_{t=i+1}^{k}A_{it}^{m \times m}C_{tj}^{m \times m} - A_{i,k+1}^{m \times l}C_{k+1,j}^{l \times m}\\
+i = k - 1,...,1 ;\ C_{i,k+1}^{m \times l} = B_{i,k+1}^{m \times l} - \sum\limits_{t=i+1}^{k}A_{it}^{m \times m}C_{t,k+1}^{m \times l} - A_{i,k+1}^{m \times l}C_{k+1,k+1}^{l \times 1}$\\
+Матрица C является нашим ответом.
+\section{Сложность алгоритма}
+{\fontseries{bx}\fontsize{14}{14}\selectfont Вычисление сложности функции Triangulize:}\\\\
+По формулам из книги мы получаем:\\ 
+1) На вычисление $U(x^{(k)})$ требуется $3(n-k)+7$ действий (считаем операцию умножения и сложения равностоящими).\\
+2) $U(x^{(k)}A^{(k-1)})$ стоит $4(n-k)^{2} + 2(n-k)$.\\
+Итог: $\sum\limits_{k = 1}^n(4(n-k)^2 + 7(n-k) + O(1)) = \frac{4n^{3}}{3} + \frac{3n^2}{2} + O(n)$
+\\\\
+{\fontseries{bx}\fontsize{14}{14}\selectfont Применения матрицы U, к блокам:}\\\\
+3)Применение матрицы к вектору $4(n-k+1)$.\\
+4) Применения матрицы к правой части $4n(n-k+1)$.\\
+Не блочный алгорит нахождения обратной матрицы стоит:\\
+$4\sum\limits_{k = 1}^n (4n{^2} - 8nk + 2k^2) = \frac{8n^{3}}{3} - 12n^{2} + O(n)$\\\\
+{\fontseries{bx}\fontsize{14}{14}\selectfont Приведение матрицы к треугольному виду:}\\\\
+Будем считать(как на лекциях), что матрица поделилась нацело.\\
+Тогда на Шаге 1) получается: $Triangulize \ + \ (k-1) + k$ применеий мтарицы U к правой части $\ = \ \frac{4m^{3}}{3} + \frac{3m^2}{2} + O(m)  + (2k-1)\sum\limits_{k = 1}^m (4m(m-k+1)) \ = \ (2\frac{n}{m}-1)(2m^{3}+ 2m^{2}) + \frac{4m^{3}}{3} + \frac{3m^2}{2} + O(m)  = \frac{4m^{3}}{3} + \frac{3m^2}{2} + O(m) + 4nm^{2}-2m^{3} - 2m^{2}+ 4mn = 4nm^{2} - \frac{2m^{3}}{3} -\frac{m^{2}}{2} + O(mn)$\\
+Далее $(k-1)$(m подсчетов вектора $x^{(m)}$ и s применеий его к матрице $A^{(m+1)\times s} \ s = 1,...,m$) + (k-1 + k)(m применений вектора к блоку $(m+1)\times m)))\ = \ (k-1)(m(3m-m) + m*m(m-1)/2)\ + \ (2k-1)(4mm(m)) = \frac{5nm^{2}}{2} - \frac{3m^{3}}{2} + \frac{3mn}{2}$\\
+Итог: $13nm^{2}/2 -13m^{3}/6 - 2m^{2}+3m/2$\\\\
+За l шагов: получается:\\\\
+$Triangulize \ + \ (k-l) + k$ применеий мтарицы U к правой части $\ = \ \frac{4m^{3}}{3} - \frac{1m^2}{2} + O(m)  + (2k-l)\sum\limits_{k = 1}^m (4m(m-k+1)) \ = \ \frac{4m^{3}}{3} - \frac{1m^2}{2} + 2(\frac{n}{m}-s)(m^3+m^2)$ \\
+Далее $(k-l)$(m подсчетов вектора $x^{(m)}$ и s применеий его к матрице $A^{(m+1)\times s} \ s = 1,...,m$) + (k-l + k)(m применений вектора к блоку $(m+1)\times m)))\ = \ (k-l)(\frac{3}{2}m(m*m+m) \ + \ (2k-l)(\sum\limits_{s = 1}^{m}(m*m*(m-s))) = (k-l)(3(m^3+m^2)/2 + (2k-s)(2(m^3-m^2)))$\\
+В итоге суммируя по l получается :
+\begin{equation}
+    \frac{5n^3}{3}+\frac{7}{4}n^2m - \frac{1}{12}m^2n+O(n^2+m^2)
+\end{equation}
+
+При обратном ходе по формулам получаем:$(2m^3 - m^2) * k *\sum\limits_{s = 1}^{k-1}(2m^3 - m^2) * \frac{n}{m} * \sum\limits_{s = 1}^{k-1}s = \\ (m^3 - m^2) \ * \frac{n}{m} * \frac{\frac{n}{m}(\frac{n}{m}-1)}{2} = n^3 - n^2m +O(n^2)$\\
+Чтобы из треугольной мтарицы получить хорошую:\\
+$m^{3}*k + \frac{3(n^2)}{2} = nm^2 + O(n^{2})$\\
+В итоге:
+\begin{equation}
+    S(n,m) \ = \ \frac{8}{3}n^3 + \frac{9}{4}n^2m + \frac{5}{12}nm^2 + O(n^2 + m^2)
+\end{equation}
+
+$S(n,1) = 8n^3/3 + O(n^2)\ \ S(n,n) = 16n^3/3 + O(n^2)$
+\end{document}
