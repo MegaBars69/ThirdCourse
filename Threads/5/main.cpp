@@ -145,6 +145,7 @@ int main(int argc, char* argv[])
     {
         pthread_join(a[k].tid, nullptr);
     }
+
     
     double res = ProccesResults(a);
     for (int i = 0; i < p; i++)

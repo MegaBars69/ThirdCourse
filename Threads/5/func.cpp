@@ -212,11 +212,11 @@ void ProccesElements(Args* a)
                 }
                 else if (i == m-1 && (k < p-1))
                 {
-                    if (fabs(pa[m-1] > EPSILON))
+                    if (fabs(pa[m-1]) > EPSILON)
                     {
                         if (fabs(a->next/pa[m-1] - cur_q) < EPSILON)
                         {
-                            if (start_of_seq < 0)
+                            if (start_of_seq < 0 && in_seq)
                             {
                                 a->left_can_connect = true;
                                 a->left_sum = sum;
@@ -320,7 +320,7 @@ int ProccesResults(Args *a)
                 a[i-1].el_in_right_sum = 1;
             }*/
 
-            if (a[i].el_in_left_sum < a[i].m || (fabs(a[i].array[a[i].m-1]) > EPSILON && fabs(a[i].next/a[i].array[a[i].m-1] - a[i].q_left)))
+            if (a[i].el_in_left_sum < a[i].m || (fabs(a[i].array[a[i].m-1]) > EPSILON && fabs(a[i].next/a[i].array[a[i].m-1] - a[i].q_left) > EPSILON))
             {
                 /*sum += a[i].left_sum;
                 el_in_sum += a[i].el_in_left_sum;*/
