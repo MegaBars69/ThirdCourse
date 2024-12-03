@@ -844,6 +844,9 @@ void FirstStep(double* A, double* B, double* U, double norm, int n, int m, int p
     int up_bound = (l > 0 ? k+1: k);
 
     int s = K + (a->cur_str)*p;
+    
+    int dop_up_bound = (shag == 0 ? s+1 : up_bound);
+
 
     block_size_row = (s < k ? m : l);
     
@@ -866,7 +869,7 @@ void FirstStep(double* A, double* B, double* U, double norm, int n, int m, int p
 
         }
 
-        for (j = 0, pb = B + s*m*n; j < up_bound; j++, pb += block_size_row*m)
+        for (j = 0, pb = B + s*m*n; j < dop_up_bound; j++, pb += block_size_row*m)
         {
             block_size_col = (j < k ? m : l);
             
@@ -914,8 +917,10 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double n
 
     int l = n%m;
     int k = (n-l)/m;
-    int block_size_row, block_size_col, down_block_size_row, down_block_size_col;
+    int block_size_row, block_size_col, size = aA->s, down_block_size_row, down_block_size_col;
     double* pa, *pa_side, *pa_down, *pa_down_side, *pb, *pb_down; 
+    double* ZeroMatrix = aA->ZeroMatrix;
+    
     
     int up_bound = (l > 0 ? k+1: k);
 
@@ -1052,8 +1057,21 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double n
 
             pb = B + s*m*n;
             
-        
-            for(int j = 0; j < up_bound; j++)
+            for(int j = 0; j < up_bound; j++, pb += m*block_size_row)
+            {
+                block_size_col = (j < k ? m : l);
+                if ((size == 0 || size == 4) || ((size == 3) && (j == 0)) || (j + 1 >= s))
+                {
+                    BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
+                    ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
+                }
+                else
+                {
+                    ReplaceWith(pb, ZeroMatrix, block_size_row, block_size_col);
+                }
+                
+            } 
+            /*for(int j = 0; j < up_bound; j++)
             {
                 block_size_col = (j < k ? m : l);
                 
@@ -1062,7 +1080,7 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double n
 
                 
                 pb += m*block_size_row;
-            } 
+            } */
         }
         
     }    
@@ -1081,16 +1099,16 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double n
     reduce_sum<double>(p, aA->U, m*m);
     
     pa = A + shag*m*n + (K + shag + 1 )*block_size_row*m;
-    if (K == 0)
+    if (K == 0) 
     {
         cout<<"A SHAG : "<<shag<<endl;
         PrintMatrix(A, n,m,n);
         PrintMatrix(B, n,m,n);
 
     }
-    reduce_sum<int>(p);
+    reduce_sum<int>(p);*/
 
-    for (int d = 0; d < p; d++)
+    /*for (int d = 0; d < p; d++)
     {
         if (K == d)
         {
@@ -1099,13 +1117,16 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double n
         }
         reduce_sum<int>(p);
     }
-
+    int j;
+    if (K == 0)
+    {
+        cout<<"SHAG"<<shag<<endl;
+    }
+    
     for (j = shag + K + 1 ; j < up_bound; j += p, pa += p*m*block_size_row)
     {
         block_size_col = (j < k ? m : l);
-
-
-        
+        cout<<"K: "<<K<<" to "<<j<<endl;
 
         BlockMul(U, pa, ProductResult, block_size_row, block_size_row, block_size_col); 
         ReplaceWith(pa, ProductResult, block_size_row, block_size_col);
@@ -1126,9 +1147,16 @@ void SecondStep(double* A, double* B, double* U, double* ProductResult, double n
         reduce_sum<int>(p);
 
     }
+    reduce_sum<int>(p);
+    if (K == 0)
+    {
+        cout<<"B"<<shag<<endl;
+    }
     for(j = K; j < up_bound; j += p, pb += p*m*block_size_row)
     {
         block_size_col = (j < k ? m : l);
+        cout<<"K: "<<K<<" to "<<j<<endl;
+
         
         BlockMul(U, pb, ProductResult, block_size_row, block_size_row, block_size_col);
         ReplaceWith(pb, ProductResult, block_size_row, block_size_col);
@@ -1145,7 +1173,7 @@ void ThirdStep(double* A, double* B, int n, int m, int p, int K, Args *a)
     int bj, s;
     int k = (n-l)/m;
     int bi,  r;
-    int block_size_col, block_size_row;
+    int block_size_col, size = a->s, block_size_row;
     int up_bound = (l > 0 ? k+1 : k);
    
     s = K + p*(a->cur_str - 1);
@@ -1159,13 +1187,36 @@ void ThirdStep(double* A, double* B, int n, int m, int p, int K, Args *a)
 
             for (r = s ; r >= K; r -= p)
             {
-
-                MinusEqualBlockMul(B + r*m*n + bj*m*m, A + r*m*n + bi*m*m, B + bi*m*n + bj*block_size_row*m, m, block_size_row, block_size_col);
+                if ((size == 3 && (r <= bj+1 || bj == 0)) || size != 3)
+                {
+                    MinusEqualBlockMul(B + r*m*n + bj*m*m, A + r*m*n + bi*m*m, B + bi*m*n + bj*block_size_row*m, m, block_size_row, block_size_col);
+                }
             }
             
         }
         reduce_sum<int>(p);
     }    
+    /*for (bi = k-1; bi >= 0; bi--)
+    {
+        block_size_row = (bi< k ? m : l);
+
+        for (bj = 0; bj < up_bound; bj++)
+        {
+            block_size_col = (bj < k ? m : l);      
+            
+            upper = (size != 2 && size != 1 ? k+1: min(up_bound,bj+2));
+
+            for (r = bi + 1; r < upper; r++)
+            {
+                m12 = (r < k ? m : l);
+                if ((size == 3 && (r <= bj+1 || bj == 0)) || size != 3)
+                {
+                    MinusEqualBlockMul(B + bi*m*n + bj*block_size_row*m, A + bi*m*n + r*block_size_row*m, B + r*m*n + bj*m12*m, block_size_row, m12, block_size_col);
+                }
+                
+            }
+        } 
+    }*/
 }
 
 
@@ -1261,6 +1312,7 @@ void* thread_func(void *arg)
         {
             res = ReadMatrixFromFile(name, A, n, m);            
         }
+
         reduce_sum(p, &res, 1);
 
         if (res > 0)
@@ -1297,40 +1349,41 @@ void* thread_func(void *arg)
         
     }*/
     
-    double t;
+    double t, astr_t;
+    
+    reduce_sum<int>(p);
 
     t = get_cpu_time(); 
+    if (k == 0)
+    {
+        astr_t = get_fun_time();
+    }
  
     InverseMatrixParallel(a);
+
+    if (k == 0)
+    {
+        astr_t = get_fun_time() - astr_t;
+        a->astr_time = astr_t;
+    }   
     
     t = get_cpu_time() - t;
-    
-    /*for (int i = 0; i < p; i++)
-    {
-        reduce_sum<int>(p);
-        if (i == k)
-        {
-            a->PrintAll();
-        }
-    }*/  
     
     a->cpu_time = t;
     a->cpu_time_of_all_threads = t;
     reduce_sum(p, &a->cpu_time_of_all_threads, 1);
+    reduce_sum(p, &a->astr_time, 1);
 
-    /*
-    if (k == 0)
+    
+    /*if (k == 0)
     {
-        PrintMatrix(A, n, m, r, p, 0, true, true, false);
+        PrintMatrix(A, n, m, n, p, 0, true, true, false);
         //PrintMatrix(B, n, m, r, p, 0, true, true, false);
     }*/
-     
-    reduce_sum<int>(p);
 
     /*delete[] U;
     delete[] ProductResult;*/
 
-    reduce_sum<int>(p);
 
     //reduce_sum(a->p, &a->amount_of_changed, 1);
 

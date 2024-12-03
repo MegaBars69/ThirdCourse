@@ -16,6 +16,9 @@ int main(int argc, char* argv[])
     double* A, *B, **U, **ProductResult, **ZeroMatrix;
     int k;
     int n = 0, m = 0, r = 0, s = 0, p = 0, M = 0, ostatok = 0;
+
+    double t1 = 0.0, t2 =0, r1 = -1,r2 = -1;
+
     if (argc >=6)
     {
         n = atoi(argv[1]);
@@ -31,8 +34,14 @@ int main(int argc, char* argv[])
             return 4;
         }
         M = n/p;
-        p = (n/m < p ? n/m : p);
-        ostatok = n%p;
+        p = (n/m < p && n/m > 0 ? n/m : p);
+        ostatok = (p > 0 ? n%p : 1);
+        if (p <= 0 || n <= 0 || m <=0 || r<0)
+        {
+            printf("Usage ./a.out n m p r s filename\n");
+           
+            return 4;
+        }
     }
     else
     {
@@ -72,6 +81,18 @@ int main(int argc, char* argv[])
     else
     {
         printf(" p >=0");
+        for (int i = 0; i < p; i++)
+        {
+            delete[] U[i];
+            delete[] ProductResult[i];
+            delete[] ZeroMatrix[i];
+        }
+        delete[] A;
+        delete[] B;
+        delete[] U;
+        delete[] a;
+        delete[] ProductResult;
+        delete[] ZeroMatrix;
         return 4;
     }        
     //Обработка массива. Распределение памяти.
@@ -106,12 +127,18 @@ int main(int argc, char* argv[])
         if (pthread_create(&a[k].tid, nullptr, thread_func, a+k))
         {
             std::cerr << "Error creating thread " << k <<std::endl;
-            
+            for (int i = 0; i < p; i++)
+            {
+                delete[] U[i];
+                delete[] ProductResult[i];
+                delete[] ZeroMatrix[i];
+            }
             delete[] A;
             delete[] B;
             delete[] U;
             delete[] a;
             delete[] ProductResult;
+            delete[] ZeroMatrix;
             return 1;
         }
     }
@@ -124,13 +151,26 @@ int main(int argc, char* argv[])
     {
         pthread_join(a[k].tid, nullptr);
     }
-
-    /*for (k = 0; k < p; k++)
+    if (a[0].res > 0)
     {
-        a[k].PrintAll();
-    }*/
+        printf ("%s : Task = %d Res1 = %e Res2 = %e T1 = %.2f T2 = %.2f S = %d N = %d M = %d P = %d\n", argv[0], 24, r1, r2, t1, t2, s, n, m, atoi(argv[3]));
+        for (int i = 0; i < p; i++)
+        {
+            delete[] U[i];
+            delete[] ProductResult[i];
+            delete[] ZeroMatrix[i];
+        }
+        delete[] A;
+        delete[] B;
+        delete[] a;
+        delete[] U;
+        delete[] ProductResult;
+        delete[] ZeroMatrix;
+
+        return 2;
+    }
     
-     //Инициализируем матрицу для подсчета невязки
+    //Инициализируем матрицу для подсчета невязки
     
     if (s == 0) {
         string filename = argv[6];
@@ -138,6 +178,8 @@ int main(int argc, char* argv[])
     } else {
         FormulaMatrixInitialization(A, n, m, s, 1, 0);
     }
+    
+    
     PrintMatrix(A,n,m,r,0,0,true,true,false);
      
     /*if (end_of_inverse != 0)
@@ -155,25 +197,22 @@ int main(int argc, char* argv[])
     }*/
 
     //Печать ответа
-    //PrintMatrix(A, n, m, r, true, false);
-
-    double t1 = 0, t2 =0, r1 = -1,r2 = -1;
-    double* Sum = new double[m*m];
-    double* Column = new double[m];
-    for (int i = 0; i < m; i++)
-    {
-        for (int j = 0; j < m; j++) 
-        {
-            Sum[i*m + j] = 0;
-            ProductResult[0][i*m +j] = 0;
-        }  
-    }  
-    for (int j = 0; j < m; j++)
-    {
-        Column[j] = 0;
-    }     
+    //PrintMatrix(A, n, m, r, true, false);  
 
     t1 = a[0].cpu_time;
+    double* Sum = new double[m*m];
+    double* Column = new double[m];
+
+    for (int i = 0; i < m; i++)
+    {
+        Column[i] = 0;
+    }
+    for (int i = 0; i < m*m; i++)
+    {
+        Sum[i] = 0;
+    }
+    
+    
 
     //Подсчет невязки
     clock_t start2 = clock();
@@ -188,22 +227,37 @@ int main(int argc, char* argv[])
         r1 = -1;
         r2 = -1;
     }
-    else
+    else  
     {
         PrintMatrix(B, n, m, r, 0, 0, true, true, false);
         r1 = 0;
-        r2 = 0;
+        r2 = 0; 
     }
     clock_t end2 = clock();
 
     t2 = static_cast<double>(end2 - start2) / CLOCKS_PER_SEC;
+    /*for (int k = 0; k < p; k++)
+    {
+        a[k].PrintAll();
+    }*/
+    
     
     printf ("%s : Task = %d Res1 = %e Res2 = %e T1 = %.2f T2 = %.2f S = %d N = %d M = %d P = %d\n", argv[0], 24, r1, r2, t1, t2, s, n, m, atoi(argv[3]));
     
     delete[] A;
     delete[] B;
     delete[] a;
+    for (int i = 0; i < p; i++)
+    {
+        delete[] U[i];
+        delete[] ProductResult[i];
+        delete[] ZeroMatrix[i];
+    }
     delete[] U;
     delete[] ProductResult;
+    delete[] ZeroMatrix;
+    delete[] Sum;
+    delete[] Column;
+
     return 0;
 }

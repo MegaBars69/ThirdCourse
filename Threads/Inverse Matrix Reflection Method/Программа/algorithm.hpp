@@ -89,7 +89,7 @@ class Args{
         pthread_t tid = 0;
         double cpu_time = 0;
         double cpu_time_of_all_threads = 0;
-        double astr_time = 0;
+        double astr_time = 0.0;
         io_status status = io_status::not_working;
         double res = 0;
 
@@ -125,6 +125,9 @@ class Args{
             printf("nomer_v_okne: %d \n", nomer_v_okne);
             printf("cur_str: %d \n", cur_str);
             printf("cpu time: %lf \n", cpu_time);
+            printf("cpu time of all_threads: %lf \n", cpu_time_of_all_threads);
+            printf("astr time: %lf \n",astr_time);
+
             
             printf("res: %lf \n", res);
 
