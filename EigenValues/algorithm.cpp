@@ -1,6 +1,9 @@
 #include <iostream>
 #include <cmath>
 #include "algorithm.hpp"
+#include "initialize_matrix.hpp"
+
+using namespace std;
 
 double Trace(double* A, int n)
 {
@@ -9,6 +12,21 @@ double Trace(double* A, int n)
     {
         result += A[i*n + i];
     }
+    return result;
+}
+
+double LengthOfMatrix(double* A, int n)
+{
+    double aij, result = 0;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            aij = A[i*n + j];
+            result += aij*aij;
+        }    
+    }
+    result = sqrt(result);
     return result;
 }
 
@@ -140,5 +158,121 @@ void TriDiagonalize(double* A, double* U, int n, double mera)
         ApplyLeftVector(U, A, n, k, true); 
         AppyRightVector(U, A, n, k, true); 
     }
+}
 
+int FindEigenValues(double* A, int n, double* X, double eps)
+{
+    int k;
+    int iteration = 0;
+    bool is_running = true;
+    int up_bound = n;
+    double s, ann, ann_1, half_ann_1;
+    double *pa = A;
+    double x1, x2, new_diag_el, ak1, ak2, norm_xk, scolar_sum;
+    double a11, a12, a21, a22, D;
+
+    while(is_running)
+    {
+        /*double trace = Trace(A, n);
+        double Length = LengthOfMatrix(A, n);
+        PrintMatrix(A, n, n);
+        cout<<"trA = "<<trace<<endl;
+        cout<<"||A|| = "<<Length<<endl;*/
+        if (up_bound > 2)
+        {   
+            ann = A[(up_bound - 1)*n +  up_bound - 1];
+            ann_1 = A[(up_bound - 1)*n +  up_bound  - 2];
+            half_ann_1 = ann_1/2;
+            s = (ann > 0 && half_ann_1 > 0 || ann < 0 && half_ann_1 < 0 ? ann + half_ann_1: ann - half_ann_1);            
+            
+            if (fabs(ann_1) < eps)
+            {
+                up_bound--;
+                X[up_bound] = ann;
+            }
+            else
+            {
+                for (k = 0; k < up_bound - 1; k++)
+                {
+                    A[k*n + k] -= s;
+
+                    if (fabs(A[(k + 1)*n + k]) > eps)
+                    {
+                        //Finding vector xk
+
+                        ak1 = A[k*n + k];
+                        ak2 = A[(k + 1)*n + k];
+
+                        new_diag_el = sqrt(ak1*ak1 + ak2*ak2);
+
+                        x1 = ak1 - new_diag_el;
+                        x2 = ak2;
+
+                        A[k*n + k] = new_diag_el;
+                        A[(k + 1)*n + k] = 0;
+                        
+                        norm_xk = sqrt(x1*x1 + x2*x2);
+
+                        x1 = x1/norm_xk;
+                        x2 = x2/norm_xk;
+
+                        //Applying to second column
+
+                        ak1 = A[k*n + k + 1];
+                        ak2 = A[(k+1)*n + k + 1];
+
+                        scolar_sum = 2*(ak1*x1 + ak2*x2);
+
+                        A[k*n + k + 1] -= x1*scolar_sum;
+                        A[(k+1)*n + k + 1] -= x2*scolar_sum;
+
+                        
+                        //Aplying from the right side
+
+                        //Aplying to first row
+                        ak1 = A[k*n + k];
+                        ak2 = A[k*n + k + 1];
+
+                        scolar_sum = 2*(ak1*x1 + ak2*x2);
+
+                        A[k*n + k] -= x1*scolar_sum;
+                        A[k*n + k + 1] -= x2*scolar_sum;
+
+                        //Applying to second row
+                        ak1 = A[(k + 1)*n + k];
+                        ak2 = A[(k + 1)*n + k + 1];
+
+                        scolar_sum = 2*(ak1*x1 + ak2*x2);
+
+                        A[(k + 1)*n + k] -= x1*scolar_sum;
+                        A[(k + 1)*n + k + 1] -= x2*scolar_sum;
+                    }   
+                    A[k*n + k] += s;
+                }
+                iteration++;
+            }
+        }
+        else
+        {
+            a11 = *A;
+            a12 = A[1];
+            a21 = A[n];
+            a22 = A[n + 1];
+
+            if (fabs(a21) < eps)
+            {
+                X[0] = a11;
+                X[1] = a22;
+            }
+            else
+            {                
+                D = (a11 + a22)*(a11 + a22) - 4*(a11*a22 - a12*a21);
+                X[0] = (a11 + a22 + sqrt(D))/2;
+                X[1] = (a11 + a22 - sqrt(D))/2;
+            }
+            is_running = false;
+        }
+    }
+
+    return iteration;
 }

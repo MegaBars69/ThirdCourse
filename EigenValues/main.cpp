@@ -11,13 +11,17 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+    double res1 = 0, res2 = 0, t1 = 0, t2 = 0;
+    double sum = 0, len = 0;
+    int n = 0, its = 0;
     if(argc < 5)
     {
         printf("Usage ./a.out n m eps s filename\n");
+        printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
         return 1;
     }
 
-    int n = atoi(argv[1]);
+    n = atoi(argv[1]);
     int m = atoi(argv[2]);
     double eps = atof(argv[3]);
     int s = atoi(argv[4]);
@@ -25,6 +29,8 @@ int main(int argc, char* argv[])
     if (n <= 0 || m < 0 || eps < 0 || s < 0 || s>4)
     {
         printf("Usage ./a.out n m eps s filename\n");
+        printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
+
         return 1;
     }
     
@@ -35,6 +41,8 @@ int main(int argc, char* argv[])
         res_of_read = ReadMatrixFromFile(argv[5], A, n);
         if (res_of_read > 0)
         {
+            printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
+            
             delete[] A;
             return res_of_read;
         }
@@ -43,6 +51,7 @@ int main(int argc, char* argv[])
             if(CheckMatrix(A, n) > 0)
             {
                 printf("Matrix is'n simmetric\n");
+                printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
                 delete[] A;
                 return 4;
             }
@@ -61,13 +70,51 @@ int main(int argc, char* argv[])
 
     double norm = Norm(A, U, n);
     double trace = Trace(A, n);
-    cout<<trace<<endl;
+    double Length = LengthOfMatrix(A, n);
+    cout<<"trA = "<<trace<<endl;
+    cout<<"||A|| = "<<Length<<endl;
     double mera = norm*EPSILON;   
+    
+    clock_t start1 = clock();
 
     TriDiagonalize(A, U, n, mera);
 
+    clock_t end1 = clock();
+    
+    t1 = static_cast<double>(end1 - start1) / CLOCKS_PER_SEC;
+
     PrintMatrix(A, n, m); 
-    cout<<Trace(A, n)<<endl;
+    trace = Trace(A, n);
+    Length = LengthOfMatrix(A, n);
+    cout<<"trA = "<<trace<<endl;
+    cout<<"||A|| = "<<Length<<endl;
+
+    clock_t start2 = clock();
+    
+    its = FindEigenValues(A, n, U, eps);
+
+    clock_t end2 = clock();
+
+    t2 = static_cast<double>(end2 - start2) / CLOCKS_PER_SEC;
+
+    for (int i = 0; i < n; i++)
+    {
+        sum += U[i];
+        len += U[i]*U[i];
+    }
+    for (int i = 0; i < m; i++)
+    {
+        cout<<U[i]<<" ";
+    }
+    
+    cout<<endl<<"Sum = "<<sum<<endl;
+    cout<<"Length = "<<sqrt(len)<<endl;
+    res1 = fabs(sum - trace)/norm;
+    res2 = fabs(Length - sqrt(len))/norm;
+    cout<<endl;
+
+
+    printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
 
     delete[] A;
     delete[] U;
