@@ -173,7 +173,8 @@ int FindEigenValues(double* A, int n, double* X, double eps)
 
     while(is_running)
     {
-        /*double trace = Trace(A, n);
+        /*
+        double trace = Trace(A, n);
         double Length = LengthOfMatrix(A, n);
         PrintMatrix(A, n, n);
         cout<<"trA = "<<trace<<endl;
@@ -195,6 +196,7 @@ int FindEigenValues(double* A, int n, double* X, double eps)
                 for (k = 0; k < up_bound - 1; k++)
                 {
                     A[k*n + k] -= s;
+                    A[(k + 1)*n + k + 1] -= s;
 
                     if (fabs(A[(k + 1)*n + k]) > eps)
                     {
@@ -248,6 +250,13 @@ int FindEigenValues(double* A, int n, double* X, double eps)
                         A[(k + 1)*n + k + 1] -= x2*scolar_sum;
                     }   
                     A[k*n + k] += s;
+                    A[(k + 1)*n + k + 1] += s;
+
+                    /*double trace = Trace(A, n);
+                    double Length = LengthOfMatrix(A, n);
+                    //PrintMatrix(A, n, n);
+                    cout<<"trA = "<<trace<<endl;
+                    cout<<"||A|| = "<<Length<<endl;*/
                 }
                 iteration++;
             }

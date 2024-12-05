@@ -13,11 +13,11 @@ int main(int argc, char* argv[])
 {
     double res1 = 0, res2 = 0, t1 = 0, t2 = 0;
     double sum = 0, len = 0;
-    int n = 0, its = 0;
+    int n = 1, its = 0;
     if(argc < 5)
     {
         printf("Usage ./a.out n m eps s filename\n");
-        printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
+        printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its, t1, t2);
         return 1;
     }
 
@@ -26,10 +26,10 @@ int main(int argc, char* argv[])
     double eps = atof(argv[3]);
     int s = atoi(argv[4]);
 
-    if (n <= 0 || m < 0 || eps < 0 || s < 0 || s>4)
+    if (n <= 0 || m < 0 || eps < 0 || s < 0 || s>4 || (s != 0 && argv[5] != nullptr))
     {
         printf("Usage ./a.out n m eps s filename\n");
-        printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
+        printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its , t1, t2);
 
         return 1;
     }
@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
         sum += U[i];
         len += U[i]*U[i];
     }
-    for (int i = 0; i < m; i++)
+    for (int i = 0; i < min(n, m); i++)
     {
         cout<<U[i]<<" ";
     }
