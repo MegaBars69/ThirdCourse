@@ -22,8 +22,7 @@ double LengthOfMatrix(double* A, int n)
     {
         for (int j = 0; j < n; j++)
         {
-            aij = A[i*n + j];
-            result += aij*aij;
+            result += A[i*n + j]*A[j*n +i];
         }    
     }
     result = sqrt(result);
@@ -111,7 +110,6 @@ void AppyRightVector(double* X, double* A, int n, int k, bool inside)
     }   
 }
 
-
 void TriDiagonalize(double* A, double* U, int n, double mera)
 {
     double sk, ajk,akk;
@@ -160,6 +158,86 @@ void TriDiagonalize(double* A, double* U, int n, double mera)
     }
 }
 
+void UAU(double* A, int n, int k, double* X, double* Y)
+{
+    double yi = 0, sk = 0;
+    int i, j;
+    for ( i = 0; i < k; i++)
+    {
+        yi = 0;
+        for ( j = 0; j < k; j++)
+        {
+            yi += A[i*n + j]*X[j];
+        }
+        Y[i] = yi;
+    }
+    for (i = 0; i < k; i++)
+    {
+        sk +=X[i]*Y[i];
+    }
+    
+    sk = 2*sk; 
+    
+    for (i = 0; i < k; i++)
+    {
+        Y[i] = 2*Y[i] - sk*X[i];
+    }
+
+    for (i = 0; i < k; i++)
+    {
+        for ( j = 0; j < k; j++)
+        {
+            A[i*n +j] -= (Y[i]*X[j] + X[i]*Y[j]);
+        }
+    }
+}
+/*
+void TriDiagonalize(double* A, double* U, int n, double mera, double* Y)
+{
+    double *pa = A;
+    double sk, ajk,akk;
+    double new_diag_el, norm_xk, first_in_x;
+    double* pu;
+
+    for (int k = 0; k < n; k++)
+    {
+        pu = U;
+        sk = 0;
+
+        for (int i = k+2; i < n; i++)
+        {
+            ajk = A[i*n + k];
+            pu++;
+            *pu = ajk;
+            sk+= ajk*ajk;
+            A[i*n + k] = 0;
+            A[k*n + i] = 0;
+        }
+
+        akk = A[(k + 1)*n + k];
+        new_diag_el = sqrt(sk + akk*akk);
+        first_in_x = akk - new_diag_el;
+        
+        pu = U;
+        *pu = first_in_x;
+        
+        norm_xk = sqrt(sk + first_in_x*first_in_x);
+
+        if(!(fabs(norm_xk) < mera))
+        {
+            for (int i = 0; i < n; i++, pu++)
+            {
+                *pu = (*pu)/norm_xk;
+            }
+        }
+        A[(k + 1)*n + k] = new_diag_el;
+        A[k*n + k + 1] = new_diag_el;
+        pa += n + 1;
+        UAU(pa, n, n - k - 1, U, Y);
+    }  
+}
+*/
+
 int FindEigenValues(double* A, int n, double* X, double eps)
 {
     int k;
@@ -168,17 +246,12 @@ int FindEigenValues(double* A, int n, double* X, double eps)
     int up_bound = n;
     double s, ann, ann_1, half_ann_1;
     double *pa = A;
-    double x1, x2, new_diag_el, ak1, ak2, norm_xk, scolar_sum;
+    double x1 = 0, x2 = 0, y1 =  0, y2 = 0, new_diag_el =  0, ak1, ak2, ak3, norm_xk, scolar_sum;
+    bool aply_to_prev = true, did_reflect = true;
     double a11, a12, a21, a22, D;
 
     while(is_running)
     {
-        /*
-        double trace = Trace(A, n);
-        double Length = LengthOfMatrix(A, n);
-        PrintMatrix(A, n, n);
-        cout<<"trA = "<<trace<<endl;
-        cout<<"||A|| = "<<Length<<endl;*/
         if (up_bound > 2)
         {   
             ann = A[(up_bound - 1)*n +  up_bound - 1];
@@ -195,70 +268,188 @@ int FindEigenValues(double* A, int n, double* X, double eps)
             {
                 for (k = 0; k < up_bound - 1; k++)
                 {
-                    A[k*n + k] -= s;
-                    A[(k + 1)*n + k + 1] -= s;
-
-                    if (fabs(A[(k + 1)*n + k]) > eps)
+                    if(k == 0)
                     {
-                        //Finding vector xk
+                        A[k*n + k] -= s;
+                        A[(k + 1)*n + k + 1] -= s;
 
-                        ak1 = A[k*n + k];
-                        ak2 = A[(k + 1)*n + k];
+                        if (fabs(A[(k + 1)*n + k]) > eps)
+                        {
+                            //Finding vector xk
 
-                        new_diag_el = sqrt(ak1*ak1 + ak2*ak2);
+                            ak1 = A[k*n + k];
+                            ak2 = A[(k + 1)*n + k];
 
-                        x1 = ak1 - new_diag_el;
-                        x2 = ak2;
+                            new_diag_el = sqrt(ak1*ak1 + ak2*ak2);
 
-                        A[k*n + k] = new_diag_el;
-                        A[(k + 1)*n + k] = 0;
-                        
-                        norm_xk = sqrt(x1*x1 + x2*x2);
+                            x1 = ak1 - new_diag_el;
+                            x2 = ak2;
+                
+                            A[k*n + k] = new_diag_el;
+                            A[(k + 1)*n + k] = 0;
+                            
+                            norm_xk = sqrt(x1*x1 + x2*x2);
 
-                        x1 = x1/norm_xk;
-                        x2 = x2/norm_xk;
+                            x1 = x1/norm_xk;
+                            x2 = x2/norm_xk;
 
-                        //Applying to second column
+                            //Applying to second column
 
-                        ak1 = A[k*n + k + 1];
-                        ak2 = A[(k+1)*n + k + 1];
+                            ak1 = A[k*n + k + 1];
+                            ak2 = A[(k+1)*n + k + 1];
 
-                        scolar_sum = 2*(ak1*x1 + ak2*x2);
+                            scolar_sum = 2*(ak1*x1 + ak2*x2);
 
-                        A[k*n + k + 1] -= x1*scolar_sum;
-                        A[(k+1)*n + k + 1] -= x2*scolar_sum;
+                            A[k*n + k + 1] -= x1*scolar_sum;
+                            A[(k+1)*n + k + 1] -= x2*scolar_sum;
 
-                        
-                        //Aplying from the right side
+                            //Applying to third column
+                            
+                            if (k + 2 < up_bound)
+                            {
+                                ak2 = A[(k+1)*n + k + 2];
+
+                                scolar_sum = 2*ak2*x2;
+
+                                A[(k+1)*n + k + 2] -= x2*scolar_sum;
+                            }
+                            y1 = x1;
+                            y2 = x2;
+                            aply_to_prev = true;
+                        }
+                        else
+                        {
+                            y1 = 0;
+                            y2 = 0;
+                            aply_to_prev = false;
+                        }
+                    }
+                    else
+                    {
+                        A[(k + 1)*n + k + 1] -= s;
+                    
+                        if (fabs(A[(k + 1)*n + k]) > eps)
+                        {
+                            //Finding vector xk
+
+                            ak1 = A[k*n + k];
+                            ak2 = A[(k + 1)*n + k];
+
+                            new_diag_el = sqrt(ak1*ak1 + ak2*ak2);
+
+                            x1 = ak1 - new_diag_el;
+                            x2 = ak2;
+                
+                            A[k*n + k] = new_diag_el;
+                            A[(k + 1)*n + k] = 0;
+                            
+                            norm_xk = sqrt(x1*x1 + x2*x2);
+
+                            x1 = x1/norm_xk;
+                            x2 = x2/norm_xk;
+
+                            //Applying to second column
+
+                            ak1 = A[k*n + k + 1];
+                            ak2 = A[(k+1)*n + k + 1];
+
+                            scolar_sum = 2*(ak1*x1 + ak2*x2);
+
+                            A[k*n + k + 1] -= x1*scolar_sum;
+                            A[(k+1)*n + k + 1] -= x2*scolar_sum;
+
+                            //Applying to third column
+                            
+                            if (k + 2 < up_bound)
+                            {
+                                ak2 = A[(k+1)*n + k + 2];
+
+                                scolar_sum = 2*ak2*x2;
+
+                                A[(k+1)*n + k + 2] -= x2*scolar_sum;
+                            }
+                            did_reflect = true;
+                        }   
+                        else
+                        {
+                            did_reflect = false;
+                        }
+                        //Aplying preview from the right side
+                        if (aply_to_prev)
+                        {
+                            //Aplying to first row
+                            ak1 = A[(k - 1)*n + k - 1];
+                            ak2 = A[(k - 1)*n + k];
+
+                            scolar_sum = 2*(ak1*y1 + ak2*y2);
+
+                            A[(k - 1)*n + k - 1] -= y1*scolar_sum;
+                            A[(k - 1)*n + k] -= y2*scolar_sum;
+
+                            //Applying to second row
+                            ak1 = A[k*n + k - 1];
+                            ak2 = A[k*n + k];
+
+                            scolar_sum = 2*(ak1*y1 + ak2*y2);
+
+                            A[k*n + k - 1] -= y1*scolar_sum;
+                            A[k*n + k] -= y2*scolar_sum;
+                            A[(k - 1)*n + k] = A[k*n + k - 1]; 
+                        }
+
+                        if(did_reflect)
+                        {
+                            y1 = x1;
+                            y2 = x2;
+                            aply_to_prev = true;
+                        }
+                        else
+                        {
+                            y1 = 0;
+                            y2 = 0;
+                            aply_to_prev = false;
+                        }
+                        A[(k - 1)*n + k - 1] += s;
+                    }   
+                    if (k == up_bound - 2)
+                    {
+                        //Aplying preview from the right side
 
                         //Aplying to first row
                         ak1 = A[k*n + k];
                         ak2 = A[k*n + k + 1];
 
-                        scolar_sum = 2*(ak1*x1 + ak2*x2);
+                        scolar_sum = 2*(ak1*y1 + ak2*y2);
 
-                        A[k*n + k] -= x1*scolar_sum;
-                        A[k*n + k + 1] -= x2*scolar_sum;
+                        A[k*n + k] -= y1*scolar_sum;
+                        A[k*n + k + 1] -= y2*scolar_sum;
 
                         //Applying to second row
                         ak1 = A[(k + 1)*n + k];
                         ak2 = A[(k + 1)*n + k + 1];
 
-                        scolar_sum = 2*(ak1*x1 + ak2*x2);
+                        scolar_sum = 2*(ak1*y1 + ak2*y2);
 
-                        A[(k + 1)*n + k] -= x1*scolar_sum;
-                        A[(k + 1)*n + k + 1] -= x2*scolar_sum;
-                    }   
-                    A[k*n + k] += s;
-                    A[(k + 1)*n + k + 1] += s;
+                        A[(k + 1)*n + k] -= y1*scolar_sum;
+                        A[(k + 1)*n + k + 1] -= y2*scolar_sum;
+                        //A[k*n + k + 1] = A[(k + 1)*n + k];
 
-                    /*double trace = Trace(A, n);
-                    double Length = LengthOfMatrix(A, n);
+                        y1 = x1;
+                        y2 = x2;
+                    
+                        A[k*n + k] += s;
+                        A[(k + 1)*n + k + 1] += s;
+                    }
+                    
+                    
                     //PrintMatrix(A, n, n);
-                    cout<<"trA = "<<trace<<endl;
-                    cout<<"||A|| = "<<Length<<endl;*/
                 }
                 iteration++;
+                /*cout<<"Up_bound = "<<up_bound<<endl;
+                double trace = Trace(A, n);
+                double Length = LengthOfMatrix(A, n);
+                cout<<"trA = "<<trace<<endl;
+                cout<<"||A|| = "<<Length<<endl;*/
             }
         }
         else

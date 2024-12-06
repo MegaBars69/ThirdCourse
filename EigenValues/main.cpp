@@ -66,7 +66,9 @@ int main(int argc, char* argv[])
     PrintMatrix(A, n, m);
 
     double* U = new double[n];
+    double* Y = new double[n];
     memset(U, 0, n* sizeof(double));
+    memset(Y, 0, n* sizeof(double));
 
     double norm = Norm(A, U, n);
     double trace = Trace(A, n);
@@ -77,6 +79,7 @@ int main(int argc, char* argv[])
     
     clock_t start1 = clock();
 
+    //TriDiagonalize(A, U, n, mera, Y);
     TriDiagonalize(A, U, n, mera);
 
     clock_t end1 = clock();
@@ -88,20 +91,23 @@ int main(int argc, char* argv[])
     Length = LengthOfMatrix(A, n);
     cout<<"trA = "<<trace<<endl;
     cout<<"||A|| = "<<Length<<endl;
-
+    
     clock_t start2 = clock();
     
-    its = FindEigenValues(A, n, U, eps);
+    its = FindEigenValues(A, n, U, eps*norm);
 
     clock_t end2 = clock();
+    PrintMatrix(A, n, m); 
 
     t2 = static_cast<double>(end2 - start2) / CLOCKS_PER_SEC;
+
 
     for (int i = 0; i < n; i++)
     {
         sum += U[i];
         len += U[i]*U[i];
     }
+    
     for (int i = 0; i < min(n, m); i++)
     {
         cout<<U[i]<<" ";
@@ -109,14 +115,18 @@ int main(int argc, char* argv[])
     
     cout<<endl<<"Sum = "<<sum<<endl;
     cout<<"Length = "<<sqrt(len)<<endl;
-    res1 = fabs(sum - trace)/norm;
-    res2 = fabs(Length - sqrt(len))/norm;
+    if (fabs(norm) > EPSILON)
+    {
+        res1 = fabs(sum - trace)/norm;
+        res2 = fabs(Length - sqrt(len))/norm;
+    }
     cout<<endl;
 
 
     printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
 
     delete[] A;
+    delete[] Y;
     delete[] U;
     return 0;
 }
