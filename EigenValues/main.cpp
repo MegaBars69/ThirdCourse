@@ -36,6 +36,8 @@ int main(int argc, char* argv[])
     
     double* A = new double[n*n];
     int res_of_read = 0;
+    int res_of_check = 0;
+    
     if (s == 0)
     {
         res_of_read = ReadMatrixFromFile(argv[5], A, n);
@@ -46,58 +48,62 @@ int main(int argc, char* argv[])
             delete[] A;
             return res_of_read;
         }
-        else
-        {
-            if(CheckMatrix(A, n) > 0)
-            {
-                printf("Matrix is'n simmetric\n");
-                printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
-                delete[] A;
-                return 4;
-            }
-        }
-        
     }
     else
     {
         FormulaMatrixInitialization(A, n, s);
     }
+    
+    double* U = new double[n];
+    memset(U, 0, n* sizeof(double));
+
+    double norm = Norm(A, U, n);
+    res_of_check = CheckMatrix(A, n, eps*norm);
+
+    if(res_of_check > 0)
+    {
+        printf("Matrix is'n simmetric\n");
+        printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
+        delete[] A;
+        return 4;
+    }
 
     PrintMatrix(A, n, m);
 
-    double* U = new double[n];
     double* Y = new double[n];
-    memset(U, 0, n* sizeof(double));
     memset(Y, 0, n* sizeof(double));
 
-    double norm = Norm(A, U, n);
     double trace = Trace(A, n);
     double Length = LengthOfMatrix(A, n);
-    cout<<"trA = "<<trace<<endl;
+
+    /*cout<<"trA = "<<trace<<endl;
     cout<<"||A|| = "<<Length<<endl;
-    double mera = norm*EPSILON;   
+
+    cout<<"Res of check = "<<res_of_check<<endl;*/
+    double mera = norm*eps;   
     
     clock_t start1 = clock();
 
-    //TriDiagonalize(A, U, n, mera, Y);
-    TriDiagonalize(A, U, n, mera);
-
+    if(res_of_check == 0)
+    {
+        TriDiagonalize(A, U, n, mera, Y);
+        //TriDiagonalize(A, U, n, mera);
+    }
     clock_t end1 = clock();
     
     t1 = static_cast<double>(end1 - start1) / CLOCKS_PER_SEC;
 
-    PrintMatrix(A, n, m); 
+    /*PrintMatrix(A, n, m); 
     trace = Trace(A, n);
     Length = LengthOfMatrix(A, n);
     cout<<"trA = "<<trace<<endl;
-    cout<<"||A|| = "<<Length<<endl;
+    cout<<"||A|| = "<<Length<<endl;*/
     
     clock_t start2 = clock();
     
     its = FindEigenValues(A, n, U, eps*norm);
 
     clock_t end2 = clock();
-    PrintMatrix(A, n, m); 
 
     t2 = static_cast<double>(end2 - start2) / CLOCKS_PER_SEC;
 
@@ -109,12 +115,12 @@ int main(int argc, char* argv[])
     }
     
     for (int i = 0; i < min(n, m); i++)
-    {
-        cout<<U[i]<<" ";
+    {           
+        printf("%10.3e ", U[i]); 
     }
     
-    cout<<endl<<"Sum = "<<sum<<endl;
-    cout<<"Length = "<<sqrt(len)<<endl;
+    /*cout<<endl<<"Sum = "<<sum<<endl;
+    cout<<"Length = "<<sqrt(len)<<endl;*/
     if (fabs(norm) > EPSILON)
     {
         res1 = fabs(sum - trace)/norm;

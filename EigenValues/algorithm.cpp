@@ -17,7 +17,7 @@ double Trace(double* A, int n)
 
 double LengthOfMatrix(double* A, int n)
 {
-    double aij, result = 0;
+    double result = 0;
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
@@ -191,7 +191,7 @@ void UAU(double* A, int n, int k, double* X, double* Y)
         }
     }
 }
-/*
+
 void TriDiagonalize(double* A, double* U, int n, double mera, double* Y)
 {
     double *pa = A;
@@ -199,7 +199,7 @@ void TriDiagonalize(double* A, double* U, int n, double mera, double* Y)
     double new_diag_el, norm_xk, first_in_x;
     double* pu;
 
-    for (int k = 0; k < n; k++)
+    for (int k = 0; k < n-1; k++)
     {
         pu = U;
         sk = 0;
@@ -236,7 +236,7 @@ void TriDiagonalize(double* A, double* U, int n, double mera, double* Y)
         UAU(pa, n, n - k - 1, U, Y);
     }  
 }
-*/
+
 
 int FindEigenValues(double* A, int n, double* X, double eps)
 {
@@ -245,8 +245,7 @@ int FindEigenValues(double* A, int n, double* X, double eps)
     bool is_running = true;
     int up_bound = n;
     double s, ann, ann_1, half_ann_1;
-    double *pa = A;
-    double x1 = 0, x2 = 0, y1 =  0, y2 = 0, new_diag_el =  0, ak1, ak2, ak3, norm_xk, scolar_sum;
+    double x1 = 0, x2 = 0, y1 =  0, y2 = 0, new_diag_el =  0, ak1, ak2, norm_xk, scolar_sum;
     bool aply_to_prev = true, did_reflect = true;
     double a11, a12, a21, a22, D;
 
@@ -257,7 +256,7 @@ int FindEigenValues(double* A, int n, double* X, double eps)
             ann = A[(up_bound - 1)*n +  up_bound - 1];
             ann_1 = A[(up_bound - 1)*n +  up_bound  - 2];
             half_ann_1 = ann_1/2;
-            s = (ann > 0 && half_ann_1 > 0 || ann < 0 && half_ann_1 < 0 ? ann + half_ann_1: ann - half_ann_1);            
+            s = ((ann > 0 && half_ann_1 > 0) || (ann < 0 && half_ann_1 < 0) ? ann + half_ann_1: ann - half_ann_1);            
             
             if (fabs(ann_1) < eps)
             {
