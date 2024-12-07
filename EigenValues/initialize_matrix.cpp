@@ -153,15 +153,17 @@ double f(int i, int j, int n, int s)
         }  
         break;
     case 3:
-        if (i == j && j < n-1)
+        i++;
+        j++;
+        if (i == j && j < n)
         {
             return 1;
         }
-        else if (j == n-1)
+        else if (j == n)
         {
             return i;
         }
-        else if(i == n-1)
+        else if(i == n)
         {
             return j;
         }

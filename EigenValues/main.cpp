@@ -65,6 +65,7 @@ int main(int argc, char* argv[])
         printf("Matrix is'n simmetric\n");
         printf ("%s : Residual1 = %e Residual2 = %e Iterations = %d Iterations1 = %d Elapsed1 = %.2f Elapsed2 = %.2f\n", argv[0], res1, res2, its, its / n, t1, t2);
         delete[] A;
+        delete[] U;
         return 4;
     }
 
