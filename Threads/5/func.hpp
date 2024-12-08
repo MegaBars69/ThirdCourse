@@ -136,20 +136,8 @@ class Args{
                     std::cout << "array: nullptr" << std::endl;
                 }
             }
-            std::cout << "m: " << m << std::endl;
             std::cout << "amount of changed: " << amount_of_changed << std::endl;
 
-            std::cout << "prev: " << prev << std::endl;
-            std::cout << "next: " << next << std::endl;
-            std::cout << "rigth sum: " << right_sum << std::endl;
-            std::cout << "left sum: " << left_sum << std::endl;
-
-            std::cout << "el in rigth sum: " << el_in_right_sum << std::endl;
-            std::cout << "el in left sum: " << el_in_left_sum << std::endl;
-            std::cout << "left can connect: " << left_can_connect << std::endl;
-
-            std::cout << "q right: " << q_right << std::endl;
-            std::cout << "q left: " << q_left << std::endl;
            
             printf("\n");
         }

@@ -64,6 +64,7 @@ int main(int argc, char* argv[])
                 printf("RESULT %2d:",p);
 
                 printf("To few elements in file(<n)\n");
+                fclose(fp);
                 delete[] array;
                 delete[] a;
                 return 3;
@@ -75,7 +76,7 @@ int main(int argc, char* argv[])
             printf("RESULT %2d:",p);
 
             printf("Problem with reading an element \n");
-            
+            fclose(fp);
             delete[] array;
             delete[] a;
             return 2;
@@ -86,6 +87,7 @@ int main(int argc, char* argv[])
             printf("RESULT %2d:",p);
 
             printf("To many elements in file(>n)\n");
+            fclose(fp);
             delete[] array;
             delete[] a;
             return 4;
@@ -96,6 +98,8 @@ int main(int argc, char* argv[])
         }
         i++;
     }
+    fclose(fp);
+    
     //Обработка массива. Распределение памяти.
     for (k = 0; k < p; k++,pa += m + (k <= (p-l) ? 0 : 1))
     {
@@ -109,7 +113,7 @@ int main(int argc, char* argv[])
         {
             a[k].prev = *(pa-1);
         }
-        if (k < p-l)
+        if (k < p-l && k < p-1)
         {
             a[k].next = *(pa + m);
         }
