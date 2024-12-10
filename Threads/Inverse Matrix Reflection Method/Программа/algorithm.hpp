@@ -95,6 +95,7 @@ class Args{
 
         double* A = nullptr;
         double* B = nullptr; 
+        bool* ZerosMatrix = nullptr;
         double* U = nullptr;
         double* ProductResult = nullptr;
         double* ZeroMatrix = nullptr;
@@ -146,11 +147,7 @@ class Args{
         }
         //Args();
 };
-
-void FirstStep(double* A, double* B, double* U, double norm, int n, int m, int p, int K, int shag, Args *a);
-void SecondStep(double* A, double* B, double* U, double* ProductResult, double norm, int n, int m, int p, int K, int shag, Args* aA);
-void ThirdStep(double* A, double* B, int n, int m, int p, int K, Args *a);
-void InverseMatrixParallel(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int M);
+void printM(bool* A, int n);
 
 double get_cpu_time();
 double get_fun_time();
@@ -175,5 +172,10 @@ void BlockMul(double *a, double* b, double* c, int n1, int m12, int n2);
 void BlockMulOptimized(double *a, double* b, double* c, int n1, int m12, int n2);
 double CalcError(double * A, double * InversedA, int n, int m);
 double Discrepancy(double * A, double * InversedA, double* Column, double* ProductResult, double* Sum, int n, int m);
+
+void FirstStep(double* A, double* B, double* U, double norm, int n, int m, int p, int K, int shag, Args *a);
+void SecondStep(double* A, double* B, double* U, double* ProductResult, double norm, int n, int m, int p, int K, int shag, Args* aA);
+void ThirdStep(double* A, double* B, int n, int m, int p, int K, Args *a);
+void InverseMatrixParallel(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int p, int K, int M);
 
 #endif 
