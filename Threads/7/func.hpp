@@ -91,18 +91,24 @@ class Args{
 
         int founded_pairs = 0;
 
-        void  PrintAll(void)
+        int founded_pairs_in_the_last_interval = 0;
+
+        void  PrintAll(bool only_cpu_info)
         {
             std::cout<<"----------------------------------------"<<std::endl;
-            std::cout<<"p = "<<p<<std::endl;
             std::cout<<"k = "<<k<<std::endl;
-            std::cout<<"n = "<<n<<std::endl;
-            std::cout<<"chunk = "<<chunk<<std::endl;
-            std::cout<<"found pairs = "<<founded_pairs<<std::endl;
-            std::cout<<"L = "<<L<<std::endl;
+            if (only_cpu_info)
+            {
+                std::cout<<"p = "<<p<<std::endl;
+                std::cout<<"n = "<<n<<std::endl;
+                std::cout<<"chunk = "<<chunk<<std::endl;
+                std::cout<<"found pairs = "<<founded_pairs<<std::endl;
+                std::cout<<"found pairs in the last interval = "<<founded_pairs_in_the_last_interval<<std::endl;
+                std::cout<<"L = "<<L<<std::endl;
+            
+            }
+            std::cout<<"Sum of CPU time of all threads = "<<cpu_time_of_all_threads<<std::endl;
             std::cout<<"CPU time of thread = "<<cpu_time_of_thread<<std::endl;
-            std::cout<<"CPU time of all threads = "<<cpu_time_of_all_threads<<std::endl;
-            std::cout<<"answer = "<<answer<<std::endl;
             std::cout<<"----------------------------------------"<<std::endl;
 
         }

@@ -13,6 +13,7 @@ double get_cpu_time()
     return buf.ru_utime.tv_sec + buf.ru_utime.tv_usec/1e6;
 }
 
+/*Check if Number and (Number + 6) are prime*/ 
 bool NumberAndNextArePrime(unsigned long long int num)
 {
     unsigned long long int next = num + 6;
@@ -44,16 +45,14 @@ bool NumberAndNextArePrime(unsigned long long int num)
 void FindInterval(Args* a)
 {
     int n = a->n;
-    //int k = a->k;
     int p = a->p;
     int chunk = a->chunk;
-    int founded_pairs = a->founded_pairs;
-    int pairs_in_interval = 0;
+    int founded_pairs = a->founded_pairs; //amount of pairs from left side
+    int pairs_in_interval = 0; //pairs in current chunk interval
     
-    unsigned long long int L = a->L;
+    unsigned long long int L = a->L; //left bound of chunk interval
     unsigned long long int i = 0;
-    unsigned long long int up_bound = L + chunk;
-    unsigned long long int answer = 0;
+    unsigned long long int up_bound = L + chunk; // right bound of chunk interval
 
     while (founded_pairs < n)  
     {
@@ -67,7 +66,8 @@ void FindInterval(Args* a)
             }
 
         } 
-
+        
+        a->founded_pairs_in_the_last_interval = pairs_in_interval;
         reduce_sum(p, &pairs_in_interval, 1);
         founded_pairs += pairs_in_interval;
         L += p*chunk;
@@ -86,6 +86,7 @@ void ProccesResult(Args* a)
     unsigned long long int up_bound = i + p*a->chunk; 
     int pair_in_interval = a->founded_pairs;
     int n = a->n; 
+
     for (; i < up_bound; i += 2)
     {
         if (NumberAndNextArePrime(i))
@@ -96,9 +97,7 @@ void ProccesResult(Args* a)
                 a->answer = i + 6;
             }
         }
-        
     }
-    
 } 
 
 

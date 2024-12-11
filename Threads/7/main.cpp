@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 {
     Args* a;
     int k = 0;
-    int chunk = 20000;
+    int chunk = 1000000;
 
     if(argc < 3)
     {
@@ -65,9 +65,9 @@ int main(int argc, char* argv[])
     
     for (k = p-1; k >= 0; k--)
     {
-        a[k].PrintAll();
+        a[k].PrintAll(false);
     }
-    
+    std::cout<<"RESULT "<<p<<" : "<<a[0].answer<<std::endl;
    
     
     
