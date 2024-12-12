@@ -68,7 +68,9 @@ void FindInterval(Args* a)
         } 
         
         a->founded_pairs_in_the_last_interval = pairs_in_interval;
+
         reduce_sum(p, &pairs_in_interval, 1);
+        
         founded_pairs += pairs_in_interval;
         L += p*chunk;
         up_bound = L + chunk; 
