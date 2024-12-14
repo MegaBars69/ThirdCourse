@@ -194,17 +194,18 @@ void UAU(double* A, int n, int k, double* X, double* Y)
 
 void TriDiagonalize(double* A, double* U, int n, double mera, double* Y)
 {
+    int i, k;
     double *pa = A;
     double sk, ajk,akk;
     double new_diag_el, norm_xk, first_in_x;
     double* pu;
 
-    for (int k = 0; k < n-1; k++)
+    for (k = 0; k < n-1; k++)
     {
         pu = U;
         sk = 0;
 
-        for (int i = k+2; i < n; i++)
+        for (i = k+2; i < n; i++)
         {
             ajk = A[i*n + k];
             pu++;
@@ -225,7 +226,7 @@ void TriDiagonalize(double* A, double* U, int n, double mera, double* Y)
 
         if(!(fabs(norm_xk) < mera))
         {
-            for (int i = 0; i < n; i++, pu++)
+            for (i = k+1; i < n; i++, pu++)
             {
                 *pu = (*pu)/norm_xk;
             }

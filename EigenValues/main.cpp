@@ -76,11 +76,6 @@ int main(int argc, char* argv[])
 
     double trace = Trace(A, n);
     double Length = LengthOfMatrix(A, n);
-
-    /*cout<<"trA = "<<trace<<endl;
-    cout<<"||A|| = "<<Length<<endl;
-
-    cout<<"Res of check = "<<res_of_check<<endl;*/
     double mera = norm*eps;   
     
     clock_t start1 = clock();
@@ -93,12 +88,6 @@ int main(int argc, char* argv[])
     clock_t end1 = clock();
     
     t1 = static_cast<double>(end1 - start1) / CLOCKS_PER_SEC;
-
-    /*PrintMatrix(A, n, m); 
-    trace = Trace(A, n);
-    Length = LengthOfMatrix(A, n);
-    cout<<"trA = "<<trace<<endl;
-    cout<<"||A|| = "<<Length<<endl;*/
     
     clock_t start2 = clock();
     
