@@ -163,8 +163,8 @@ void MinusEqualBlockMulEqualBlockMul(double* Main, double *a, double* b, int n1,
 int Triungulize(double* A, double* U, int row_num, int col_num, double norm);
 int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double* ZeroMatrix, double norm, int n, int m, int S);
 void ApplyMatrix(double* U, double* A, int row_num, int col_num, int amount_of_vectors);
-void ZeroOut(double* Diag, double* Down, double* U, int m, int row_size, double norm);
-void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero = false);
+void ZeroOut(double* Diag, double* Down, double* U, int m, int row_size, double norm, bool down_is_triungle = false);
+void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero = false, bool down_is_triungle = false);
 
 double Norm(double* A, double* results, int n, int m);
 void AddToMatrix(double* A, double* B, int n, int m);
