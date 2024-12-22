@@ -1526,7 +1526,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
         if(InverseTriungleBlock(pa, U, block_size_row, norm) != 0)
         {
             cout<<"Matrix is singular"<<endl;
-            return -1;
+            return 1;
         } 
 
         for (j = s+1; j < up_bound; j++)
@@ -1578,7 +1578,7 @@ void InverseMatrixParallel(Args* a)
 
     if (p == 1)
     {
-        InverseMatrix(A, B, U, ProductResult, ZeroMatrix, size, a->norm, n,m);        
+        a ->res = InverseMatrix(A, B, U, ProductResult, ZeroMatrix, size, a->norm, n,m);        
     }
     else
     {
