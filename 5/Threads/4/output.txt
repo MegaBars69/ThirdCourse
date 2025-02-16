@@ -1,0 +1,6760 @@
+]633;E;((i = 0));3d547b25-91b1-4939-a815-3914743af643]633;CRESULT  0: p > 0 
+
+Args Data:
+p: 10
+k: 0
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 9.60e-04 
+tid: 81864512
+array: 1507 1508.5 1509.5 1510.5 1511.5 1512.5 1513.5 1514.5 1515.5 
+m: 9
+amount of changed: 96
+pan: 0
+na0: 1516
+na1: 1517
+
+
+Args Data:
+p: 10
+k: 1
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 9.60e-04 
+tid: 94459584
+array: 1516.5 1517.5 1518.5 1519.5 1520.5 1521.5 1522.5 1523.5 1524.5 
+m: 9
+amount of changed: 96
+pan: 1515
+na0: 1525
+na1: 1526
+
+
+Args Data:
+p: 10
+k: 2
+n: 99
+cpu time of thread: 9.60e-04 
+cpu time of all threads: 9.60e-04 
+tid: 102852288
+array: 1525.5 1526.5 1527.5 1528.5 1529.5 1530.5 1531.5 1532.5 1533.5 
+m: 9
+amount of changed: 96
+pan: 1524
+na0: 1534
+na1: 1535
+
+
+Args Data:
+p: 10
+k: 3
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 9.60e-04 
+tid: 111244992
+array: 1534.5 1535.5 1536.5 1537.5 1538.5 1539.5 1540.5 1541.5 1542.5 
+m: 9
+amount of changed: 96
+pan: 1533
+na0: 1543
+na1: 1544
+
+
+Args Data:
+p: 10
+k: 4
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 9.60e-04 
+tid: 119637696
+array: 1543.5 1544.5 1545.5 1546.5 1547.5 1548.5 1549.5 1550.5 1551.5 
+m: 9
+amount of changed: 96
+pan: 1542
+na0: 1552
+na1: 1553
+
+
+Args Data:
+p: 10
+k: 5
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 9.60e-04 
+tid: 128030400
+array: 1552.5 1553.5 1554.5 1555.5 1556.5 1557.5 1558.5 1559.5 1560.5 
+m: 9
+amount of changed: 96
+pan: 1551
+na0: 1561
+na1: 1562
+
+
+Args Data:
+p: 10
+k: 6
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 9.60e-04 
+tid: 136423104
+array: 1561.5 1562.5 1563.5 1564.5 1565.5 1566.5 1567.5 1568.5 1569.5 
+m: 9
+amount of changed: 96
+pan: 1560
+na0: 1570
+na1: 1571
+
+
+Args Data:
+p: 10
+k: 7
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 9.60e-04 
+tid: 144815808
+array: 1570.5 1571.5 1572.5 1573.5 1574.5 1575.5 1576.5 1577.5 1578.5 
+m: 9
+amount of changed: 96
+pan: 1569
+na0: 1579
+na1: 1580
+
+
+Args Data:
+p: 10
+k: 8
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 9.60e-04 
+tid: 153208512
+array: 1579.5 1580.5 1581.5 1582.5 1583.5 1584.5 1585.5 1586.5 1587.5 
+m: 9
+amount of changed: 96
+pan: 1578
+na0: 1588
+na1: 1589
+
+
+Args Data:
+p: 10
+k: 9
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 9.60e-04 
+tid: 161601216
+array: 1588.5 1589.5 1590.5 1591.5 1592.5 1593.5 1594.5 1595.5 1596.5 1597.5 1598.5 1599.5 1600.5 1601.5 1602.5 1603.5 1604 1605 
+m: 18
+amount of changed: 96
+pan: 1587
+na0: 0
+na1: 0
+
+RESULT 10: 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03
+
+Args Data:
+p: 20
+k: 0
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 81864512
+array: 1507 1508.5 1509.5 1510.5 
+m: 4
+amount of changed: 96
+pan: 0
+na0: 1511
+na1: 1512
+
+
+Args Data:
+p: 20
+k: 1
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 94459584
+array: 1511.5 1512.5 1513.5 1514.5 
+m: 4
+amount of changed: 96
+pan: 1510
+na0: 1515
+na1: 1516
+
+
+Args Data:
+p: 20
+k: 2
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 102852288
+array: 1515.5 1516.5 1517.5 1518.5 
+m: 4
+amount of changed: 96
+pan: 1514
+na0: 1519
+na1: 1520
+
+
+Args Data:
+p: 20
+k: 3
+n: 99
+cpu time of thread: 2.56e-03 
+cpu time of all threads: 2.56e-03 
+tid: 111244992
+array: 1519.5 1520.5 1521.5 1522.5 
+m: 4
+amount of changed: 96
+pan: 1518
+na0: 1523
+na1: 1524
+
+
+Args Data:
+p: 20
+k: 4
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 119637696
+array: 1523.5 1524.5 1525.5 1526.5 
+m: 4
+amount of changed: 96
+pan: 1522
+na0: 1527
+na1: 1528
+
+
+Args Data:
+p: 20
+k: 5
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 128030400
+array: 1527.5 1528.5 1529.5 1530.5 
+m: 4
+amount of changed: 96
+pan: 1526
+na0: 1531
+na1: 1532
+
+
+Args Data:
+p: 20
+k: 6
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 136423104
+array: 1531.5 1532.5 1533.5 1534.5 
+m: 4
+amount of changed: 96
+pan: 1530
+na0: 1535
+na1: 1536
+
+
+Args Data:
+p: 20
+k: 7
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 144815808
+array: 1535.5 1536.5 1537.5 1538.5 
+m: 4
+amount of changed: 96
+pan: 1534
+na0: 1539
+na1: 1540
+
+
+Args Data:
+p: 20
+k: 8
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 153208512
+array: 1539.5 1540.5 1541.5 1542.5 
+m: 4
+amount of changed: 96
+pan: 1538
+na0: 1543
+na1: 1544
+
+
+Args Data:
+p: 20
+k: 9
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 161601216
+array: 1543.5 1544.5 1545.5 1546.5 
+m: 4
+amount of changed: 96
+pan: 1542
+na0: 1547
+na1: 1548
+
+
+Args Data:
+p: 20
+k: 10
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 169993920
+array: 1547.5 1548.5 1549.5 1550.5 
+m: 4
+amount of changed: 96
+pan: 1546
+na0: 1551
+na1: 1552
+
+
+Args Data:
+p: 20
+k: 11
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 178386624
+array: 1551.5 1552.5 1553.5 1554.5 
+m: 4
+amount of changed: 96
+pan: 1550
+na0: 1555
+na1: 1556
+
+
+Args Data:
+p: 20
+k: 12
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 186779328
+array: 1555.5 1556.5 1557.5 1558.5 
+m: 4
+amount of changed: 96
+pan: 1554
+na0: 1559
+na1: 1560
+
+
+Args Data:
+p: 20
+k: 13
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 195172032
+array: 1559.5 1560.5 1561.5 1562.5 
+m: 4
+amount of changed: 96
+pan: 1558
+na0: 1563
+na1: 1564
+
+
+Args Data:
+p: 20
+k: 14
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 203564736
+array: 1563.5 1564.5 1565.5 1566.5 
+m: 4
+amount of changed: 96
+pan: 1562
+na0: 1567
+na1: 1568
+
+
+Args Data:
+p: 20
+k: 15
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 211957440
+array: 1567.5 1568.5 1569.5 1570.5 
+m: 4
+amount of changed: 96
+pan: 1566
+na0: 1571
+na1: 1572
+
+
+Args Data:
+p: 20
+k: 16
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 220350144
+array: 1571.5 1572.5 1573.5 1574.5 
+m: 4
+amount of changed: 96
+pan: 1570
+na0: 1575
+na1: 1576
+
+
+Args Data:
+p: 20
+k: 17
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 228742848
+array: 1575.5 1576.5 1577.5 1578.5 
+m: 4
+amount of changed: 96
+pan: 1574
+na0: 1579
+na1: 1580
+
+
+Args Data:
+p: 20
+k: 18
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 237135552
+array: 1579.5 1580.5 1581.5 1582.5 
+m: 4
+amount of changed: 96
+pan: 1578
+na0: 1583
+na1: 1584
+
+
+Args Data:
+p: 20
+k: 19
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 2.56e-03 
+tid: 245528256
+array: 1583.5 1584.5 1585.5 1586.5 1587.5 1588.5 1589.5 1590.5 1591.5 1592.5 1593.5 1594.5 1595.5 1596.5 1597.5 1598.5 1599.5 1600.5 1601.5 1602.5 1603.5 1604 1605 
+m: 23
+amount of changed: 96
+pan: 1582
+na0: 0
+na1: 0
+
+RESULT 20: 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03
+
+Args Data:
+p: 30
+k: 0
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 81864512
+array: 1507 1508.5 1509.5 
+m: 3
+amount of changed: 96
+pan: 0
+na0: 1510
+na1: 1511
+
+
+Args Data:
+p: 30
+k: 1
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 94459584
+array: 1510.5 1511.5 1512.5 
+m: 3
+amount of changed: 96
+pan: 1509
+na0: 1513
+na1: 1514
+
+
+Args Data:
+p: 30
+k: 2
+n: 99
+cpu time of thread: 1.94e-03 
+cpu time of all threads: 1.94e-03 
+tid: 102852288
+array: 1513.5 1514.5 1515.5 
+m: 3
+amount of changed: 96
+pan: 1512
+na0: 1516
+na1: 1517
+
+
+Args Data:
+p: 30
+k: 3
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 111244992
+array: 1516.5 1517.5 1518.5 
+m: 3
+amount of changed: 96
+pan: 1515
+na0: 1519
+na1: 1520
+
+
+Args Data:
+p: 30
+k: 4
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 119637696
+array: 1519.5 1520.5 1521.5 
+m: 3
+amount of changed: 96
+pan: 1518
+na0: 1522
+na1: 1523
+
+
+Args Data:
+p: 30
+k: 5
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 128030400
+array: 1522.5 1523.5 1524.5 
+m: 3
+amount of changed: 96
+pan: 1521
+na0: 1525
+na1: 1526
+
+
+Args Data:
+p: 30
+k: 6
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 136423104
+array: 1525.5 1526.5 1527.5 
+m: 3
+amount of changed: 96
+pan: 1524
+na0: 1528
+na1: 1529
+
+
+Args Data:
+p: 30
+k: 7
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 144815808
+array: 1528.5 1529.5 1530.5 
+m: 3
+amount of changed: 96
+pan: 1527
+na0: 1531
+na1: 1532
+
+
+Args Data:
+p: 30
+k: 8
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 153208512
+array: 1531.5 1532.5 1533.5 
+m: 3
+amount of changed: 96
+pan: 1530
+na0: 1534
+na1: 1535
+
+
+Args Data:
+p: 30
+k: 9
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 161601216
+array: 1534.5 1535.5 1536.5 
+m: 3
+amount of changed: 96
+pan: 1533
+na0: 1537
+na1: 1538
+
+
+Args Data:
+p: 30
+k: 10
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 169993920
+array: 1537.5 1538.5 1539.5 
+m: 3
+amount of changed: 96
+pan: 1536
+na0: 1540
+na1: 1541
+
+
+Args Data:
+p: 30
+k: 11
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 178386624
+array: 1540.5 1541.5 1542.5 
+m: 3
+amount of changed: 96
+pan: 1539
+na0: 1543
+na1: 1544
+
+
+Args Data:
+p: 30
+k: 12
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 186779328
+array: 1543.5 1544.5 1545.5 
+m: 3
+amount of changed: 96
+pan: 1542
+na0: 1546
+na1: 1547
+
+
+Args Data:
+p: 30
+k: 13
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 195172032
+array: 1546.5 1547.5 1548.5 
+m: 3
+amount of changed: 96
+pan: 1545
+na0: 1549
+na1: 1550
+
+
+Args Data:
+p: 30
+k: 14
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 203564736
+array: 1549.5 1550.5 1551.5 
+m: 3
+amount of changed: 96
+pan: 1548
+na0: 1552
+na1: 1553
+
+
+Args Data:
+p: 30
+k: 15
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 211957440
+array: 1552.5 1553.5 1554.5 
+m: 3
+amount of changed: 96
+pan: 1551
+na0: 1555
+na1: 1556
+
+
+Args Data:
+p: 30
+k: 16
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 220350144
+array: 1555.5 1556.5 1557.5 
+m: 3
+amount of changed: 96
+pan: 1554
+na0: 1558
+na1: 1559
+
+
+Args Data:
+p: 30
+k: 17
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 228742848
+array: 1558.5 1559.5 1560.5 
+m: 3
+amount of changed: 96
+pan: 1557
+na0: 1561
+na1: 1562
+
+
+Args Data:
+p: 30
+k: 18
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 237135552
+array: 1561.5 1562.5 1563.5 
+m: 3
+amount of changed: 96
+pan: 1560
+na0: 1564
+na1: 1565
+
+
+Args Data:
+p: 30
+k: 19
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 245528256
+array: 1564.5 1565.5 1566.5 
+m: 3
+amount of changed: 96
+pan: 1563
+na0: 1567
+na1: 1568
+
+
+Args Data:
+p: 30
+k: 20
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 253920960
+array: 1567.5 1568.5 1569.5 
+m: 3
+amount of changed: 96
+pan: 1566
+na0: 1570
+na1: 1571
+
+
+Args Data:
+p: 30
+k: 21
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 262313664
+array: 1570.5 1571.5 1572.5 
+m: 3
+amount of changed: 96
+pan: 1569
+na0: 1573
+na1: 1574
+
+
+Args Data:
+p: 30
+k: 22
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 270706368
+array: 1573.5 1574.5 1575.5 
+m: 3
+amount of changed: 96
+pan: 1572
+na0: 1576
+na1: 1577
+
+
+Args Data:
+p: 30
+k: 23
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 279099072
+array: 1576.5 1577.5 1578.5 
+m: 3
+amount of changed: 96
+pan: 1575
+na0: 1579
+na1: 1580
+
+
+Args Data:
+p: 30
+k: 24
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 287491776
+array: 1579.5 1580.5 1581.5 
+m: 3
+amount of changed: 96
+pan: 1578
+na0: 1582
+na1: 1583
+
+
+Args Data:
+p: 30
+k: 25
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 295884480
+array: 1582.5 1583.5 1584.5 
+m: 3
+amount of changed: 96
+pan: 1581
+na0: 1585
+na1: 1586
+
+
+Args Data:
+p: 30
+k: 26
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 304277184
+array: 1585.5 1586.5 1587.5 
+m: 3
+amount of changed: 96
+pan: 1584
+na0: 1588
+na1: 1589
+
+
+Args Data:
+p: 30
+k: 27
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 312669888
+array: 1588.5 1589.5 1590.5 
+m: 3
+amount of changed: 96
+pan: 1587
+na0: 1591
+na1: 1592
+
+
+Args Data:
+p: 30
+k: 28
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 321062592
+array: 1591.5 1592.5 1593.5 
+m: 3
+amount of changed: 96
+pan: 1590
+na0: 1594
+na1: 1595
+
+
+Args Data:
+p: 30
+k: 29
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.94e-03 
+tid: 329455296
+array: 1594.5 1595.5 1596.5 1597.5 1598.5 1599.5 1600.5 1601.5 1602.5 1603.5 1604 1605 
+m: 12
+amount of changed: 96
+pan: 1593
+na0: 0
+na1: 0
+
+RESULT 30: 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03
+
+Args Data:
+p: 40
+k: 0
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 81864512
+array: 1507 1508.5 
+m: 2
+amount of changed: 96
+pan: 0
+na0: 1509
+na1: 1510
+
+
+Args Data:
+p: 40
+k: 1
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 94459584
+array: 1509.5 1510.5 
+m: 2
+amount of changed: 96
+pan: 1508
+na0: 1511
+na1: 1512
+
+
+Args Data:
+p: 40
+k: 2
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 102852288
+array: 1511.5 1512.5 
+m: 2
+amount of changed: 96
+pan: 1510
+na0: 1513
+na1: 1514
+
+
+Args Data:
+p: 40
+k: 3
+n: 99
+cpu time of thread: 2.60e-05 
+cpu time of all threads: 5.26e-04 
+tid: 111244992
+array: 1513.5 1514.5 
+m: 2
+amount of changed: 96
+pan: 1512
+na0: 1515
+na1: 1516
+
+
+Args Data:
+p: 40
+k: 4
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 119637696
+array: 1515.5 1516.5 
+m: 2
+amount of changed: 96
+pan: 1514
+na0: 1517
+na1: 1518
+
+
+Args Data:
+p: 40
+k: 5
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 128030400
+array: 1517.5 1518.5 
+m: 2
+amount of changed: 96
+pan: 1516
+na0: 1519
+na1: 1520
+
+
+Args Data:
+p: 40
+k: 6
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 136423104
+array: 1519.5 1520.5 
+m: 2
+amount of changed: 96
+pan: 1518
+na0: 1521
+na1: 1522
+
+
+Args Data:
+p: 40
+k: 7
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 144815808
+array: 1521.5 1522.5 
+m: 2
+amount of changed: 96
+pan: 1520
+na0: 1523
+na1: 1524
+
+
+Args Data:
+p: 40
+k: 8
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 153208512
+array: 1523.5 1524.5 
+m: 2
+amount of changed: 96
+pan: 1522
+na0: 1525
+na1: 1526
+
+
+Args Data:
+p: 40
+k: 9
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 161601216
+array: 1525.5 1526.5 
+m: 2
+amount of changed: 96
+pan: 1524
+na0: 1527
+na1: 1528
+
+
+Args Data:
+p: 40
+k: 10
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 169993920
+array: 1527.5 1528.5 
+m: 2
+amount of changed: 96
+pan: 1526
+na0: 1529
+na1: 1530
+
+
+Args Data:
+p: 40
+k: 11
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 178386624
+array: 1529.5 1530.5 
+m: 2
+amount of changed: 96
+pan: 1528
+na0: 1531
+na1: 1532
+
+
+Args Data:
+p: 40
+k: 12
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 186779328
+array: 1531.5 1532.5 
+m: 2
+amount of changed: 96
+pan: 1530
+na0: 1533
+na1: 1534
+
+
+Args Data:
+p: 40
+k: 13
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 195172032
+array: 1533.5 1534.5 
+m: 2
+amount of changed: 96
+pan: 1532
+na0: 1535
+na1: 1536
+
+
+Args Data:
+p: 40
+k: 14
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 203564736
+array: 1535.5 1536.5 
+m: 2
+amount of changed: 96
+pan: 1534
+na0: 1537
+na1: 1538
+
+
+Args Data:
+p: 40
+k: 15
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 211957440
+array: 1537.5 1538.5 
+m: 2
+amount of changed: 96
+pan: 1536
+na0: 1539
+na1: 1540
+
+
+Args Data:
+p: 40
+k: 16
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 220350144
+array: 1539.5 1540.5 
+m: 2
+amount of changed: 96
+pan: 1538
+na0: 1541
+na1: 1542
+
+
+Args Data:
+p: 40
+k: 17
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 228742848
+array: 1541.5 1542.5 
+m: 2
+amount of changed: 96
+pan: 1540
+na0: 1543
+na1: 1544
+
+
+Args Data:
+p: 40
+k: 18
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 237135552
+array: 1543.5 1544.5 
+m: 2
+amount of changed: 96
+pan: 1542
+na0: 1545
+na1: 1546
+
+
+Args Data:
+p: 40
+k: 19
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 245528256
+array: 1545.5 1546.5 
+m: 2
+amount of changed: 96
+pan: 1544
+na0: 1547
+na1: 1548
+
+
+Args Data:
+p: 40
+k: 20
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 253920960
+array: 1547.5 1548.5 
+m: 2
+amount of changed: 96
+pan: 1546
+na0: 1549
+na1: 1550
+
+
+Args Data:
+p: 40
+k: 21
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 262313664
+array: 1549.5 1550.5 
+m: 2
+amount of changed: 96
+pan: 1548
+na0: 1551
+na1: 1552
+
+
+Args Data:
+p: 40
+k: 22
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 270706368
+array: 1551.5 1552.5 
+m: 2
+amount of changed: 96
+pan: 1550
+na0: 1553
+na1: 1554
+
+
+Args Data:
+p: 40
+k: 23
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 279099072
+array: 1553.5 1554.5 
+m: 2
+amount of changed: 96
+pan: 1552
+na0: 1555
+na1: 1556
+
+
+Args Data:
+p: 40
+k: 24
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 287491776
+array: 1555.5 1556.5 
+m: 2
+amount of changed: 96
+pan: 1554
+na0: 1557
+na1: 1558
+
+
+Args Data:
+p: 40
+k: 25
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 295884480
+array: 1557.5 1558.5 
+m: 2
+amount of changed: 96
+pan: 1556
+na0: 1559
+na1: 1560
+
+
+Args Data:
+p: 40
+k: 26
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 304277184
+array: 1559.5 1560.5 
+m: 2
+amount of changed: 96
+pan: 1558
+na0: 1561
+na1: 1562
+
+
+Args Data:
+p: 40
+k: 27
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 312669888
+array: 1561.5 1562.5 
+m: 2
+amount of changed: 96
+pan: 1560
+na0: 1563
+na1: 1564
+
+
+Args Data:
+p: 40
+k: 28
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 321062592
+array: 1563.5 1564.5 
+m: 2
+amount of changed: 96
+pan: 1562
+na0: 1565
+na1: 1566
+
+
+Args Data:
+p: 40
+k: 29
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 329455296
+array: 1565.5 1566.5 
+m: 2
+amount of changed: 96
+pan: 1564
+na0: 1567
+na1: 1568
+
+
+Args Data:
+p: 40
+k: 30
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 337848000
+array: 1567.5 1568.5 
+m: 2
+amount of changed: 96
+pan: 1566
+na0: 1569
+na1: 1570
+
+
+Args Data:
+p: 40
+k: 31
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 346240704
+array: 1569.5 1570.5 
+m: 2
+amount of changed: 96
+pan: 1568
+na0: 1571
+na1: 1572
+
+
+Args Data:
+p: 40
+k: 32
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 354633408
+array: 1571.5 1572.5 
+m: 2
+amount of changed: 96
+pan: 1570
+na0: 1573
+na1: 1574
+
+
+Args Data:
+p: 40
+k: 33
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 363026112
+array: 1573.5 1574.5 
+m: 2
+amount of changed: 96
+pan: 1572
+na0: 1575
+na1: 1576
+
+
+Args Data:
+p: 40
+k: 34
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 371418816
+array: 1575.5 1576.5 
+m: 2
+amount of changed: 96
+pan: 1574
+na0: 1577
+na1: 1578
+
+
+Args Data:
+p: 40
+k: 35
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 379811520
+array: 1577.5 1578.5 
+m: 2
+amount of changed: 96
+pan: 1576
+na0: 1579
+na1: 1580
+
+
+Args Data:
+p: 40
+k: 36
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 388204224
+array: 1579.5 1580.5 
+m: 2
+amount of changed: 96
+pan: 1578
+na0: 1581
+na1: 1582
+
+
+Args Data:
+p: 40
+k: 37
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 396596928
+array: 1581.5 1582.5 
+m: 2
+amount of changed: 96
+pan: 1580
+na0: 1583
+na1: 1584
+
+
+Args Data:
+p: 40
+k: 38
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 5.26e-04 
+tid: 404989632
+array: 1583.5 1584.5 
+m: 2
+amount of changed: 96
+pan: 1582
+na0: 1585
+na1: 1586
+
+
+Args Data:
+p: 40
+k: 39
+n: 99
+cpu time of thread: 5.00e-04 
+cpu time of all threads: 5.26e-04 
+tid: 413382336
+array: 1585.5 1586.5 1587.5 1588.5 1589.5 1590.5 1591.5 1592.5 1593.5 1594.5 1595.5 1596.5 1597.5 1598.5 1599.5 1600.5 1601.5 1602.5 1603.5 1604 1605 
+m: 21
+amount of changed: 96
+pan: 1584
+na0: 0
+na1: 0
+
+RESULT 40: 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03
+
+Args Data:
+p: 50
+k: 0
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 81864512
+array: 1507 
+m: 1
+amount of changed: 96
+pan: 0
+na0: 1508
+na1: 1509
+
+
+Args Data:
+p: 50
+k: 1
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 94459584
+array: 1508.5 
+m: 1
+amount of changed: 96
+pan: 1507
+na0: 1509
+na1: 1510
+
+
+Args Data:
+p: 50
+k: 2
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 102852288
+array: 1509.5 
+m: 1
+amount of changed: 96
+pan: 1508
+na0: 1510
+na1: 1511
+
+
+Args Data:
+p: 50
+k: 3
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 111244992
+array: 1510.5 
+m: 1
+amount of changed: 96
+pan: 1509
+na0: 1511
+na1: 1512
+
+
+Args Data:
+p: 50
+k: 4
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 119637696
+array: 1511.5 
+m: 1
+amount of changed: 96
+pan: 1510
+na0: 1512
+na1: 1513
+
+
+Args Data:
+p: 50
+k: 5
+n: 99
+cpu time of thread: 1.14e-03 
+cpu time of all threads: 1.72e-03 
+tid: 128030400
+array: 1512.5 
+m: 1
+amount of changed: 96
+pan: 1511
+na0: 1513
+na1: 1514
+
+
+Args Data:
+p: 50
+k: 6
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 136423104
+array: 1513.5 
+m: 1
+amount of changed: 96
+pan: 1512
+na0: 1514
+na1: 1515
+
+
+Args Data:
+p: 50
+k: 7
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 144815808
+array: 1514.5 
+m: 1
+amount of changed: 96
+pan: 1513
+na0: 1515
+na1: 1516
+
+
+Args Data:
+p: 50
+k: 8
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 153208512
+array: 1515.5 
+m: 1
+amount of changed: 96
+pan: 1514
+na0: 1516
+na1: 1517
+
+
+Args Data:
+p: 50
+k: 9
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 161601216
+array: 1516.5 
+m: 1
+amount of changed: 96
+pan: 1515
+na0: 1517
+na1: 1518
+
+
+Args Data:
+p: 50
+k: 10
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 169993920
+array: 1517.5 
+m: 1
+amount of changed: 96
+pan: 1516
+na0: 1518
+na1: 1519
+
+
+Args Data:
+p: 50
+k: 11
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 178386624
+array: 1518.5 
+m: 1
+amount of changed: 96
+pan: 1517
+na0: 1519
+na1: 1520
+
+
+Args Data:
+p: 50
+k: 12
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 186779328
+array: 1519.5 
+m: 1
+amount of changed: 96
+pan: 1518
+na0: 1520
+na1: 1521
+
+
+Args Data:
+p: 50
+k: 13
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 195172032
+array: 1520.5 
+m: 1
+amount of changed: 96
+pan: 1519
+na0: 1521
+na1: 1522
+
+
+Args Data:
+p: 50
+k: 14
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 203564736
+array: 1521.5 
+m: 1
+amount of changed: 96
+pan: 1520
+na0: 1522
+na1: 1523
+
+
+Args Data:
+p: 50
+k: 15
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 211957440
+array: 1522.5 
+m: 1
+amount of changed: 96
+pan: 1521
+na0: 1523
+na1: 1524
+
+
+Args Data:
+p: 50
+k: 16
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 220350144
+array: 1523.5 
+m: 1
+amount of changed: 96
+pan: 1522
+na0: 1524
+na1: 1525
+
+
+Args Data:
+p: 50
+k: 17
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 228742848
+array: 1524.5 
+m: 1
+amount of changed: 96
+pan: 1523
+na0: 1525
+na1: 1526
+
+
+Args Data:
+p: 50
+k: 18
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 237135552
+array: 1525.5 
+m: 1
+amount of changed: 96
+pan: 1524
+na0: 1526
+na1: 1527
+
+
+Args Data:
+p: 50
+k: 19
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 245528256
+array: 1526.5 
+m: 1
+amount of changed: 96
+pan: 1525
+na0: 1527
+na1: 1528
+
+
+Args Data:
+p: 50
+k: 20
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 253920960
+array: 1527.5 
+m: 1
+amount of changed: 96
+pan: 1526
+na0: 1528
+na1: 1529
+
+
+Args Data:
+p: 50
+k: 21
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 262313664
+array: 1528.5 
+m: 1
+amount of changed: 96
+pan: 1527
+na0: 1529
+na1: 1530
+
+
+Args Data:
+p: 50
+k: 22
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 270706368
+array: 1529.5 
+m: 1
+amount of changed: 96
+pan: 1528
+na0: 1530
+na1: 1531
+
+
+Args Data:
+p: 50
+k: 23
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 279099072
+array: 1530.5 
+m: 1
+amount of changed: 96
+pan: 1529
+na0: 1531
+na1: 1532
+
+
+Args Data:
+p: 50
+k: 24
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 287491776
+array: 1531.5 
+m: 1
+amount of changed: 96
+pan: 1530
+na0: 1532
+na1: 1533
+
+
+Args Data:
+p: 50
+k: 25
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 295884480
+array: 1532.5 
+m: 1
+amount of changed: 96
+pan: 1531
+na0: 1533
+na1: 1534
+
+
+Args Data:
+p: 50
+k: 26
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 304277184
+array: 1533.5 
+m: 1
+amount of changed: 96
+pan: 1532
+na0: 1534
+na1: 1535
+
+
+Args Data:
+p: 50
+k: 27
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 312669888
+array: 1534.5 
+m: 1
+amount of changed: 96
+pan: 1533
+na0: 1535
+na1: 1536
+
+
+Args Data:
+p: 50
+k: 28
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 321062592
+array: 1535.5 
+m: 1
+amount of changed: 96
+pan: 1534
+na0: 1536
+na1: 1537
+
+
+Args Data:
+p: 50
+k: 29
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 329455296
+array: 1536.5 
+m: 1
+amount of changed: 96
+pan: 1535
+na0: 1537
+na1: 1538
+
+
+Args Data:
+p: 50
+k: 30
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 337848000
+array: 1537.5 
+m: 1
+amount of changed: 96
+pan: 1536
+na0: 1538
+na1: 1539
+
+
+Args Data:
+p: 50
+k: 31
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 346240704
+array: 1538.5 
+m: 1
+amount of changed: 96
+pan: 1537
+na0: 1539
+na1: 1540
+
+
+Args Data:
+p: 50
+k: 32
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 354633408
+array: 1539.5 
+m: 1
+amount of changed: 96
+pan: 1538
+na0: 1540
+na1: 1541
+
+
+Args Data:
+p: 50
+k: 33
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 363026112
+array: 1540.5 
+m: 1
+amount of changed: 96
+pan: 1539
+na0: 1541
+na1: 1542
+
+
+Args Data:
+p: 50
+k: 34
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 371418816
+array: 1541.5 
+m: 1
+amount of changed: 96
+pan: 1540
+na0: 1542
+na1: 1543
+
+
+Args Data:
+p: 50
+k: 35
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 379811520
+array: 1542.5 
+m: 1
+amount of changed: 96
+pan: 1541
+na0: 1543
+na1: 1544
+
+
+Args Data:
+p: 50
+k: 36
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 388204224
+array: 1543.5 
+m: 1
+amount of changed: 96
+pan: 1542
+na0: 1544
+na1: 1545
+
+
+Args Data:
+p: 50
+k: 37
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 396596928
+array: 1544.5 
+m: 1
+amount of changed: 96
+pan: 1543
+na0: 1545
+na1: 1546
+
+
+Args Data:
+p: 50
+k: 38
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 404989632
+array: 1545.5 
+m: 1
+amount of changed: 96
+pan: 1544
+na0: 1546
+na1: 1547
+
+
+Args Data:
+p: 50
+k: 39
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 413382336
+array: 1546.5 
+m: 1
+amount of changed: 96
+pan: 1545
+na0: 1547
+na1: 1548
+
+
+Args Data:
+p: 50
+k: 40
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 421775040
+array: 1547.5 
+m: 1
+amount of changed: 96
+pan: 1546
+na0: 1548
+na1: 1549
+
+
+Args Data:
+p: 50
+k: 41
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 430167744
+array: 1548.5 
+m: 1
+amount of changed: 96
+pan: 1547
+na0: 1549
+na1: 1550
+
+
+Args Data:
+p: 50
+k: 42
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 438560448
+array: 1549.5 
+m: 1
+amount of changed: 96
+pan: 1548
+na0: 1550
+na1: 1551
+
+
+Args Data:
+p: 50
+k: 43
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 446953152
+array: 1550.5 
+m: 1
+amount of changed: 96
+pan: 1549
+na0: 1551
+na1: 1552
+
+
+Args Data:
+p: 50
+k: 44
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 455345856
+array: 1551.5 
+m: 1
+amount of changed: 96
+pan: 1550
+na0: 1552
+na1: 1553
+
+
+Args Data:
+p: 50
+k: 45
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 463738560
+array: 1552.5 
+m: 1
+amount of changed: 96
+pan: 1551
+na0: 1553
+na1: 1554
+
+
+Args Data:
+p: 50
+k: 46
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 472131264
+array: 1553.5 
+m: 1
+amount of changed: 96
+pan: 1552
+na0: 1554
+na1: 1555
+
+
+Args Data:
+p: 50
+k: 47
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 480523968
+array: 1554.5 
+m: 1
+amount of changed: 96
+pan: 1553
+na0: 1555
+na1: 1556
+
+
+Args Data:
+p: 50
+k: 48
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.72e-03 
+tid: 488916672
+array: 1555.5 
+m: 1
+amount of changed: 96
+pan: 1554
+na0: 1556
+na1: 1557
+
+
+Args Data:
+p: 50
+k: 49
+n: 99
+cpu time of thread: 5.78e-04 
+cpu time of all threads: 1.72e-03 
+tid: 497309376
+array: 1556.5 1557.5 1558.5 1559.5 1560.5 1561.5 1562.5 1563.5 1564.5 1565.5 1566.5 1567.5 1568.5 1569.5 1570.5 1571.5 1572.5 1573.5 1574.5 1575.5 1576.5 1577.5 1578.5 1579.5 1580.5 1581.5 1582.5 1583.5 1584.5 1585.5 1586.5 1587.5 1588.5 1589.5 1590.5 1591.5 1592.5 1593.5 1594.5 1595.5 1596.5 1597.5 1598.5 1599.5 1600.5 1601.5 1602.5 1603.5 1604 1605 
+m: 50
+amount of changed: 96
+pan: 1555
+na0: 0
+na1: 0
+
+RESULT 50: 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03
+
+Args Data:
+p: 60
+k: 0
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 81864512
+array: 1507 
+m: 1
+amount of changed: 96
+pan: 0
+na0: 1508
+na1: 1509
+
+
+Args Data:
+p: 60
+k: 1
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 94459584
+array: 1508.5 
+m: 1
+amount of changed: 96
+pan: 1507
+na0: 1509
+na1: 1510
+
+
+Args Data:
+p: 60
+k: 2
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 102852288
+array: 1509.5 
+m: 1
+amount of changed: 96
+pan: 1508
+na0: 1510
+na1: 1511
+
+
+Args Data:
+p: 60
+k: 3
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 111244992
+array: 1510.5 
+m: 1
+amount of changed: 96
+pan: 1509
+na0: 1511
+na1: 1512
+
+
+Args Data:
+p: 60
+k: 4
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 119637696
+array: 1511.5 
+m: 1
+amount of changed: 96
+pan: 1510
+na0: 1512
+na1: 1513
+
+
+Args Data:
+p: 60
+k: 5
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 128030400
+array: 1512.5 
+m: 1
+amount of changed: 96
+pan: 1511
+na0: 1513
+na1: 1514
+
+
+Args Data:
+p: 60
+k: 6
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 136423104
+array: 1513.5 
+m: 1
+amount of changed: 96
+pan: 1512
+na0: 1514
+na1: 1515
+
+
+Args Data:
+p: 60
+k: 7
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 144815808
+array: 1514.5 
+m: 1
+amount of changed: 96
+pan: 1513
+na0: 1515
+na1: 1516
+
+
+Args Data:
+p: 60
+k: 8
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 153208512
+array: 1515.5 
+m: 1
+amount of changed: 96
+pan: 1514
+na0: 1516
+na1: 1517
+
+
+Args Data:
+p: 60
+k: 9
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 161601216
+array: 1516.5 
+m: 1
+amount of changed: 96
+pan: 1515
+na0: 1517
+na1: 1518
+
+
+Args Data:
+p: 60
+k: 10
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 169993920
+array: 1517.5 
+m: 1
+amount of changed: 96
+pan: 1516
+na0: 1518
+na1: 1519
+
+
+Args Data:
+p: 60
+k: 11
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 178386624
+array: 1518.5 
+m: 1
+amount of changed: 96
+pan: 1517
+na0: 1519
+na1: 1520
+
+
+Args Data:
+p: 60
+k: 12
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 186779328
+array: 1519.5 
+m: 1
+amount of changed: 96
+pan: 1518
+na0: 1520
+na1: 1521
+
+
+Args Data:
+p: 60
+k: 13
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 195172032
+array: 1520.5 
+m: 1
+amount of changed: 96
+pan: 1519
+na0: 1521
+na1: 1522
+
+
+Args Data:
+p: 60
+k: 14
+n: 99
+cpu time of thread: 9.76e-04 
+cpu time of all threads: 1.76e-03 
+tid: 203564736
+array: 1521.5 
+m: 1
+amount of changed: 96
+pan: 1520
+na0: 1522
+na1: 1523
+
+
+Args Data:
+p: 60
+k: 15
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 211957440
+array: 1522.5 
+m: 1
+amount of changed: 96
+pan: 1521
+na0: 1523
+na1: 1524
+
+
+Args Data:
+p: 60
+k: 16
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 220350144
+array: 1523.5 
+m: 1
+amount of changed: 96
+pan: 1522
+na0: 1524
+na1: 1525
+
+
+Args Data:
+p: 60
+k: 17
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 228742848
+array: 1524.5 
+m: 1
+amount of changed: 96
+pan: 1523
+na0: 1525
+na1: 1526
+
+
+Args Data:
+p: 60
+k: 18
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 237135552
+array: 1525.5 
+m: 1
+amount of changed: 96
+pan: 1524
+na0: 1526
+na1: 1527
+
+
+Args Data:
+p: 60
+k: 19
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 245528256
+array: 1526.5 
+m: 1
+amount of changed: 96
+pan: 1525
+na0: 1527
+na1: 1528
+
+
+Args Data:
+p: 60
+k: 20
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 253920960
+array: 1527.5 
+m: 1
+amount of changed: 96
+pan: 1526
+na0: 1528
+na1: 1529
+
+
+Args Data:
+p: 60
+k: 21
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 262313664
+array: 1528.5 
+m: 1
+amount of changed: 96
+pan: 1527
+na0: 1529
+na1: 1530
+
+
+Args Data:
+p: 60
+k: 22
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 270706368
+array: 1529.5 
+m: 1
+amount of changed: 96
+pan: 1528
+na0: 1530
+na1: 1531
+
+
+Args Data:
+p: 60
+k: 23
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 279099072
+array: 1530.5 
+m: 1
+amount of changed: 96
+pan: 1529
+na0: 1531
+na1: 1532
+
+
+Args Data:
+p: 60
+k: 24
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 287491776
+array: 1531.5 
+m: 1
+amount of changed: 96
+pan: 1530
+na0: 1532
+na1: 1533
+
+
+Args Data:
+p: 60
+k: 25
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 295884480
+array: 1532.5 
+m: 1
+amount of changed: 96
+pan: 1531
+na0: 1533
+na1: 1534
+
+
+Args Data:
+p: 60
+k: 26
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 304277184
+array: 1533.5 
+m: 1
+amount of changed: 96
+pan: 1532
+na0: 1534
+na1: 1535
+
+
+Args Data:
+p: 60
+k: 27
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 312669888
+array: 1534.5 
+m: 1
+amount of changed: 96
+pan: 1533
+na0: 1535
+na1: 1536
+
+
+Args Data:
+p: 60
+k: 28
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 321062592
+array: 1535.5 
+m: 1
+amount of changed: 96
+pan: 1534
+na0: 1536
+na1: 1537
+
+
+Args Data:
+p: 60
+k: 29
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 329455296
+array: 1536.5 
+m: 1
+amount of changed: 96
+pan: 1535
+na0: 1537
+na1: 1538
+
+
+Args Data:
+p: 60
+k: 30
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 337848000
+array: 1537.5 
+m: 1
+amount of changed: 96
+pan: 1536
+na0: 1538
+na1: 1539
+
+
+Args Data:
+p: 60
+k: 31
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 346240704
+array: 1538.5 
+m: 1
+amount of changed: 96
+pan: 1537
+na0: 1539
+na1: 1540
+
+
+Args Data:
+p: 60
+k: 32
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 354633408
+array: 1539.5 
+m: 1
+amount of changed: 96
+pan: 1538
+na0: 1540
+na1: 1541
+
+
+Args Data:
+p: 60
+k: 33
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 363026112
+array: 1540.5 
+m: 1
+amount of changed: 96
+pan: 1539
+na0: 1541
+na1: 1542
+
+
+Args Data:
+p: 60
+k: 34
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 371418816
+array: 1541.5 
+m: 1
+amount of changed: 96
+pan: 1540
+na0: 1542
+na1: 1543
+
+
+Args Data:
+p: 60
+k: 35
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 379811520
+array: 1542.5 
+m: 1
+amount of changed: 96
+pan: 1541
+na0: 1543
+na1: 1544
+
+
+Args Data:
+p: 60
+k: 36
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 388204224
+array: 1543.5 
+m: 1
+amount of changed: 96
+pan: 1542
+na0: 1544
+na1: 1545
+
+
+Args Data:
+p: 60
+k: 37
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 396596928
+array: 1544.5 
+m: 1
+amount of changed: 96
+pan: 1543
+na0: 1545
+na1: 1546
+
+
+Args Data:
+p: 60
+k: 38
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 404989632
+array: 1545.5 
+m: 1
+amount of changed: 96
+pan: 1544
+na0: 1546
+na1: 1547
+
+
+Args Data:
+p: 60
+k: 39
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 413382336
+array: 1546.5 
+m: 1
+amount of changed: 96
+pan: 1545
+na0: 1547
+na1: 1548
+
+
+Args Data:
+p: 60
+k: 40
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 421775040
+array: 1547.5 
+m: 1
+amount of changed: 96
+pan: 1546
+na0: 1548
+na1: 1549
+
+
+Args Data:
+p: 60
+k: 41
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 430167744
+array: 1548.5 
+m: 1
+amount of changed: 96
+pan: 1547
+na0: 1549
+na1: 1550
+
+
+Args Data:
+p: 60
+k: 42
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 438560448
+array: 1549.5 
+m: 1
+amount of changed: 96
+pan: 1548
+na0: 1550
+na1: 1551
+
+
+Args Data:
+p: 60
+k: 43
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 446953152
+array: 1550.5 
+m: 1
+amount of changed: 96
+pan: 1549
+na0: 1551
+na1: 1552
+
+
+Args Data:
+p: 60
+k: 44
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 455345856
+array: 1551.5 
+m: 1
+amount of changed: 96
+pan: 1550
+na0: 1552
+na1: 1553
+
+
+Args Data:
+p: 60
+k: 45
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 463738560
+array: 1552.5 
+m: 1
+amount of changed: 96
+pan: 1551
+na0: 1553
+na1: 1554
+
+
+Args Data:
+p: 60
+k: 46
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 472131264
+array: 1553.5 
+m: 1
+amount of changed: 96
+pan: 1552
+na0: 1554
+na1: 1555
+
+
+Args Data:
+p: 60
+k: 47
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 480523968
+array: 1554.5 
+m: 1
+amount of changed: 96
+pan: 1553
+na0: 1555
+na1: 1556
+
+
+Args Data:
+p: 60
+k: 48
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 488916672
+array: 1555.5 
+m: 1
+amount of changed: 96
+pan: 1554
+na0: 1556
+na1: 1557
+
+
+Args Data:
+p: 60
+k: 49
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 497309376
+array: 1556.5 
+m: 1
+amount of changed: 96
+pan: 1555
+na0: 1557
+na1: 1558
+
+
+Args Data:
+p: 60
+k: 50
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 505702080
+array: 1557.5 
+m: 1
+amount of changed: 96
+pan: 1556
+na0: 1558
+na1: 1559
+
+
+Args Data:
+p: 60
+k: 51
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 514094784
+array: 1558.5 
+m: 1
+amount of changed: 96
+pan: 1557
+na0: 1559
+na1: 1560
+
+
+Args Data:
+p: 60
+k: 52
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 522487488
+array: 1559.5 
+m: 1
+amount of changed: 96
+pan: 1558
+na0: 1560
+na1: 1561
+
+
+Args Data:
+p: 60
+k: 53
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 530880192
+array: 1560.5 
+m: 1
+amount of changed: 96
+pan: 1559
+na0: 1561
+na1: 1562
+
+
+Args Data:
+p: 60
+k: 54
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 539272896
+array: 1561.5 
+m: 1
+amount of changed: 96
+pan: 1560
+na0: 1562
+na1: 1563
+
+
+Args Data:
+p: 60
+k: 55
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 547665600
+array: 1562.5 
+m: 1
+amount of changed: 96
+pan: 1561
+na0: 1563
+na1: 1564
+
+
+Args Data:
+p: 60
+k: 56
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 556058304
+array: 1563.5 
+m: 1
+amount of changed: 96
+pan: 1562
+na0: 1564
+na1: 1565
+
+
+Args Data:
+p: 60
+k: 57
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 564451008
+array: 1564.5 
+m: 1
+amount of changed: 96
+pan: 1563
+na0: 1565
+na1: 1566
+
+
+Args Data:
+p: 60
+k: 58
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.76e-03 
+tid: 572843712
+array: 1565.5 
+m: 1
+amount of changed: 96
+pan: 1564
+na0: 1566
+na1: 1567
+
+
+Args Data:
+p: 60
+k: 59
+n: 99
+cpu time of thread: 7.86e-04 
+cpu time of all threads: 1.76e-03 
+tid: 581236416
+array: 1566.5 1567.5 1568.5 1569.5 1570.5 1571.5 1572.5 1573.5 1574.5 1575.5 1576.5 1577.5 1578.5 1579.5 1580.5 1581.5 1582.5 1583.5 1584.5 1585.5 1586.5 1587.5 1588.5 1589.5 1590.5 1591.5 1592.5 1593.5 1594.5 1595.5 1596.5 1597.5 1598.5 1599.5 1600.5 1601.5 1602.5 1603.5 1604 1605 
+m: 40
+amount of changed: 96
+pan: 1565
+na0: 0
+na1: 0
+
+RESULT 60: 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03
+
+Args Data:
+p: 70
+k: 0
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 81864512
+array: 1507 
+m: 1
+amount of changed: 96
+pan: 0
+na0: 1508
+na1: 1509
+
+
+Args Data:
+p: 70
+k: 1
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 94459584
+array: 1508.5 
+m: 1
+amount of changed: 96
+pan: 1507
+na0: 1509
+na1: 1510
+
+
+Args Data:
+p: 70
+k: 2
+n: 99
+cpu time of thread: 1.26e-03 
+cpu time of all threads: 1.26e-03 
+tid: 102852288
+array: 1509.5 
+m: 1
+amount of changed: 96
+pan: 1508
+na0: 1510
+na1: 1511
+
+
+Args Data:
+p: 70
+k: 3
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 111244992
+array: 1510.5 
+m: 1
+amount of changed: 96
+pan: 1509
+na0: 1511
+na1: 1512
+
+
+Args Data:
+p: 70
+k: 4
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 119637696
+array: 1511.5 
+m: 1
+amount of changed: 96
+pan: 1510
+na0: 1512
+na1: 1513
+
+
+Args Data:
+p: 70
+k: 5
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 128030400
+array: 1512.5 
+m: 1
+amount of changed: 96
+pan: 1511
+na0: 1513
+na1: 1514
+
+
+Args Data:
+p: 70
+k: 6
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 136423104
+array: 1513.5 
+m: 1
+amount of changed: 96
+pan: 1512
+na0: 1514
+na1: 1515
+
+
+Args Data:
+p: 70
+k: 7
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 144815808
+array: 1514.5 
+m: 1
+amount of changed: 96
+pan: 1513
+na0: 1515
+na1: 1516
+
+
+Args Data:
+p: 70
+k: 8
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 153208512
+array: 1515.5 
+m: 1
+amount of changed: 96
+pan: 1514
+na0: 1516
+na1: 1517
+
+
+Args Data:
+p: 70
+k: 9
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 161601216
+array: 1516.5 
+m: 1
+amount of changed: 96
+pan: 1515
+na0: 1517
+na1: 1518
+
+
+Args Data:
+p: 70
+k: 10
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 169993920
+array: 1517.5 
+m: 1
+amount of changed: 96
+pan: 1516
+na0: 1518
+na1: 1519
+
+
+Args Data:
+p: 70
+k: 11
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 178386624
+array: 1518.5 
+m: 1
+amount of changed: 96
+pan: 1517
+na0: 1519
+na1: 1520
+
+
+Args Data:
+p: 70
+k: 12
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 186779328
+array: 1519.5 
+m: 1
+amount of changed: 96
+pan: 1518
+na0: 1520
+na1: 1521
+
+
+Args Data:
+p: 70
+k: 13
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 195172032
+array: 1520.5 
+m: 1
+amount of changed: 96
+pan: 1519
+na0: 1521
+na1: 1522
+
+
+Args Data:
+p: 70
+k: 14
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 203564736
+array: 1521.5 
+m: 1
+amount of changed: 96
+pan: 1520
+na0: 1522
+na1: 1523
+
+
+Args Data:
+p: 70
+k: 15
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 211957440
+array: 1522.5 
+m: 1
+amount of changed: 96
+pan: 1521
+na0: 1523
+na1: 1524
+
+
+Args Data:
+p: 70
+k: 16
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 220350144
+array: 1523.5 
+m: 1
+amount of changed: 96
+pan: 1522
+na0: 1524
+na1: 1525
+
+
+Args Data:
+p: 70
+k: 17
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 228742848
+array: 1524.5 
+m: 1
+amount of changed: 96
+pan: 1523
+na0: 1525
+na1: 1526
+
+
+Args Data:
+p: 70
+k: 18
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 237135552
+array: 1525.5 
+m: 1
+amount of changed: 96
+pan: 1524
+na0: 1526
+na1: 1527
+
+
+Args Data:
+p: 70
+k: 19
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 245528256
+array: 1526.5 
+m: 1
+amount of changed: 96
+pan: 1525
+na0: 1527
+na1: 1528
+
+
+Args Data:
+p: 70
+k: 20
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 253920960
+array: 1527.5 
+m: 1
+amount of changed: 96
+pan: 1526
+na0: 1528
+na1: 1529
+
+
+Args Data:
+p: 70
+k: 21
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 262313664
+array: 1528.5 
+m: 1
+amount of changed: 96
+pan: 1527
+na0: 1529
+na1: 1530
+
+
+Args Data:
+p: 70
+k: 22
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 270706368
+array: 1529.5 
+m: 1
+amount of changed: 96
+pan: 1528
+na0: 1530
+na1: 1531
+
+
+Args Data:
+p: 70
+k: 23
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 279099072
+array: 1530.5 
+m: 1
+amount of changed: 96
+pan: 1529
+na0: 1531
+na1: 1532
+
+
+Args Data:
+p: 70
+k: 24
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 287491776
+array: 1531.5 
+m: 1
+amount of changed: 96
+pan: 1530
+na0: 1532
+na1: 1533
+
+
+Args Data:
+p: 70
+k: 25
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 295884480
+array: 1532.5 
+m: 1
+amount of changed: 96
+pan: 1531
+na0: 1533
+na1: 1534
+
+
+Args Data:
+p: 70
+k: 26
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 304277184
+array: 1533.5 
+m: 1
+amount of changed: 96
+pan: 1532
+na0: 1534
+na1: 1535
+
+
+Args Data:
+p: 70
+k: 27
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 312669888
+array: 1534.5 
+m: 1
+amount of changed: 96
+pan: 1533
+na0: 1535
+na1: 1536
+
+
+Args Data:
+p: 70
+k: 28
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 321062592
+array: 1535.5 
+m: 1
+amount of changed: 96
+pan: 1534
+na0: 1536
+na1: 1537
+
+
+Args Data:
+p: 70
+k: 29
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 329455296
+array: 1536.5 
+m: 1
+amount of changed: 96
+pan: 1535
+na0: 1537
+na1: 1538
+
+
+Args Data:
+p: 70
+k: 30
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 337848000
+array: 1537.5 
+m: 1
+amount of changed: 96
+pan: 1536
+na0: 1538
+na1: 1539
+
+
+Args Data:
+p: 70
+k: 31
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 346240704
+array: 1538.5 
+m: 1
+amount of changed: 96
+pan: 1537
+na0: 1539
+na1: 1540
+
+
+Args Data:
+p: 70
+k: 32
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 354633408
+array: 1539.5 
+m: 1
+amount of changed: 96
+pan: 1538
+na0: 1540
+na1: 1541
+
+
+Args Data:
+p: 70
+k: 33
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 363026112
+array: 1540.5 
+m: 1
+amount of changed: 96
+pan: 1539
+na0: 1541
+na1: 1542
+
+
+Args Data:
+p: 70
+k: 34
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 371418816
+array: 1541.5 
+m: 1
+amount of changed: 96
+pan: 1540
+na0: 1542
+na1: 1543
+
+
+Args Data:
+p: 70
+k: 35
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 379811520
+array: 1542.5 
+m: 1
+amount of changed: 96
+pan: 1541
+na0: 1543
+na1: 1544
+
+
+Args Data:
+p: 70
+k: 36
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 388204224
+array: 1543.5 
+m: 1
+amount of changed: 96
+pan: 1542
+na0: 1544
+na1: 1545
+
+
+Args Data:
+p: 70
+k: 37
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 396596928
+array: 1544.5 
+m: 1
+amount of changed: 96
+pan: 1543
+na0: 1545
+na1: 1546
+
+
+Args Data:
+p: 70
+k: 38
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 404989632
+array: 1545.5 
+m: 1
+amount of changed: 96
+pan: 1544
+na0: 1546
+na1: 1547
+
+
+Args Data:
+p: 70
+k: 39
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 413382336
+array: 1546.5 
+m: 1
+amount of changed: 96
+pan: 1545
+na0: 1547
+na1: 1548
+
+
+Args Data:
+p: 70
+k: 40
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 421775040
+array: 1547.5 
+m: 1
+amount of changed: 96
+pan: 1546
+na0: 1548
+na1: 1549
+
+
+Args Data:
+p: 70
+k: 41
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 430167744
+array: 1548.5 
+m: 1
+amount of changed: 96
+pan: 1547
+na0: 1549
+na1: 1550
+
+
+Args Data:
+p: 70
+k: 42
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 438560448
+array: 1549.5 
+m: 1
+amount of changed: 96
+pan: 1548
+na0: 1550
+na1: 1551
+
+
+Args Data:
+p: 70
+k: 43
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 446953152
+array: 1550.5 
+m: 1
+amount of changed: 96
+pan: 1549
+na0: 1551
+na1: 1552
+
+
+Args Data:
+p: 70
+k: 44
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 455345856
+array: 1551.5 
+m: 1
+amount of changed: 96
+pan: 1550
+na0: 1552
+na1: 1553
+
+
+Args Data:
+p: 70
+k: 45
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 463738560
+array: 1552.5 
+m: 1
+amount of changed: 96
+pan: 1551
+na0: 1553
+na1: 1554
+
+
+Args Data:
+p: 70
+k: 46
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 472131264
+array: 1553.5 
+m: 1
+amount of changed: 96
+pan: 1552
+na0: 1554
+na1: 1555
+
+
+Args Data:
+p: 70
+k: 47
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 480523968
+array: 1554.5 
+m: 1
+amount of changed: 96
+pan: 1553
+na0: 1555
+na1: 1556
+
+
+Args Data:
+p: 70
+k: 48
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 488916672
+array: 1555.5 
+m: 1
+amount of changed: 96
+pan: 1554
+na0: 1556
+na1: 1557
+
+
+Args Data:
+p: 70
+k: 49
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 497309376
+array: 1556.5 
+m: 1
+amount of changed: 96
+pan: 1555
+na0: 1557
+na1: 1558
+
+
+Args Data:
+p: 70
+k: 50
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 505702080
+array: 1557.5 
+m: 1
+amount of changed: 96
+pan: 1556
+na0: 1558
+na1: 1559
+
+
+Args Data:
+p: 70
+k: 51
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 514094784
+array: 1558.5 
+m: 1
+amount of changed: 96
+pan: 1557
+na0: 1559
+na1: 1560
+
+
+Args Data:
+p: 70
+k: 52
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 522487488
+array: 1559.5 
+m: 1
+amount of changed: 96
+pan: 1558
+na0: 1560
+na1: 1561
+
+
+Args Data:
+p: 70
+k: 53
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 530880192
+array: 1560.5 
+m: 1
+amount of changed: 96
+pan: 1559
+na0: 1561
+na1: 1562
+
+
+Args Data:
+p: 70
+k: 54
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 539272896
+array: 1561.5 
+m: 1
+amount of changed: 96
+pan: 1560
+na0: 1562
+na1: 1563
+
+
+Args Data:
+p: 70
+k: 55
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 547665600
+array: 1562.5 
+m: 1
+amount of changed: 96
+pan: 1561
+na0: 1563
+na1: 1564
+
+
+Args Data:
+p: 70
+k: 56
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 556058304
+array: 1563.5 
+m: 1
+amount of changed: 96
+pan: 1562
+na0: 1564
+na1: 1565
+
+
+Args Data:
+p: 70
+k: 57
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 564451008
+array: 1564.5 
+m: 1
+amount of changed: 96
+pan: 1563
+na0: 1565
+na1: 1566
+
+
+Args Data:
+p: 70
+k: 58
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 572843712
+array: 1565.5 
+m: 1
+amount of changed: 96
+pan: 1564
+na0: 1566
+na1: 1567
+
+
+Args Data:
+p: 70
+k: 59
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 581236416
+array: 1566.5 
+m: 1
+amount of changed: 96
+pan: 1565
+na0: 1567
+na1: 1568
+
+
+Args Data:
+p: 70
+k: 60
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 589629120
+array: 1567.5 
+m: 1
+amount of changed: 96
+pan: 1566
+na0: 1568
+na1: 1569
+
+
+Args Data:
+p: 70
+k: 61
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 598021824
+array: 1568.5 
+m: 1
+amount of changed: 96
+pan: 1567
+na0: 1569
+na1: 1570
+
+
+Args Data:
+p: 70
+k: 62
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 606414528
+array: 1569.5 
+m: 1
+amount of changed: 96
+pan: 1568
+na0: 1570
+na1: 1571
+
+
+Args Data:
+p: 70
+k: 63
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 614807232
+array: 1570.5 
+m: 1
+amount of changed: 96
+pan: 1569
+na0: 1571
+na1: 1572
+
+
+Args Data:
+p: 70
+k: 64
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 623199936
+array: 1571.5 
+m: 1
+amount of changed: 96
+pan: 1570
+na0: 1572
+na1: 1573
+
+
+Args Data:
+p: 70
+k: 65
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 631592640
+array: 1572.5 
+m: 1
+amount of changed: 96
+pan: 1571
+na0: 1573
+na1: 1574
+
+
+Args Data:
+p: 70
+k: 66
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 639985344
+array: 1573.5 
+m: 1
+amount of changed: 96
+pan: 1572
+na0: 1574
+na1: 1575
+
+
+Args Data:
+p: 70
+k: 67
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 648378048
+array: 1574.5 
+m: 1
+amount of changed: 96
+pan: 1573
+na0: 1575
+na1: 1576
+
+
+Args Data:
+p: 70
+k: 68
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 656770752
+array: 1575.5 
+m: 1
+amount of changed: 96
+pan: 1574
+na0: 1576
+na1: 1577
+
+
+Args Data:
+p: 70
+k: 69
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-03 
+tid: 665163456
+array: 1576.5 1577.5 1578.5 1579.5 1580.5 1581.5 1582.5 1583.5 1584.5 1585.5 1586.5 1587.5 1588.5 1589.5 1590.5 1591.5 1592.5 1593.5 1594.5 1595.5 1596.5 1597.5 1598.5 1599.5 1600.5 1601.5 1602.5 1603.5 1604 1605 
+m: 30
+amount of changed: 96
+pan: 1575
+na0: 0
+na1: 0
+
+RESULT 70: 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03
+
+Args Data:
+p: 80
+k: 0
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 81864512
+array: 1507 
+m: 1
+amount of changed: 96
+pan: 0
+na0: 1508
+na1: 1509
+
+
+Args Data:
+p: 80
+k: 1
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 94459584
+array: 1508.5 
+m: 1
+amount of changed: 96
+pan: 1507
+na0: 1509
+na1: 1510
+
+
+Args Data:
+p: 80
+k: 2
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 102852288
+array: 1509.5 
+m: 1
+amount of changed: 96
+pan: 1508
+na0: 1510
+na1: 1511
+
+
+Args Data:
+p: 80
+k: 3
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 111244992
+array: 1510.5 
+m: 1
+amount of changed: 96
+pan: 1509
+na0: 1511
+na1: 1512
+
+
+Args Data:
+p: 80
+k: 4
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 119637696
+array: 1511.5 
+m: 1
+amount of changed: 96
+pan: 1510
+na0: 1512
+na1: 1513
+
+
+Args Data:
+p: 80
+k: 5
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 128030400
+array: 1512.5 
+m: 1
+amount of changed: 96
+pan: 1511
+na0: 1513
+na1: 1514
+
+
+Args Data:
+p: 80
+k: 6
+n: 99
+cpu time of thread: 1.36e-03 
+cpu time of all threads: 1.96e-03 
+tid: 136423104
+array: 1513.5 
+m: 1
+amount of changed: 96
+pan: 1512
+na0: 1514
+na1: 1515
+
+
+Args Data:
+p: 80
+k: 7
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 144815808
+array: 1514.5 
+m: 1
+amount of changed: 96
+pan: 1513
+na0: 1515
+na1: 1516
+
+
+Args Data:
+p: 80
+k: 8
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 153208512
+array: 1515.5 
+m: 1
+amount of changed: 96
+pan: 1514
+na0: 1516
+na1: 1517
+
+
+Args Data:
+p: 80
+k: 9
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 161601216
+array: 1516.5 
+m: 1
+amount of changed: 96
+pan: 1515
+na0: 1517
+na1: 1518
+
+
+Args Data:
+p: 80
+k: 10
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 169993920
+array: 1517.5 
+m: 1
+amount of changed: 96
+pan: 1516
+na0: 1518
+na1: 1519
+
+
+Args Data:
+p: 80
+k: 11
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 178386624
+array: 1518.5 
+m: 1
+amount of changed: 96
+pan: 1517
+na0: 1519
+na1: 1520
+
+
+Args Data:
+p: 80
+k: 12
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 186779328
+array: 1519.5 
+m: 1
+amount of changed: 96
+pan: 1518
+na0: 1520
+na1: 1521
+
+
+Args Data:
+p: 80
+k: 13
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 195172032
+array: 1520.5 
+m: 1
+amount of changed: 96
+pan: 1519
+na0: 1521
+na1: 1522
+
+
+Args Data:
+p: 80
+k: 14
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 203564736
+array: 1521.5 
+m: 1
+amount of changed: 96
+pan: 1520
+na0: 1522
+na1: 1523
+
+
+Args Data:
+p: 80
+k: 15
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 211957440
+array: 1522.5 
+m: 1
+amount of changed: 96
+pan: 1521
+na0: 1523
+na1: 1524
+
+
+Args Data:
+p: 80
+k: 16
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 220350144
+array: 1523.5 
+m: 1
+amount of changed: 96
+pan: 1522
+na0: 1524
+na1: 1525
+
+
+Args Data:
+p: 80
+k: 17
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 228742848
+array: 1524.5 
+m: 1
+amount of changed: 96
+pan: 1523
+na0: 1525
+na1: 1526
+
+
+Args Data:
+p: 80
+k: 18
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 237135552
+array: 1525.5 
+m: 1
+amount of changed: 96
+pan: 1524
+na0: 1526
+na1: 1527
+
+
+Args Data:
+p: 80
+k: 19
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 245528256
+array: 1526.5 
+m: 1
+amount of changed: 96
+pan: 1525
+na0: 1527
+na1: 1528
+
+
+Args Data:
+p: 80
+k: 20
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 253920960
+array: 1527.5 
+m: 1
+amount of changed: 96
+pan: 1526
+na0: 1528
+na1: 1529
+
+
+Args Data:
+p: 80
+k: 21
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 262313664
+array: 1528.5 
+m: 1
+amount of changed: 96
+pan: 1527
+na0: 1529
+na1: 1530
+
+
+Args Data:
+p: 80
+k: 22
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 270706368
+array: 1529.5 
+m: 1
+amount of changed: 96
+pan: 1528
+na0: 1530
+na1: 1531
+
+
+Args Data:
+p: 80
+k: 23
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 279099072
+array: 1530.5 
+m: 1
+amount of changed: 96
+pan: 1529
+na0: 1531
+na1: 1532
+
+
+Args Data:
+p: 80
+k: 24
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 287491776
+array: 1531.5 
+m: 1
+amount of changed: 96
+pan: 1530
+na0: 1532
+na1: 1533
+
+
+Args Data:
+p: 80
+k: 25
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 295884480
+array: 1532.5 
+m: 1
+amount of changed: 96
+pan: 1531
+na0: 1533
+na1: 1534
+
+
+Args Data:
+p: 80
+k: 26
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 304277184
+array: 1533.5 
+m: 1
+amount of changed: 96
+pan: 1532
+na0: 1534
+na1: 1535
+
+
+Args Data:
+p: 80
+k: 27
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 312669888
+array: 1534.5 
+m: 1
+amount of changed: 96
+pan: 1533
+na0: 1535
+na1: 1536
+
+
+Args Data:
+p: 80
+k: 28
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 321062592
+array: 1535.5 
+m: 1
+amount of changed: 96
+pan: 1534
+na0: 1536
+na1: 1537
+
+
+Args Data:
+p: 80
+k: 29
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 329455296
+array: 1536.5 
+m: 1
+amount of changed: 96
+pan: 1535
+na0: 1537
+na1: 1538
+
+
+Args Data:
+p: 80
+k: 30
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 337848000
+array: 1537.5 
+m: 1
+amount of changed: 96
+pan: 1536
+na0: 1538
+na1: 1539
+
+
+Args Data:
+p: 80
+k: 31
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 346240704
+array: 1538.5 
+m: 1
+amount of changed: 96
+pan: 1537
+na0: 1539
+na1: 1540
+
+
+Args Data:
+p: 80
+k: 32
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 354633408
+array: 1539.5 
+m: 1
+amount of changed: 96
+pan: 1538
+na0: 1540
+na1: 1541
+
+
+Args Data:
+p: 80
+k: 33
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 363026112
+array: 1540.5 
+m: 1
+amount of changed: 96
+pan: 1539
+na0: 1541
+na1: 1542
+
+
+Args Data:
+p: 80
+k: 34
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 371418816
+array: 1541.5 
+m: 1
+amount of changed: 96
+pan: 1540
+na0: 1542
+na1: 1543
+
+
+Args Data:
+p: 80
+k: 35
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 379811520
+array: 1542.5 
+m: 1
+amount of changed: 96
+pan: 1541
+na0: 1543
+na1: 1544
+
+
+Args Data:
+p: 80
+k: 36
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 388204224
+array: 1543.5 
+m: 1
+amount of changed: 96
+pan: 1542
+na0: 1544
+na1: 1545
+
+
+Args Data:
+p: 80
+k: 37
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 396596928
+array: 1544.5 
+m: 1
+amount of changed: 96
+pan: 1543
+na0: 1545
+na1: 1546
+
+
+Args Data:
+p: 80
+k: 38
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 404989632
+array: 1545.5 
+m: 1
+amount of changed: 96
+pan: 1544
+na0: 1546
+na1: 1547
+
+
+Args Data:
+p: 80
+k: 39
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 413382336
+array: 1546.5 
+m: 1
+amount of changed: 96
+pan: 1545
+na0: 1547
+na1: 1548
+
+
+Args Data:
+p: 80
+k: 40
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 421775040
+array: 1547.5 
+m: 1
+amount of changed: 96
+pan: 1546
+na0: 1548
+na1: 1549
+
+
+Args Data:
+p: 80
+k: 41
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 430167744
+array: 1548.5 
+m: 1
+amount of changed: 96
+pan: 1547
+na0: 1549
+na1: 1550
+
+
+Args Data:
+p: 80
+k: 42
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 438560448
+array: 1549.5 
+m: 1
+amount of changed: 96
+pan: 1548
+na0: 1550
+na1: 1551
+
+
+Args Data:
+p: 80
+k: 43
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 446953152
+array: 1550.5 
+m: 1
+amount of changed: 96
+pan: 1549
+na0: 1551
+na1: 1552
+
+
+Args Data:
+p: 80
+k: 44
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 455345856
+array: 1551.5 
+m: 1
+amount of changed: 96
+pan: 1550
+na0: 1552
+na1: 1553
+
+
+Args Data:
+p: 80
+k: 45
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 463738560
+array: 1552.5 
+m: 1
+amount of changed: 96
+pan: 1551
+na0: 1553
+na1: 1554
+
+
+Args Data:
+p: 80
+k: 46
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 472131264
+array: 1553.5 
+m: 1
+amount of changed: 96
+pan: 1552
+na0: 1554
+na1: 1555
+
+
+Args Data:
+p: 80
+k: 47
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 480523968
+array: 1554.5 
+m: 1
+amount of changed: 96
+pan: 1553
+na0: 1555
+na1: 1556
+
+
+Args Data:
+p: 80
+k: 48
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 488916672
+array: 1555.5 
+m: 1
+amount of changed: 96
+pan: 1554
+na0: 1556
+na1: 1557
+
+
+Args Data:
+p: 80
+k: 49
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 497309376
+array: 1556.5 
+m: 1
+amount of changed: 96
+pan: 1555
+na0: 1557
+na1: 1558
+
+
+Args Data:
+p: 80
+k: 50
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 505702080
+array: 1557.5 
+m: 1
+amount of changed: 96
+pan: 1556
+na0: 1558
+na1: 1559
+
+
+Args Data:
+p: 80
+k: 51
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 514094784
+array: 1558.5 
+m: 1
+amount of changed: 96
+pan: 1557
+na0: 1559
+na1: 1560
+
+
+Args Data:
+p: 80
+k: 52
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 522487488
+array: 1559.5 
+m: 1
+amount of changed: 96
+pan: 1558
+na0: 1560
+na1: 1561
+
+
+Args Data:
+p: 80
+k: 53
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 530880192
+array: 1560.5 
+m: 1
+amount of changed: 96
+pan: 1559
+na0: 1561
+na1: 1562
+
+
+Args Data:
+p: 80
+k: 54
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 539272896
+array: 1561.5 
+m: 1
+amount of changed: 96
+pan: 1560
+na0: 1562
+na1: 1563
+
+
+Args Data:
+p: 80
+k: 55
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 547665600
+array: 1562.5 
+m: 1
+amount of changed: 96
+pan: 1561
+na0: 1563
+na1: 1564
+
+
+Args Data:
+p: 80
+k: 56
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 556058304
+array: 1563.5 
+m: 1
+amount of changed: 96
+pan: 1562
+na0: 1564
+na1: 1565
+
+
+Args Data:
+p: 80
+k: 57
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 564451008
+array: 1564.5 
+m: 1
+amount of changed: 96
+pan: 1563
+na0: 1565
+na1: 1566
+
+
+Args Data:
+p: 80
+k: 58
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 572843712
+array: 1565.5 
+m: 1
+amount of changed: 96
+pan: 1564
+na0: 1566
+na1: 1567
+
+
+Args Data:
+p: 80
+k: 59
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 581236416
+array: 1566.5 
+m: 1
+amount of changed: 96
+pan: 1565
+na0: 1567
+na1: 1568
+
+
+Args Data:
+p: 80
+k: 60
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 589629120
+array: 1567.5 
+m: 1
+amount of changed: 96
+pan: 1566
+na0: 1568
+na1: 1569
+
+
+Args Data:
+p: 80
+k: 61
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 598021824
+array: 1568.5 
+m: 1
+amount of changed: 96
+pan: 1567
+na0: 1569
+na1: 1570
+
+
+Args Data:
+p: 80
+k: 62
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 606414528
+array: 1569.5 
+m: 1
+amount of changed: 96
+pan: 1568
+na0: 1570
+na1: 1571
+
+
+Args Data:
+p: 80
+k: 63
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 614807232
+array: 1570.5 
+m: 1
+amount of changed: 96
+pan: 1569
+na0: 1571
+na1: 1572
+
+
+Args Data:
+p: 80
+k: 64
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 623199936
+array: 1571.5 
+m: 1
+amount of changed: 96
+pan: 1570
+na0: 1572
+na1: 1573
+
+
+Args Data:
+p: 80
+k: 65
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 631592640
+array: 1572.5 
+m: 1
+amount of changed: 96
+pan: 1571
+na0: 1573
+na1: 1574
+
+
+Args Data:
+p: 80
+k: 66
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 639985344
+array: 1573.5 
+m: 1
+amount of changed: 96
+pan: 1572
+na0: 1574
+na1: 1575
+
+
+Args Data:
+p: 80
+k: 67
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 648378048
+array: 1574.5 
+m: 1
+amount of changed: 96
+pan: 1573
+na0: 1575
+na1: 1576
+
+
+Args Data:
+p: 80
+k: 68
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 656770752
+array: 1575.5 
+m: 1
+amount of changed: 96
+pan: 1574
+na0: 1576
+na1: 1577
+
+
+Args Data:
+p: 80
+k: 69
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 665163456
+array: 1576.5 
+m: 1
+amount of changed: 96
+pan: 1575
+na0: 1577
+na1: 1578
+
+
+Args Data:
+p: 80
+k: 70
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 673556160
+array: 1577.5 
+m: 1
+amount of changed: 96
+pan: 1576
+na0: 1578
+na1: 1579
+
+
+Args Data:
+p: 80
+k: 71
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 681948864
+array: 1578.5 
+m: 1
+amount of changed: 96
+pan: 1577
+na0: 1579
+na1: 1580
+
+
+Args Data:
+p: 80
+k: 72
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 690341568
+array: 1579.5 
+m: 1
+amount of changed: 96
+pan: 1578
+na0: 1580
+na1: 1581
+
+
+Args Data:
+p: 80
+k: 73
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 698734272
+array: 1580.5 
+m: 1
+amount of changed: 96
+pan: 1579
+na0: 1581
+na1: 1582
+
+
+Args Data:
+p: 80
+k: 74
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 707126976
+array: 1581.5 
+m: 1
+amount of changed: 96
+pan: 1580
+na0: 1582
+na1: 1583
+
+
+Args Data:
+p: 80
+k: 75
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 715519680
+array: 1582.5 
+m: 1
+amount of changed: 96
+pan: 1581
+na0: 1583
+na1: 1584
+
+
+Args Data:
+p: 80
+k: 76
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 723912384
+array: 1583.5 
+m: 1
+amount of changed: 96
+pan: 1582
+na0: 1584
+na1: 1585
+
+
+Args Data:
+p: 80
+k: 77
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 732305088
+array: 1584.5 
+m: 1
+amount of changed: 96
+pan: 1583
+na0: 1585
+na1: 1586
+
+
+Args Data:
+p: 80
+k: 78
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.96e-03 
+tid: 740697792
+array: 1585.5 
+m: 1
+amount of changed: 96
+pan: 1584
+na0: 1586
+na1: 1587
+
+
+Args Data:
+p: 80
+k: 79
+n: 99
+cpu time of thread: 5.99e-04 
+cpu time of all threads: 1.96e-03 
+tid: 749090496
+array: 1586.5 1587.5 1588.5 1589.5 1590.5 1591.5 1592.5 1593.5 1594.5 1595.5 1596.5 1597.5 1598.5 1599.5 1600.5 1601.5 1602.5 1603.5 1604 1605 
+m: 20
+amount of changed: 96
+pan: 1585
+na0: 0
+na1: 0
+
+RESULT 80: 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03
+
+Args Data:
+p: 90
+k: 0
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 81864512
+array: 1507 
+m: 1
+amount of changed: 96
+pan: 0
+na0: 1508
+na1: 1509
+
+
+Args Data:
+p: 90
+k: 1
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 94459584
+array: 1508.5 
+m: 1
+amount of changed: 96
+pan: 1507
+na0: 1509
+na1: 1510
+
+
+Args Data:
+p: 90
+k: 2
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 102852288
+array: 1509.5 
+m: 1
+amount of changed: 96
+pan: 1508
+na0: 1510
+na1: 1511
+
+
+Args Data:
+p: 90
+k: 3
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 111244992
+array: 1510.5 
+m: 1
+amount of changed: 96
+pan: 1509
+na0: 1511
+na1: 1512
+
+
+Args Data:
+p: 90
+k: 4
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 119637696
+array: 1511.5 
+m: 1
+amount of changed: 96
+pan: 1510
+na0: 1512
+na1: 1513
+
+
+Args Data:
+p: 90
+k: 5
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 128030400
+array: 1512.5 
+m: 1
+amount of changed: 96
+pan: 1511
+na0: 1513
+na1: 1514
+
+
+Args Data:
+p: 90
+k: 6
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 136423104
+array: 1513.5 
+m: 1
+amount of changed: 96
+pan: 1512
+na0: 1514
+na1: 1515
+
+
+Args Data:
+p: 90
+k: 7
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 144815808
+array: 1514.5 
+m: 1
+amount of changed: 96
+pan: 1513
+na0: 1515
+na1: 1516
+
+
+Args Data:
+p: 90
+k: 8
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 153208512
+array: 1515.5 
+m: 1
+amount of changed: 96
+pan: 1514
+na0: 1516
+na1: 1517
+
+
+Args Data:
+p: 90
+k: 9
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 161601216
+array: 1516.5 
+m: 1
+amount of changed: 96
+pan: 1515
+na0: 1517
+na1: 1518
+
+
+Args Data:
+p: 90
+k: 10
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 169993920
+array: 1517.5 
+m: 1
+amount of changed: 96
+pan: 1516
+na0: 1518
+na1: 1519
+
+
+Args Data:
+p: 90
+k: 11
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 178386624
+array: 1518.5 
+m: 1
+amount of changed: 96
+pan: 1517
+na0: 1519
+na1: 1520
+
+
+Args Data:
+p: 90
+k: 12
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 186779328
+array: 1519.5 
+m: 1
+amount of changed: 96
+pan: 1518
+na0: 1520
+na1: 1521
+
+
+Args Data:
+p: 90
+k: 13
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 195172032
+array: 1520.5 
+m: 1
+amount of changed: 96
+pan: 1519
+na0: 1521
+na1: 1522
+
+
+Args Data:
+p: 90
+k: 14
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 203564736
+array: 1521.5 
+m: 1
+amount of changed: 96
+pan: 1520
+na0: 1522
+na1: 1523
+
+
+Args Data:
+p: 90
+k: 15
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 211957440
+array: 1522.5 
+m: 1
+amount of changed: 96
+pan: 1521
+na0: 1523
+na1: 1524
+
+
+Args Data:
+p: 90
+k: 16
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 220350144
+array: 1523.5 
+m: 1
+amount of changed: 96
+pan: 1522
+na0: 1524
+na1: 1525
+
+
+Args Data:
+p: 90
+k: 17
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 228742848
+array: 1524.5 
+m: 1
+amount of changed: 96
+pan: 1523
+na0: 1525
+na1: 1526
+
+
+Args Data:
+p: 90
+k: 18
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 237135552
+array: 1525.5 
+m: 1
+amount of changed: 96
+pan: 1524
+na0: 1526
+na1: 1527
+
+
+Args Data:
+p: 90
+k: 19
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 245528256
+array: 1526.5 
+m: 1
+amount of changed: 96
+pan: 1525
+na0: 1527
+na1: 1528
+
+
+Args Data:
+p: 90
+k: 20
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 253920960
+array: 1527.5 
+m: 1
+amount of changed: 96
+pan: 1526
+na0: 1528
+na1: 1529
+
+
+Args Data:
+p: 90
+k: 21
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 262313664
+array: 1528.5 
+m: 1
+amount of changed: 96
+pan: 1527
+na0: 1529
+na1: 1530
+
+
+Args Data:
+p: 90
+k: 22
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 270706368
+array: 1529.5 
+m: 1
+amount of changed: 96
+pan: 1528
+na0: 1530
+na1: 1531
+
+
+Args Data:
+p: 90
+k: 23
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 279099072
+array: 1530.5 
+m: 1
+amount of changed: 96
+pan: 1529
+na0: 1531
+na1: 1532
+
+
+Args Data:
+p: 90
+k: 24
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 287491776
+array: 1531.5 
+m: 1
+amount of changed: 96
+pan: 1530
+na0: 1532
+na1: 1533
+
+
+Args Data:
+p: 90
+k: 25
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 295884480
+array: 1532.5 
+m: 1
+amount of changed: 96
+pan: 1531
+na0: 1533
+na1: 1534
+
+
+Args Data:
+p: 90
+k: 26
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 304277184
+array: 1533.5 
+m: 1
+amount of changed: 96
+pan: 1532
+na0: 1534
+na1: 1535
+
+
+Args Data:
+p: 90
+k: 27
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 312669888
+array: 1534.5 
+m: 1
+amount of changed: 96
+pan: 1533
+na0: 1535
+na1: 1536
+
+
+Args Data:
+p: 90
+k: 28
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 321062592
+array: 1535.5 
+m: 1
+amount of changed: 96
+pan: 1534
+na0: 1536
+na1: 1537
+
+
+Args Data:
+p: 90
+k: 29
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 329455296
+array: 1536.5 
+m: 1
+amount of changed: 96
+pan: 1535
+na0: 1537
+na1: 1538
+
+
+Args Data:
+p: 90
+k: 30
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 337848000
+array: 1537.5 
+m: 1
+amount of changed: 96
+pan: 1536
+na0: 1538
+na1: 1539
+
+
+Args Data:
+p: 90
+k: 31
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 346240704
+array: 1538.5 
+m: 1
+amount of changed: 96
+pan: 1537
+na0: 1539
+na1: 1540
+
+
+Args Data:
+p: 90
+k: 32
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 354633408
+array: 1539.5 
+m: 1
+amount of changed: 96
+pan: 1538
+na0: 1540
+na1: 1541
+
+
+Args Data:
+p: 90
+k: 33
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 363026112
+array: 1540.5 
+m: 1
+amount of changed: 96
+pan: 1539
+na0: 1541
+na1: 1542
+
+
+Args Data:
+p: 90
+k: 34
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 371418816
+array: 1541.5 
+m: 1
+amount of changed: 96
+pan: 1540
+na0: 1542
+na1: 1543
+
+
+Args Data:
+p: 90
+k: 35
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 379811520
+array: 1542.5 
+m: 1
+amount of changed: 96
+pan: 1541
+na0: 1543
+na1: 1544
+
+
+Args Data:
+p: 90
+k: 36
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 388204224
+array: 1543.5 
+m: 1
+amount of changed: 96
+pan: 1542
+na0: 1544
+na1: 1545
+
+
+Args Data:
+p: 90
+k: 37
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 396596928
+array: 1544.5 
+m: 1
+amount of changed: 96
+pan: 1543
+na0: 1545
+na1: 1546
+
+
+Args Data:
+p: 90
+k: 38
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 404989632
+array: 1545.5 
+m: 1
+amount of changed: 96
+pan: 1544
+na0: 1546
+na1: 1547
+
+
+Args Data:
+p: 90
+k: 39
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 413382336
+array: 1546.5 
+m: 1
+amount of changed: 96
+pan: 1545
+na0: 1547
+na1: 1548
+
+
+Args Data:
+p: 90
+k: 40
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 421775040
+array: 1547.5 
+m: 1
+amount of changed: 96
+pan: 1546
+na0: 1548
+na1: 1549
+
+
+Args Data:
+p: 90
+k: 41
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 430167744
+array: 1548.5 
+m: 1
+amount of changed: 96
+pan: 1547
+na0: 1549
+na1: 1550
+
+
+Args Data:
+p: 90
+k: 42
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 438560448
+array: 1549.5 
+m: 1
+amount of changed: 96
+pan: 1548
+na0: 1550
+na1: 1551
+
+
+Args Data:
+p: 90
+k: 43
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 446953152
+array: 1550.5 
+m: 1
+amount of changed: 96
+pan: 1549
+na0: 1551
+na1: 1552
+
+
+Args Data:
+p: 90
+k: 44
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 455345856
+array: 1551.5 
+m: 1
+amount of changed: 96
+pan: 1550
+na0: 1552
+na1: 1553
+
+
+Args Data:
+p: 90
+k: 45
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 463738560
+array: 1552.5 
+m: 1
+amount of changed: 96
+pan: 1551
+na0: 1553
+na1: 1554
+
+
+Args Data:
+p: 90
+k: 46
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 472131264
+array: 1553.5 
+m: 1
+amount of changed: 96
+pan: 1552
+na0: 1554
+na1: 1555
+
+
+Args Data:
+p: 90
+k: 47
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 480523968
+array: 1554.5 
+m: 1
+amount of changed: 96
+pan: 1553
+na0: 1555
+na1: 1556
+
+
+Args Data:
+p: 90
+k: 48
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 488916672
+array: 1555.5 
+m: 1
+amount of changed: 96
+pan: 1554
+na0: 1556
+na1: 1557
+
+
+Args Data:
+p: 90
+k: 49
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 497309376
+array: 1556.5 
+m: 1
+amount of changed: 96
+pan: 1555
+na0: 1557
+na1: 1558
+
+
+Args Data:
+p: 90
+k: 50
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 505702080
+array: 1557.5 
+m: 1
+amount of changed: 96
+pan: 1556
+na0: 1558
+na1: 1559
+
+
+Args Data:
+p: 90
+k: 51
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 514094784
+array: 1558.5 
+m: 1
+amount of changed: 96
+pan: 1557
+na0: 1559
+na1: 1560
+
+
+Args Data:
+p: 90
+k: 52
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 522487488
+array: 1559.5 
+m: 1
+amount of changed: 96
+pan: 1558
+na0: 1560
+na1: 1561
+
+
+Args Data:
+p: 90
+k: 53
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 530880192
+array: 1560.5 
+m: 1
+amount of changed: 96
+pan: 1559
+na0: 1561
+na1: 1562
+
+
+Args Data:
+p: 90
+k: 54
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 539272896
+array: 1561.5 
+m: 1
+amount of changed: 96
+pan: 1560
+na0: 1562
+na1: 1563
+
+
+Args Data:
+p: 90
+k: 55
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 547665600
+array: 1562.5 
+m: 1
+amount of changed: 96
+pan: 1561
+na0: 1563
+na1: 1564
+
+
+Args Data:
+p: 90
+k: 56
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 556058304
+array: 1563.5 
+m: 1
+amount of changed: 96
+pan: 1562
+na0: 1564
+na1: 1565
+
+
+Args Data:
+p: 90
+k: 57
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 564451008
+array: 1564.5 
+m: 1
+amount of changed: 96
+pan: 1563
+na0: 1565
+na1: 1566
+
+
+Args Data:
+p: 90
+k: 58
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 572843712
+array: 1565.5 
+m: 1
+amount of changed: 96
+pan: 1564
+na0: 1566
+na1: 1567
+
+
+Args Data:
+p: 90
+k: 59
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 581236416
+array: 1566.5 
+m: 1
+amount of changed: 96
+pan: 1565
+na0: 1567
+na1: 1568
+
+
+Args Data:
+p: 90
+k: 60
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 589629120
+array: 1567.5 
+m: 1
+amount of changed: 96
+pan: 1566
+na0: 1568
+na1: 1569
+
+
+Args Data:
+p: 90
+k: 61
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 598021824
+array: 1568.5 
+m: 1
+amount of changed: 96
+pan: 1567
+na0: 1569
+na1: 1570
+
+
+Args Data:
+p: 90
+k: 62
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 606414528
+array: 1569.5 
+m: 1
+amount of changed: 96
+pan: 1568
+na0: 1570
+na1: 1571
+
+
+Args Data:
+p: 90
+k: 63
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 614807232
+array: 1570.5 
+m: 1
+amount of changed: 96
+pan: 1569
+na0: 1571
+na1: 1572
+
+
+Args Data:
+p: 90
+k: 64
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 623199936
+array: 1571.5 
+m: 1
+amount of changed: 96
+pan: 1570
+na0: 1572
+na1: 1573
+
+
+Args Data:
+p: 90
+k: 65
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 631592640
+array: 1572.5 
+m: 1
+amount of changed: 96
+pan: 1571
+na0: 1573
+na1: 1574
+
+
+Args Data:
+p: 90
+k: 66
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 639985344
+array: 1573.5 
+m: 1
+amount of changed: 96
+pan: 1572
+na0: 1574
+na1: 1575
+
+
+Args Data:
+p: 90
+k: 67
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 648378048
+array: 1574.5 
+m: 1
+amount of changed: 96
+pan: 1573
+na0: 1575
+na1: 1576
+
+
+Args Data:
+p: 90
+k: 68
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 656770752
+array: 1575.5 
+m: 1
+amount of changed: 96
+pan: 1574
+na0: 1576
+na1: 1577
+
+
+Args Data:
+p: 90
+k: 69
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 665163456
+array: 1576.5 
+m: 1
+amount of changed: 96
+pan: 1575
+na0: 1577
+na1: 1578
+
+
+Args Data:
+p: 90
+k: 70
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 673556160
+array: 1577.5 
+m: 1
+amount of changed: 96
+pan: 1576
+na0: 1578
+na1: 1579
+
+
+Args Data:
+p: 90
+k: 71
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 681948864
+array: 1578.5 
+m: 1
+amount of changed: 96
+pan: 1577
+na0: 1579
+na1: 1580
+
+
+Args Data:
+p: 90
+k: 72
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 690341568
+array: 1579.5 
+m: 1
+amount of changed: 96
+pan: 1578
+na0: 1580
+na1: 1581
+
+
+Args Data:
+p: 90
+k: 73
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 698734272
+array: 1580.5 
+m: 1
+amount of changed: 96
+pan: 1579
+na0: 1581
+na1: 1582
+
+
+Args Data:
+p: 90
+k: 74
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 707126976
+array: 1581.5 
+m: 1
+amount of changed: 96
+pan: 1580
+na0: 1582
+na1: 1583
+
+
+Args Data:
+p: 90
+k: 75
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 715519680
+array: 1582.5 
+m: 1
+amount of changed: 96
+pan: 1581
+na0: 1583
+na1: 1584
+
+
+Args Data:
+p: 90
+k: 76
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 723912384
+array: 1583.5 
+m: 1
+amount of changed: 96
+pan: 1582
+na0: 1584
+na1: 1585
+
+
+Args Data:
+p: 90
+k: 77
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 732305088
+array: 1584.5 
+m: 1
+amount of changed: 96
+pan: 1583
+na0: 1585
+na1: 1586
+
+
+Args Data:
+p: 90
+k: 78
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 740697792
+array: 1585.5 
+m: 1
+amount of changed: 96
+pan: 1584
+na0: 1586
+na1: 1587
+
+
+Args Data:
+p: 90
+k: 79
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 749090496
+array: 1586.5 
+m: 1
+amount of changed: 96
+pan: 1585
+na0: 1587
+na1: 1588
+
+
+Args Data:
+p: 90
+k: 80
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 757483200
+array: 1587.5 
+m: 1
+amount of changed: 96
+pan: 1586
+na0: 1588
+na1: 1589
+
+
+Args Data:
+p: 90
+k: 81
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 765875904
+array: 1588.5 
+m: 1
+amount of changed: 96
+pan: 1587
+na0: 1589
+na1: 1590
+
+
+Args Data:
+p: 90
+k: 82
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 774268608
+array: 1589.5 
+m: 1
+amount of changed: 96
+pan: 1588
+na0: 1590
+na1: 1591
+
+
+Args Data:
+p: 90
+k: 83
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 782661312
+array: 1590.5 
+m: 1
+amount of changed: 96
+pan: 1589
+na0: 1591
+na1: 1592
+
+
+Args Data:
+p: 90
+k: 84
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 791054016
+array: 1591.5 
+m: 1
+amount of changed: 96
+pan: 1590
+na0: 1592
+na1: 1593
+
+
+Args Data:
+p: 90
+k: 85
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 799446720
+array: 1592.5 
+m: 1
+amount of changed: 96
+pan: 1591
+na0: 1593
+na1: 1594
+
+
+Args Data:
+p: 90
+k: 86
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 807839424
+array: 1593.5 
+m: 1
+amount of changed: 96
+pan: 1592
+na0: 1594
+na1: 1595
+
+
+Args Data:
+p: 90
+k: 87
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 816232128
+array: 1594.5 
+m: 1
+amount of changed: 96
+pan: 1593
+na0: 1595
+na1: 1596
+
+
+Args Data:
+p: 90
+k: 88
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 824624832
+array: 1595.5 
+m: 1
+amount of changed: 96
+pan: 1594
+na0: 1596
+na1: 1597
+
+
+Args Data:
+p: 90
+k: 89
+n: 99
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 0.00e+00 
+tid: 833017536
+array: 1596.5 1597.5 1598.5 1599.5 1600.5 1601.5 1602.5 1603.5 1604 1605 
+m: 10
+amount of changed: 96
+pan: 1595
+na0: 0
+na1: 0
+
+RESULT 90: 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.51e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.52e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.53e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.54e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.55e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.56e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.57e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.58e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.59e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03 1.60e+03
