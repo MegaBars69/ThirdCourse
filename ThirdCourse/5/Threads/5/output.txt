@@ -1,0 +1,2367 @@
+]633;E;((i = 0));db523ace-0dfc-464d-bf89-52b330c56854]633;CRESULT  0: p > 0 
+
+Args Data:
+p: 1
+k: 0
+n: 15
+cpu time of thread: 2.76e-03 
+cpu time of all threads: 2.76e-03 
+tid: 81864512
+array: 10 20 30 40 50 60 70 80 90 100 110 120 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT  1: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 2
+k: 1
+n: 15
+cpu time of thread: 5.11e-03 
+cpu time of all threads: 1.29e-02 
+tid: 94459584
+array: 80 90 100 110 120 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 2
+k: 0
+n: 15
+cpu time of thread: 7.81e-03 
+cpu time of all threads: 1.29e-02 
+tid: 81864512
+array: 10 20 30 40 50 60 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 2
+k: 1
+n: 15
+cpu time of thread: 5.11e-03 
+cpu time of all threads: 1.29e-02 
+tid: 94459584
+array: 80 90 100 110 120 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT  2: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 3
+k: 1
+n: 15
+cpu time of thread: 1.29e-02 
+cpu time of all threads: 2.32e-02 
+tid: 94459584
+array: 60 70 80 90 100 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 3
+k: 2
+n: 15
+cpu time of thread: 5.58e-03 
+cpu time of all threads: 2.32e-02 
+tid: 102852288
+array: 110 120 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 3
+k: 0
+n: 15
+cpu time of thread: 4.71e-03 
+cpu time of all threads: 2.32e-02 
+tid: 81864512
+array: 10 20 30 40 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 3
+k: 1
+n: 15
+cpu time of thread: 1.29e-02 
+cpu time of all threads: 2.32e-02 
+tid: 94459584
+array: 60 70 80 90 100 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 3
+k: 2
+n: 15
+cpu time of thread: 5.58e-03 
+cpu time of all threads: 2.32e-02 
+tid: 102852288
+array: 110 120 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT  3: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 4
+k: 1
+n: 15
+cpu time of thread: 4.34e-03 
+cpu time of all threads: 2.14e-02 
+tid: 94459584
+array: 40 50 60 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 4
+k: 2
+n: 15
+cpu time of thread: 4.85e-03 
+cpu time of all threads: 2.14e-02 
+tid: 102852288
+array: 80 90 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 4
+k: 3
+n: 15
+cpu time of thread: 5.09e-04 
+cpu time of all threads: 2.14e-02 
+tid: 111244992
+array: 120 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 4
+k: 0
+n: 15
+cpu time of thread: 1.17e-02 
+cpu time of all threads: 2.14e-02 
+tid: 81864512
+array: 10 20 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 4
+k: 1
+n: 15
+cpu time of thread: 4.34e-03 
+cpu time of all threads: 2.14e-02 
+tid: 94459584
+array: 40 50 60 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 4
+k: 2
+n: 15
+cpu time of thread: 4.85e-03 
+cpu time of all threads: 2.14e-02 
+tid: 102852288
+array: 80 90 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 4
+k: 3
+n: 15
+cpu time of thread: 5.09e-04 
+cpu time of all threads: 2.14e-02 
+tid: 111244992
+array: 120 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT  4: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 5
+k: 1
+n: 15
+cpu time of thread: 2.24e-04 
+cpu time of all threads: 1.29e-02 
+tid: 94459584
+array: 40 50 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 5
+k: 2
+n: 15
+cpu time of thread: 2.32e-03 
+cpu time of all threads: 1.29e-02 
+tid: 102852288
+array: 70 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 5
+k: 3
+n: 15
+cpu time of thread: 1.70e-03 
+cpu time of all threads: 1.29e-02 
+tid: 111244992
+array: 100 110 120 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 5
+k: 4
+n: 15
+cpu time of thread: 2.76e-03 
+cpu time of all threads: 1.29e-02 
+tid: 119637696
+array: 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 5
+k: 0
+n: 15
+cpu time of thread: 5.91e-03 
+cpu time of all threads: 1.29e-02 
+tid: 81864512
+array: 10 20 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 5
+k: 1
+n: 15
+cpu time of thread: 2.24e-04 
+cpu time of all threads: 1.29e-02 
+tid: 94459584
+array: 40 50 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 5
+k: 2
+n: 15
+cpu time of thread: 2.32e-03 
+cpu time of all threads: 1.29e-02 
+tid: 102852288
+array: 70 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 5
+k: 3
+n: 15
+cpu time of thread: 1.70e-03 
+cpu time of all threads: 1.29e-02 
+tid: 111244992
+array: 100 110 120 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 5
+k: 4
+n: 15
+cpu time of thread: 2.76e-03 
+cpu time of all threads: 1.29e-02 
+tid: 119637696
+array: 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT  5: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 6
+k: 1
+n: 15
+cpu time of thread: 1.74e-03 
+cpu time of all threads: 1.63e-02 
+tid: 94459584
+array: 30 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 6
+k: 2
+n: 15
+cpu time of thread: 1.92e-04 
+cpu time of all threads: 1.63e-02 
+tid: 102852288
+array: 50 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 6
+k: 3
+n: 15
+cpu time of thread: 3.36e-03 
+cpu time of all threads: 1.63e-02 
+tid: 111244992
+array: 70 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 6
+k: 4
+n: 15
+cpu time of thread: 1.98e-03 
+cpu time of all threads: 1.63e-02 
+tid: 119637696
+array: 100 110 120 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 6
+k: 5
+n: 15
+cpu time of thread: 5.03e-04 
+cpu time of all threads: 1.63e-02 
+tid: 128030400
+array: 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 6
+k: 0
+n: 15
+cpu time of thread: 8.50e-03 
+cpu time of all threads: 1.63e-02 
+tid: 81864512
+array: 10 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 6
+k: 1
+n: 15
+cpu time of thread: 1.74e-03 
+cpu time of all threads: 1.63e-02 
+tid: 94459584
+array: 30 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 6
+k: 2
+n: 15
+cpu time of thread: 1.92e-04 
+cpu time of all threads: 1.63e-02 
+tid: 102852288
+array: 50 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 6
+k: 3
+n: 15
+cpu time of thread: 3.36e-03 
+cpu time of all threads: 1.63e-02 
+tid: 111244992
+array: 70 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 6
+k: 4
+n: 15
+cpu time of thread: 1.98e-03 
+cpu time of all threads: 1.63e-02 
+tid: 119637696
+array: 100 110 120 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 6
+k: 5
+n: 15
+cpu time of thread: 5.03e-04 
+cpu time of all threads: 1.63e-02 
+tid: 128030400
+array: 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT  6: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 7
+k: 1
+n: 15
+cpu time of thread: 1.40e-03 
+cpu time of all threads: 1.24e-02 
+tid: 94459584
+array: 30 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 2
+n: 15
+cpu time of thread: 1.80e-04 
+cpu time of all threads: 1.24e-02 
+tid: 102852288
+array: 50 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 3
+n: 15
+cpu time of thread: 9.60e-05 
+cpu time of all threads: 1.24e-02 
+tid: 111244992
+array: 70 80 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 4
+n: 15
+cpu time of thread: 1.68e-03 
+cpu time of all threads: 1.24e-02 
+tid: 119637696
+array: 90 100 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 5
+n: 15
+cpu time of thread: 2.42e-04 
+cpu time of all threads: 1.24e-02 
+tid: 128030400
+array: 110 120 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 6
+n: 15
+cpu time of thread: 1.56e-03 
+cpu time of all threads: 1.24e-02 
+tid: 136423104
+array: 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 0
+n: 15
+cpu time of thread: 7.28e-03 
+cpu time of all threads: 1.24e-02 
+tid: 81864512
+array: 10 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 1
+n: 15
+cpu time of thread: 1.40e-03 
+cpu time of all threads: 1.24e-02 
+tid: 94459584
+array: 30 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 2
+n: 15
+cpu time of thread: 1.80e-04 
+cpu time of all threads: 1.24e-02 
+tid: 102852288
+array: 50 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 3
+n: 15
+cpu time of thread: 9.60e-05 
+cpu time of all threads: 1.24e-02 
+tid: 111244992
+array: 70 80 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 4
+n: 15
+cpu time of thread: 1.68e-03 
+cpu time of all threads: 1.24e-02 
+tid: 119637696
+array: 90 100 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 5
+n: 15
+cpu time of thread: 2.42e-04 
+cpu time of all threads: 1.24e-02 
+tid: 128030400
+array: 110 120 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 7
+k: 6
+n: 15
+cpu time of thread: 1.56e-03 
+cpu time of all threads: 1.24e-02 
+tid: 136423104
+array: 130 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT  7: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 8
+k: 1
+n: 15
+cpu time of thread: 2.07e-03 
+cpu time of all threads: 1.28e-02 
+tid: 94459584
+array: 20 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 2
+n: 15
+cpu time of thread: 1.29e-04 
+cpu time of all threads: 1.28e-02 
+tid: 102852288
+array: 40 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 3
+n: 15
+cpu time of thread: 1.18e-04 
+cpu time of all threads: 1.28e-02 
+tid: 111244992
+array: 60 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 4
+n: 15
+cpu time of thread: 4.70e-05 
+cpu time of all threads: 1.28e-02 
+tid: 119637696
+array: 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 5
+n: 15
+cpu time of thread: 1.54e-04 
+cpu time of all threads: 1.28e-02 
+tid: 128030400
+array: 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 6
+n: 15
+cpu time of thread: 2.01e-03 
+cpu time of all threads: 1.28e-02 
+tid: 136423104
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 7
+n: 15
+cpu time of thread: 3.39e-03 
+cpu time of all threads: 1.28e-02 
+tid: 144815808
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 0
+n: 15
+cpu time of thread: 4.84e-03 
+cpu time of all threads: 1.28e-02 
+tid: 81864512
+array: 10 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 1
+n: 15
+cpu time of thread: 2.07e-03 
+cpu time of all threads: 1.28e-02 
+tid: 94459584
+array: 20 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 2
+n: 15
+cpu time of thread: 1.29e-04 
+cpu time of all threads: 1.28e-02 
+tid: 102852288
+array: 40 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 3
+n: 15
+cpu time of thread: 1.18e-04 
+cpu time of all threads: 1.28e-02 
+tid: 111244992
+array: 60 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 4
+n: 15
+cpu time of thread: 4.70e-05 
+cpu time of all threads: 1.28e-02 
+tid: 119637696
+array: 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 5
+n: 15
+cpu time of thread: 1.54e-04 
+cpu time of all threads: 1.28e-02 
+tid: 128030400
+array: 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 6
+n: 15
+cpu time of thread: 2.01e-03 
+cpu time of all threads: 1.28e-02 
+tid: 136423104
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 8
+k: 7
+n: 15
+cpu time of thread: 3.39e-03 
+cpu time of all threads: 1.28e-02 
+tid: 144815808
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT  8: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 9
+k: 1
+n: 15
+cpu time of thread: 2.98e-04 
+cpu time of all threads: 1.26e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 2
+n: 15
+cpu time of thread: 2.71e-03 
+cpu time of all threads: 1.26e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 3
+n: 15
+cpu time of thread: 1.29e-04 
+cpu time of all threads: 1.26e-02 
+tid: 111244992
+array: 40 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 4
+n: 15
+cpu time of thread: 1.32e-04 
+cpu time of all threads: 1.26e-02 
+tid: 119637696
+array: 60 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 5
+n: 15
+cpu time of thread: 1.70e-03 
+cpu time of all threads: 1.26e-02 
+tid: 128030400
+array: 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 6
+n: 15
+cpu time of thread: 1.23e-04 
+cpu time of all threads: 1.26e-02 
+tid: 136423104
+array: 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 7
+n: 15
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-02 
+tid: 144815808
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 8
+n: 15
+cpu time of thread: 4.10e-04 
+cpu time of all threads: 1.26e-02 
+tid: 153208512
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 0
+n: 15
+cpu time of thread: 7.11e-03 
+cpu time of all threads: 1.26e-02 
+tid: 81864512
+array: 10 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 1
+n: 15
+cpu time of thread: 2.98e-04 
+cpu time of all threads: 1.26e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 2
+n: 15
+cpu time of thread: 2.71e-03 
+cpu time of all threads: 1.26e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 3
+n: 15
+cpu time of thread: 1.29e-04 
+cpu time of all threads: 1.26e-02 
+tid: 111244992
+array: 40 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 4
+n: 15
+cpu time of thread: 1.32e-04 
+cpu time of all threads: 1.26e-02 
+tid: 119637696
+array: 60 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 5
+n: 15
+cpu time of thread: 1.70e-03 
+cpu time of all threads: 1.26e-02 
+tid: 128030400
+array: 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 6
+n: 15
+cpu time of thread: 1.23e-04 
+cpu time of all threads: 1.26e-02 
+tid: 136423104
+array: 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 7
+n: 15
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-02 
+tid: 144815808
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 9
+k: 8
+n: 15
+cpu time of thread: 4.10e-04 
+cpu time of all threads: 1.26e-02 
+tid: 153208512
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT  9: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 10
+k: 1
+n: 15
+cpu time of thread: 4.20e-05 
+cpu time of all threads: 1.27e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 2
+n: 15
+cpu time of thread: 2.18e-03 
+cpu time of all threads: 1.27e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 3
+n: 15
+cpu time of thread: 6.49e-04 
+cpu time of all threads: 1.27e-02 
+tid: 111244992
+array: 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 4
+n: 15
+cpu time of thread: 1.12e-04 
+cpu time of all threads: 1.27e-02 
+tid: 119637696
+array: 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 5
+n: 15
+cpu time of thread: 1.37e-03 
+cpu time of all threads: 1.27e-02 
+tid: 128030400
+array: 60 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 6
+n: 15
+cpu time of thread: 8.75e-04 
+cpu time of all threads: 1.27e-02 
+tid: 136423104
+array: 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 7
+n: 15
+cpu time of thread: 7.80e-05 
+cpu time of all threads: 1.27e-02 
+tid: 144815808
+array: 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 8
+n: 15
+cpu time of thread: 6.90e-05 
+cpu time of all threads: 1.27e-02 
+tid: 153208512
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 9
+n: 15
+cpu time of thread: 2.30e-04 
+cpu time of all threads: 1.27e-02 
+tid: 161601216
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 0
+n: 15
+cpu time of thread: 7.04e-03 
+cpu time of all threads: 1.27e-02 
+tid: 81864512
+array: 10 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 1
+n: 15
+cpu time of thread: 4.20e-05 
+cpu time of all threads: 1.27e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 2
+n: 15
+cpu time of thread: 2.18e-03 
+cpu time of all threads: 1.27e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 3
+n: 15
+cpu time of thread: 6.49e-04 
+cpu time of all threads: 1.27e-02 
+tid: 111244992
+array: 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 4
+n: 15
+cpu time of thread: 1.12e-04 
+cpu time of all threads: 1.27e-02 
+tid: 119637696
+array: 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 5
+n: 15
+cpu time of thread: 1.37e-03 
+cpu time of all threads: 1.27e-02 
+tid: 128030400
+array: 60 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 6
+n: 15
+cpu time of thread: 8.75e-04 
+cpu time of all threads: 1.27e-02 
+tid: 136423104
+array: 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 7
+n: 15
+cpu time of thread: 7.80e-05 
+cpu time of all threads: 1.27e-02 
+tid: 144815808
+array: 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 8
+n: 15
+cpu time of thread: 6.90e-05 
+cpu time of all threads: 1.27e-02 
+tid: 153208512
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 10
+k: 9
+n: 15
+cpu time of thread: 2.30e-04 
+cpu time of all threads: 1.27e-02 
+tid: 161601216
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT 10: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 11
+k: 1
+n: 15
+cpu time of thread: 1.44e-04 
+cpu time of all threads: 1.24e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 2
+n: 15
+cpu time of thread: 1.49e-04 
+cpu time of all threads: 1.24e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 3
+n: 15
+cpu time of thread: 4.20e-05 
+cpu time of all threads: 1.24e-02 
+tid: 111244992
+array: 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 4
+n: 15
+cpu time of thread: 1.28e-04 
+cpu time of all threads: 1.24e-02 
+tid: 119637696
+array: 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 5
+n: 15
+cpu time of thread: 2.66e-03 
+cpu time of all threads: 1.24e-02 
+tid: 128030400
+array: 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 6
+n: 15
+cpu time of thread: 5.39e-04 
+cpu time of all threads: 1.24e-02 
+tid: 136423104
+array: 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 7
+n: 15
+cpu time of thread: 7.99e-04 
+cpu time of all threads: 1.24e-02 
+tid: 144815808
+array: 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 8
+n: 15
+cpu time of thread: 1.15e-04 
+cpu time of all threads: 1.24e-02 
+tid: 153208512
+array: 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 9
+n: 15
+cpu time of thread: 9.90e-05 
+cpu time of all threads: 1.24e-02 
+tid: 161601216
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 10
+n: 15
+cpu time of thread: 3.30e-04 
+cpu time of all threads: 1.24e-02 
+tid: 169993920
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 0
+n: 15
+cpu time of thread: 7.38e-03 
+cpu time of all threads: 1.24e-02 
+tid: 81864512
+array: 10 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 1
+n: 15
+cpu time of thread: 1.44e-04 
+cpu time of all threads: 1.24e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 2
+n: 15
+cpu time of thread: 1.49e-04 
+cpu time of all threads: 1.24e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 3
+n: 15
+cpu time of thread: 4.20e-05 
+cpu time of all threads: 1.24e-02 
+tid: 111244992
+array: 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 4
+n: 15
+cpu time of thread: 1.28e-04 
+cpu time of all threads: 1.24e-02 
+tid: 119637696
+array: 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 5
+n: 15
+cpu time of thread: 2.66e-03 
+cpu time of all threads: 1.24e-02 
+tid: 128030400
+array: 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 6
+n: 15
+cpu time of thread: 5.39e-04 
+cpu time of all threads: 1.24e-02 
+tid: 136423104
+array: 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 7
+n: 15
+cpu time of thread: 7.99e-04 
+cpu time of all threads: 1.24e-02 
+tid: 144815808
+array: 80 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 8
+n: 15
+cpu time of thread: 1.15e-04 
+cpu time of all threads: 1.24e-02 
+tid: 153208512
+array: 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 9
+n: 15
+cpu time of thread: 9.90e-05 
+cpu time of all threads: 1.24e-02 
+tid: 161601216
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 11
+k: 10
+n: 15
+cpu time of thread: 3.30e-04 
+cpu time of all threads: 1.24e-02 
+tid: 169993920
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT 11: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 12
+k: 1
+n: 15
+cpu time of thread: 3.11e-03 
+cpu time of all threads: 1.26e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 2
+n: 15
+cpu time of thread: 1.81e-04 
+cpu time of all threads: 1.26e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 3
+n: 15
+cpu time of thread: 9.80e-05 
+cpu time of all threads: 1.26e-02 
+tid: 111244992
+array: 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 4
+n: 15
+cpu time of thread: 1.51e-04 
+cpu time of all threads: 1.26e-02 
+tid: 119637696
+array: 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 5
+n: 15
+cpu time of thread: 2.80e-03 
+cpu time of all threads: 1.26e-02 
+tid: 128030400
+array: 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 6
+n: 15
+cpu time of thread: 9.80e-05 
+cpu time of all threads: 1.26e-02 
+tid: 136423104
+array: 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 7
+n: 15
+cpu time of thread: 1.42e-04 
+cpu time of all threads: 1.26e-02 
+tid: 144815808
+array: 80 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 8
+n: 15
+cpu time of thread: 1.00e-04 
+cpu time of all threads: 1.26e-02 
+tid: 153208512
+array: 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 9
+n: 15
+cpu time of thread: 4.84e-03 
+cpu time of all threads: 1.26e-02 
+tid: 161601216
+array: 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 10
+n: 15
+cpu time of thread: 7.80e-04 
+cpu time of all threads: 1.26e-02 
+tid: 169993920
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 11
+n: 15
+cpu time of thread: 3.39e-04 
+cpu time of all threads: 1.26e-02 
+tid: 178386624
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 0
+n: 15
+cpu time of thread: 0.00e+00 
+cpu time of all threads: 1.26e-02 
+tid: 81864512
+array: 10 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 1
+n: 15
+cpu time of thread: 3.11e-03 
+cpu time of all threads: 1.26e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 2
+n: 15
+cpu time of thread: 1.81e-04 
+cpu time of all threads: 1.26e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 3
+n: 15
+cpu time of thread: 9.80e-05 
+cpu time of all threads: 1.26e-02 
+tid: 111244992
+array: 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 4
+n: 15
+cpu time of thread: 1.51e-04 
+cpu time of all threads: 1.26e-02 
+tid: 119637696
+array: 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 5
+n: 15
+cpu time of thread: 2.80e-03 
+cpu time of all threads: 1.26e-02 
+tid: 128030400
+array: 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 6
+n: 15
+cpu time of thread: 9.80e-05 
+cpu time of all threads: 1.26e-02 
+tid: 136423104
+array: 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 7
+n: 15
+cpu time of thread: 1.42e-04 
+cpu time of all threads: 1.26e-02 
+tid: 144815808
+array: 80 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 8
+n: 15
+cpu time of thread: 1.00e-04 
+cpu time of all threads: 1.26e-02 
+tid: 153208512
+array: 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 9
+n: 15
+cpu time of thread: 4.84e-03 
+cpu time of all threads: 1.26e-02 
+tid: 161601216
+array: 100 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 10
+n: 15
+cpu time of thread: 7.80e-04 
+cpu time of all threads: 1.26e-02 
+tid: 169993920
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 12
+k: 11
+n: 15
+cpu time of thread: 3.39e-04 
+cpu time of all threads: 1.26e-02 
+tid: 178386624
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT 12: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 13
+k: 1
+n: 15
+cpu time of thread: 2.05e-03 
+cpu time of all threads: 1.32e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 2
+n: 15
+cpu time of thread: 9.60e-05 
+cpu time of all threads: 1.32e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 3
+n: 15
+cpu time of thread: 3.08e-03 
+cpu time of all threads: 1.32e-02 
+tid: 111244992
+array: 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 4
+n: 15
+cpu time of thread: 1.46e-04 
+cpu time of all threads: 1.32e-02 
+tid: 119637696
+array: 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 5
+n: 15
+cpu time of thread: 1.31e-04 
+cpu time of all threads: 1.32e-02 
+tid: 128030400
+array: 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 6
+n: 15
+cpu time of thread: 7.70e-05 
+cpu time of all threads: 1.32e-02 
+tid: 136423104
+array: 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 7
+n: 15
+cpu time of thread: 1.59e-03 
+cpu time of all threads: 1.32e-02 
+tid: 144815808
+array: 80 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 8
+n: 15
+cpu time of thread: 5.70e-05 
+cpu time of all threads: 1.32e-02 
+tid: 153208512
+array: 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 9
+n: 15
+cpu time of thread: 1.08e-04 
+cpu time of all threads: 1.32e-02 
+tid: 161601216
+array: 100 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 10
+n: 15
+cpu time of thread: 8.00e-05 
+cpu time of all threads: 1.32e-02 
+tid: 169993920
+array: 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 11
+n: 15
+cpu time of thread: 8.27e-04 
+cpu time of all threads: 1.32e-02 
+tid: 178386624
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 12
+n: 15
+cpu time of thread: 4.44e-04 
+cpu time of all threads: 1.32e-02 
+tid: 186779328
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 0
+n: 15
+cpu time of thread: 4.49e-03 
+cpu time of all threads: 1.32e-02 
+tid: 81864512
+array: 10 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 1
+n: 15
+cpu time of thread: 2.05e-03 
+cpu time of all threads: 1.32e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 2
+n: 15
+cpu time of thread: 9.60e-05 
+cpu time of all threads: 1.32e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 3
+n: 15
+cpu time of thread: 3.08e-03 
+cpu time of all threads: 1.32e-02 
+tid: 111244992
+array: 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 4
+n: 15
+cpu time of thread: 1.46e-04 
+cpu time of all threads: 1.32e-02 
+tid: 119637696
+array: 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 5
+n: 15
+cpu time of thread: 1.31e-04 
+cpu time of all threads: 1.32e-02 
+tid: 128030400
+array: 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 6
+n: 15
+cpu time of thread: 7.70e-05 
+cpu time of all threads: 1.32e-02 
+tid: 136423104
+array: 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 7
+n: 15
+cpu time of thread: 1.59e-03 
+cpu time of all threads: 1.32e-02 
+tid: 144815808
+array: 80 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 8
+n: 15
+cpu time of thread: 5.70e-05 
+cpu time of all threads: 1.32e-02 
+tid: 153208512
+array: 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 9
+n: 15
+cpu time of thread: 1.08e-04 
+cpu time of all threads: 1.32e-02 
+tid: 161601216
+array: 100 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 10
+n: 15
+cpu time of thread: 8.00e-05 
+cpu time of all threads: 1.32e-02 
+tid: 169993920
+array: 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 11
+n: 15
+cpu time of thread: 8.27e-04 
+cpu time of all threads: 1.32e-02 
+tid: 178386624
+array: 120 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 13
+k: 12
+n: 15
+cpu time of thread: 4.44e-04 
+cpu time of all threads: 1.32e-02 
+tid: 186779328
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT 13: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
+
+Args Data:
+p: 14
+k: 1
+n: 15
+cpu time of thread: 1.93e-04 
+cpu time of all threads: 1.16e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 2
+n: 15
+cpu time of thread: 9.90e-05 
+cpu time of all threads: 1.16e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 3
+n: 15
+cpu time of thread: 6.30e-05 
+cpu time of all threads: 1.16e-02 
+tid: 111244992
+array: 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 4
+n: 15
+cpu time of thread: 1.90e-03 
+cpu time of all threads: 1.16e-02 
+tid: 119637696
+array: 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 5
+n: 15
+cpu time of thread: 1.05e-04 
+cpu time of all threads: 1.16e-02 
+tid: 128030400
+array: 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 6
+n: 15
+cpu time of thread: 8.50e-05 
+cpu time of all threads: 1.16e-02 
+tid: 136423104
+array: 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 7
+n: 15
+cpu time of thread: 6.10e-04 
+cpu time of all threads: 1.16e-02 
+tid: 144815808
+array: 80 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 8
+n: 15
+cpu time of thread: 3.03e-03 
+cpu time of all threads: 1.16e-02 
+tid: 153208512
+array: 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 9
+n: 15
+cpu time of thread: 1.65e-04 
+cpu time of all threads: 1.16e-02 
+tid: 161601216
+array: 100 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 10
+n: 15
+cpu time of thread: 9.20e-05 
+cpu time of all threads: 1.16e-02 
+tid: 169993920
+array: 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 11
+n: 15
+cpu time of thread: 1.04e-04 
+cpu time of all threads: 1.16e-02 
+tid: 178386624
+array: 120 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 12
+n: 15
+cpu time of thread: 6.60e-05 
+cpu time of all threads: 1.16e-02 
+tid: 186779328
+array: 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 13
+n: 15
+cpu time of thread: 5.71e-04 
+cpu time of all threads: 1.16e-02 
+tid: 195172032
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 0
+n: 15
+cpu time of thread: 4.55e-03 
+cpu time of all threads: 1.16e-02 
+tid: 81864512
+array: 10 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 1
+n: 15
+cpu time of thread: 1.93e-04 
+cpu time of all threads: 1.16e-02 
+tid: 94459584
+array: 20 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 2
+n: 15
+cpu time of thread: 9.90e-05 
+cpu time of all threads: 1.16e-02 
+tid: 102852288
+array: 30 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 3
+n: 15
+cpu time of thread: 6.30e-05 
+cpu time of all threads: 1.16e-02 
+tid: 111244992
+array: 40 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 4
+n: 15
+cpu time of thread: 1.90e-03 
+cpu time of all threads: 1.16e-02 
+tid: 119637696
+array: 50 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 5
+n: 15
+cpu time of thread: 1.05e-04 
+cpu time of all threads: 1.16e-02 
+tid: 128030400
+array: 60 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 6
+n: 15
+cpu time of thread: 8.50e-05 
+cpu time of all threads: 1.16e-02 
+tid: 136423104
+array: 70 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 7
+n: 15
+cpu time of thread: 6.10e-04 
+cpu time of all threads: 1.16e-02 
+tid: 144815808
+array: 80 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 8
+n: 15
+cpu time of thread: 3.03e-03 
+cpu time of all threads: 1.16e-02 
+tid: 153208512
+array: 90 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 9
+n: 15
+cpu time of thread: 1.65e-04 
+cpu time of all threads: 1.16e-02 
+tid: 161601216
+array: 100 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 10
+n: 15
+cpu time of thread: 9.20e-05 
+cpu time of all threads: 1.16e-02 
+tid: 169993920
+array: 110 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 11
+n: 15
+cpu time of thread: 1.04e-04 
+cpu time of all threads: 1.16e-02 
+tid: 178386624
+array: 120 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 12
+n: 15
+cpu time of thread: 6.60e-05 
+cpu time of all threads: 1.16e-02 
+tid: 186779328
+array: 130 
+amount of changed: 0
+left can connect: 0
+
+
+Args Data:
+p: 14
+k: 13
+n: 15
+cpu time of thread: 5.71e-04 
+cpu time of all threads: 1.16e-02 
+tid: 195172032
+array: 140 150 
+amount of changed: 0
+left can connect: 0
+
+RESULT 14: 1.00e+01 2.00e+01 3.00e+01 4.00e+01 5.00e+01 6.00e+01 7.00e+01 8.00e+01 9.00e+01 1.00e+02 1.10e+02 1.20e+02 1.30e+02 1.40e+02 1.50e+02
