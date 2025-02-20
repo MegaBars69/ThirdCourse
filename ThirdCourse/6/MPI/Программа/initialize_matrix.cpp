@@ -38,14 +38,14 @@ double f(int i, int j, int n, int s)
     return -1;
 }
 
-int l2g(int n, int m, int p, int k, int i_l)
+int l2g(int m, int p, int k, int i_l)
 {
     int i_l_m = i_l/m;
     int i_g_m = i_l_m*p + k;
     return i_g_m*m + i_l%m; 
 }
 
-int g2l(int n, int m, int p, int k, int i_g)
+int g2l(int m, int p, int i_g)
 {
     int i_g_m = i_g/m;
     int i_l_m = i_g_m%p;
@@ -64,86 +64,84 @@ int get_rows(int n, int m, int p, int k)
     return (k >= b%p ? b/p : (b + p - 1)/p);
 }
 
-int get_k(int n, int m, int p, int i_g)
+int get_k(int m, int p, int i_g)
 {
     int i_g_m = i_g/m;
     return i_g_m % p;
 }
 
-void PrintMatrix(double* matrix, int n, int m, int p, int K, int r, double* buf, MPI_Comm comm)
+void PrintMatrix(double* A, int n, int m, int p, int K, int r, double* buf, MPI_Comm comm)
 {
-    int l = n%m;
-    int k = (n-l)/m;
-    int bi = 0, bj = 0, i_ = 0, j_ = 0;
-    int row_block_size = 0, col_block_size = 0;
-    int r_num_line_in_block = 0, r_num_elem_in_line = 0;
+    int l = n % m;
+    int k = (n - l) / m;
+    int bi, bj, i_, j_;
+    int row_block_size, col_block_size;
+    int line_in_block, elem_in_line;
+    int row_bound = r / m;
+    int col_bound = r - m * row_bound;
+    int start_index, owner;
 
-    int restrict_k = r / m;
-    int restrict_l = r - m * restrict_k;
-    int owner;
-    
-    if(K == 0)
+    if (K == 0) 
     {
-        cout<<endl;
-    }
-    
-    if(r > n)
-    {
-        r = n;
+        cout << endl;
     }
 
-    for(bi =  0; bi < restrict_k + 1; bi++) 
+    for (bi = 0; bi < row_bound + 1; bi++) 
     {
         row_block_size = (bi < k) ? m : l;
-        r_num_line_in_block = (bi < restrict_k) ? m : restrict_l;
+        line_in_block = (bi < row_bound) ? m : col_bound;
         owner = bi % p;
         int line_of_blocks_loc = bi / p;
+
         if (K == 0) 
         {
             if (owner == 0) 
             {
-                memcpy(buf, matrix + line_of_blocks_loc * (m * m * k + l * m), (k * row_block_size * m + row_block_size * l) * sizeof(double));
+                memcpy(buf, A + line_of_blocks_loc * (m * m * k + l * m), (k * row_block_size * m + row_block_size * l) * sizeof(double));
             } 
-            else
+            else 
             {
                 MPI_Status st;
                 MPI_Recv(buf, k * row_block_size * m + row_block_size * l, MPI_DOUBLE, owner, 0, comm, &st);
             }
         } 
-        else
+        else 
         {
             if (owner == K) 
             {
-                MPI_Send(matrix + line_of_blocks_loc * (m * m * k + l * m), k * row_block_size * m + row_block_size * l, MPI_DOUBLE, 0, 0, comm);
+                MPI_Send(A + line_of_blocks_loc * (m * m * k + l * m), k * row_block_size * m + row_block_size * l, MPI_DOUBLE, 0, 0, comm);
             }
         }
 
         if (K == 0) 
         {
-            for(i_ = 0; i_ < r_num_line_in_block; i_++) 
+            for (i_ = 0; i_ < line_in_block; i_++) 
             {
-                for(bj = 0; bj < restrict_k + 1; bj++) 
+                for (bj = 0; bj < row_bound + 1; bj++) 
                 {
                     col_block_size = (bj < k) ? m : l;
-                    r_num_elem_in_line = (bj < restrict_k) ? m : restrict_l;
-                    int shift = bj * m * row_block_size + i_ * col_block_size;
-                    for(j_ = 0; j_ < r_num_elem_in_line; j_++) 
+                    elem_in_line = (bj < row_bound) ? m : col_bound;
+                    
+                    start_index = bj * m * row_block_size + i_ * col_block_size;
+
+                    for (j_ = 0; j_ < elem_in_line; j_++) 
                     {
-                        printf(" %10.3e", *(buf + shift + j_));
+                        printf("%10.3e ", *(buf + start_index + j_));
                     }
                 }
-                cout<< endl;
+                cout << endl;
             }
         }
     }
-    if(K == 0)
+
+    if (K == 0) 
     {
-        cout<< endl;
+        cout << endl;
     }
 }
 
 
-void PrintLocalMatrix(double* A,  int n, int m, int p, int K, int r, bool exp_format, bool okruglenie)
+void PrintLocalMatrix(double* A,  int n, int m, int p, int K, int r)
 {
     if (K==0)
     {
@@ -153,7 +151,6 @@ void PrintLocalMatrix(double* A,  int n, int m, int p, int K, int r, bool exp_fo
     int k = (n-l)/m;
     int max_p;
     int printed_strings = 0, printed_el = 0;
-    int rows = get_rows(n,m,p,K);
 
     for (int bi_loc = 0, bi = K; bi < k + 1; bi_loc++, bi += p)
     {
@@ -171,28 +168,13 @@ void PrintLocalMatrix(double* A,  int n, int m, int p, int K, int r, bool exp_fo
                 double* pa = (A + bi_loc * (k*m*m + m*l) + bj*max_p*m + p*max_l); 
                 for (int l = 0; l < max_l; l++)
                 {
-                    if(exp_format)
-                    {
-                        printf("%10.3e ", *(pa++));
-                    }
-                    else
-                    {
-                        if(okruglenie)
-                        {
-                            cout<<fixed<<setprecision(2)<<*(pa++)<<" ";
-                        }
-                        else
-                        {
-                            cout<<*(pa++)<<" ";                         
-                        }                
-                    }
+                    printf("%10.3e ", *(pa++));
                     printed_el++;
 
                     if(printed_el == r)
                     {
                         bj = k+1;
                         l = max_l;
-                        //p = max_p;
                         printed_el = 0;
                     }
                 }
@@ -220,7 +202,7 @@ void PrintAllData(double* A, int n, int m, int p, int K)
 
 void FormulaMatrixInitialization(double* A, int n, int m, int p, int K, int s)
 {
-    int i_loc, j_loc, i_glob, j_glob, rows;
+    int i_glob, j_glob, rows;
     int bi, bi_loc, bj, i_, j_;
 
     int l = n%m;
@@ -257,7 +239,7 @@ void FormulaMatrixInitialization(double* A, int n, int m, int p, int K, int s)
 
 void BuildE(double* A, int n, int m, int p, int K)
 {
-    int i_loc, j_loc, i_glob, j_glob, rows;
+    int i_glob, j_glob, rows;
     int bi, bi_loc, bj, i_, j_;
 
     int l = n%m;
@@ -266,10 +248,9 @@ void BuildE(double* A, int n, int m, int p, int K)
 
     double *pa = A;
 
-    rows = get_rows(n, m, p, k);
-
+    rows = get_rows(n, m, p, K);
     
-    for (bi = K, bi_loc = 0; bi < k + 1; bi+=p, bi_loc++)
+    for (bi = K, bi_loc = 0; bi_loc < rows; bi+=p, bi_loc++)
     {
         row_block_size = (bi < k ? m : l);
         for (bj = 0; bj < k + 1; bj++)
@@ -282,13 +263,13 @@ void BuildE(double* A, int n, int m, int p, int K)
                 {
                     i_glob = bi*m + i_;
                     j_glob = bj*m + j_;
+                
+                    *(pa) = (i_glob != j_glob ? 0 : 1);
                     
-                    *(pa) = (i_glob == j_glob ? 1 : 0);
                 }
     
             }  
-        }
-        
+        }  
     }
 }
 
@@ -296,102 +277,137 @@ void BuildE(double* A, int n, int m, int p, int K)
 int ReadMatrixFromFile(double* A, int n, int m, int p, int K, char* file_name, double* buf, MPI_Comm comm) 
 {
     FILE* file = nullptr;
-    int error = 0;
+    int err = 0;
+    int read_elements = 0;
     int read_strings = 0;
-    int l = n%m;
-    int k = (n-l)/m;
-    int bi = 0, i_ = 0, j_ = 0,  bj = 0, row_block_size = 0, col_block_size = 0, row_block_size_loc = 0;
+    int l = n % m;
+    int k = (n - l) / m;
+    int bi = 0, i_ = 0, j_ = 0, bj = 0, row_block_size = 0, col_block_size = 0, row_block_size_loc = 0;
     int el_in_line, owner;
-    
+    int res;
+
     if (K == 0) 
     {
         file = fopen(file_name, "r");
         if (!file) 
         {
-            error = 1;
+            err = 1;
         }
     }
 
-    MPI_Bcast(&error, 1, MPI_INT, 0, comm);
+    MPI_Bcast(&err, 1, MPI_INT, 0, comm);
 
-    if (error != 0) 
+    if (err != 0) 
     {
-        return error;
+        return err;
     }
 
-    memset(buf, 0, n * m * sizeof(double));
-
-    for(bi = 0; bi < k + 1; bi++) 
+    for (bi = 0; bi < k + 1; bi++) 
     {
         row_block_size = (bi < k) ? m : l;
-        
-        for(i_ = 0; i_ < row_block_size; i_++)
+
+        for (i_ = 0; i_ < row_block_size; i_++) 
         {
-            for(bj = 0; bj <= k; bj++) 
+            for (bj = 0; bj <= k; bj++) 
             {
                 col_block_size = (bj < k) ? m : l;
 
                 el_in_line = bj * row_block_size * m + i_ * col_block_size;
+
                 if (K == 0) 
                 {
-                    for(j_ = 0; j_ < col_block_size; j_++)
+                    for (j_ = 0; j_ < col_block_size; j_++) 
                     {
-                        if (fscanf(file, "%lf", buf + el_in_line + j_) == 1) 
+                        res = fscanf(file, "%lf", buf + el_in_line + j_);
+                        if (res == 1) 
                         {
-                            read_strings++;
+                            read_elements++;
                         } 
-                        else 
+                        else if(res == EOF) 
                         {
-                            error = 2;
-                            goto error_read_el;
+                            err = 2;
+                            break; 
                         }
+                        else if(res == 0)
+                        {
+                            err = 3;
+                            break;
+                        }
+                        if (fgetc(file) == '\n') {
+                            read_strings++;
+                        }
+                        ungetc('\n', file); 
                     }
                 }
+
+                if (err != 0) 
+                {
+                    break; 
+                }
+            }
+
+            if (err != 0) 
+            {
+                break;
             }
         }
 
-        error_read_el:
-            MPI_Bcast(&error, 1, MPI_INT, 0, comm);
-            MPI_Bcast(&read_strings, 1, MPI_INT, 0, comm);
+        MPI_Bcast(&err, 1, MPI_INT, 0, comm);
+        MPI_Bcast(&read_elements, 1, MPI_INT, 0, comm);
 
-            if (error != 0 && read_strings != n * n) 
-            {
-                if (K == 0) 
-                {
-                    fclose(file);
-                }
-                return error;
-            }
-
-            owner = bi % p;
-            row_block_size_loc = bi / p;
-
+        if (err != 0 && read_elements != n * n) 
+        {
             if (K == 0) 
             {
-                if (owner == 0) 
-                {
-                    memcpy(A + row_block_size_loc * (m * m * k + l * m), buf, (k * row_block_size * m + l * row_block_size) * sizeof(double));
-                } 
-                else 
-                {
-                    MPI_Send(buf, k * row_block_size * m + l * row_block_size, MPI_DOUBLE, owner, 0, comm);
-                }
+                fclose(file);
+            }
+            return err;
+        }
+
+        owner = bi % p;
+        row_block_size_loc = bi / p;
+
+        if (K == 0) 
+        {
+            if (owner == 0) 
+            {
+                memcpy(A + row_block_size_loc * (m * m * k + l * m), buf, (k * row_block_size * m + l * row_block_size) * sizeof(double));
             } 
             else 
             {
-                if (K == owner) 
-                {
-                    MPI_Status st;
-                    MPI_Recv(A + row_block_size_loc * (m * m * k + l * m), k * row_block_size * m + l * row_block_size, MPI_DOUBLE, 0, 0, comm, &st);
-                }
-            }        
+                MPI_Send(buf, k * row_block_size * m + l * row_block_size, MPI_DOUBLE, owner, 0, comm);
+            }
+        } 
+        else 
+        {
+            if (K == owner) 
+            {
+                MPI_Status st;
+                MPI_Recv(A + row_block_size_loc * (m * m * k + l * m), k * row_block_size * m + l * row_block_size, MPI_DOUBLE, 0, 0, comm, &st);
+            }
+        }
     }
+    
+    double fin;
+
+    if(K==0)
+    {
+        if(fscanf(file, "%lf",&fin) != EOF)
+        {
+            err = 4;
+        }
+        else if(read_strings != n)
+        {
+            err = 5;
+        }
+    }
+    MPI_Bcast(&err, 1, MPI_INT, 0, comm);
+    
+
     if (K == 0) 
     {
         fclose(file);
-        return 0;
     }
-    
-    return 0;
-}
 
+    return err;
+}

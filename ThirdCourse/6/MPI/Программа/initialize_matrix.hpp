@@ -4,7 +4,7 @@
 int get_max_rows(int n, int m, int p);
 int get_rows(int n, int m, int p, int k);
 void FormulaMatrixInitialization(double* A, int n, int m, int p, int K, int s);
-void PrintLocalMatrix(double* A,  int n, int m, int p, int K, int r, bool exp_format, bool okruglenie);
+void PrintLocalMatrix(double* A,  int n, int m, int p, int K, int r);
 void PrintAllData(double* A, int n, int m, int p, int K);
 int ReadMatrixFromFile(double* A, int n, int m, int p, int K, char* file_name, double* buf, MPI_Comm comm);
 void BuildE(double* B, int n, int m, int p, int K);
