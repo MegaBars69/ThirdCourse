@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     int n = 0, m = 0, r = 0, s = 0, p = 0, proc_num = 0;
     double r1 = -1, r2 = -1, t1 = 0, t2 = 0;
     int er_l = 0, er_g = 0;
-    
+    Args a;
     MPI_Comm comm = MPI_COMM_WORLD;
     MPI_Init(&argc, &argv);
 
@@ -49,13 +49,27 @@ int main(int argc, char* argv[])
         MPI_Finalize();
         return 0;
     }
-    
+    int k = n/m, l = n%m;
+    a.n = n;
+    a.m = m;
+    a.p = p;
+    a.k = proc_num;
+    a.l = l;
+    a.K = k;
+    a.rows = get_rows(n, m, p, proc_num);
+    a.last_line_isnt_fool = (l != 0 && (k%p) == proc_num);
+
     int max_rows = get_max_rows(n,m,p);
     double* A = new double[n*m*(max_rows+1)];
     double* B = new double[n*m*(max_rows+1)];
-    double* buf = new double[(n + m)*m];
+    double* buf = new double[(2*n + m)*m];
+    double* U = new double[(m+1)*(m+1)];
+    bool* ZerosMatrix = new bool[(k+1)*(k+1)];
+    double* ZeroMatrix = new double[m*m];
+    double* ProductResult = new double[m*m];
+    double* results = new double[n];
 
-    if(A == nullptr || B == nullptr || buf == nullptr)
+    if(A == nullptr || B == nullptr || buf == nullptr || U == nullptr || ZerosMatrix == nullptr || ProductResult == nullptr)
     {
         er_l = 1;
     }
@@ -77,12 +91,30 @@ int main(int argc, char* argv[])
         delete[] A;
         delete[] B;
         delete[] buf;
+        delete[] U;
+        delete[] ZeroMatrix;
+        delete[] ZerosMatrix;
+        delete[] ProductResult;
+        delete[] results;
         
         MPI_Finalize();
         return 0;
     }
-    
-    
+    memset(U, 0, (m+1)*(m+1)*sizeof(double));
+    memset(ProductResult, 0, m*m*sizeof(double));
+    memset(results, 0, n*sizeof(double));
+    memset(buf, 0, (n + m)*m*sizeof(double));
+    memset(ZeroMatrix, 0, m*m*sizeof(double));
+
+    for (int i = 0; i < k+1; i++)
+    {
+        for (int j = 0; j < k + 1; j++)
+        {
+            ZerosMatrix[i*(k+1) + j] = (i == j);
+        }
+        
+    }
+
     if (s == 0)
     {
         er_l = ReadMatrixFromFile(A, n, m, p, proc_num, argv[5], buf, comm);
@@ -119,10 +151,16 @@ int main(int argc, char* argv[])
             }
             printf("%s : Task = %d Res1 = %e Res2 = %e T1 = %.2f T2 = %.2f S = %d N = %d M = %d P = %d\n", argv[0], 24, r1, r2, t1, t2, s, n, m, p);
         }
+        
         delete[] A;
         delete[] B;
         delete[] buf;
-        
+        delete[] U;
+        delete[] ZeroMatrix;
+        delete[] ZerosMatrix;
+        delete[] ProductResult;
+        delete[] results;
+
         MPI_Finalize();
 
         return 0;
@@ -139,13 +177,30 @@ int main(int argc, char* argv[])
     PrintMatrix(A, n, m, p, proc_num, r,buf, comm);
     MPI_Barrier(comm);
 
+    a.A = A;
+    a.B = B;
+    a.buf = buf;
+    a.ZerosMatrix = ZerosMatrix;
+    a.ZeroMatrix = ZeroMatrix;
+    a.ProductResult = ProductResult;
+    a.U = U;
+    a.results = results;
+    a.norm = Norm(&a);
+
+    if (proc_num == 0)
+    {
+        a.PrintInfo();
+    }
+    
+    InverseMatrixParallel(&a);
     if(proc_num == 0)
     {
         cout<<"Inversed A"<<endl;
     }
 
     PrintMatrix(B, n, m, p, proc_num, r,buf, comm);
-    
+    PrintMatrix(A, n, m, p, proc_num, r,buf, comm);
+
     if(proc_num == 0) 
     {
         printf("%s : Task = %d Res1 = %e Res2 = %e T1 = %.2f T2 = %.2f S = %d N = %d M = %d P = %d\n", argv[0], 24, r1, r2, t1, t2, s, n, m, p);
@@ -154,7 +209,12 @@ int main(int argc, char* argv[])
     delete[] A;
     delete[] B;
     delete[] buf;
-    
+    delete[] U;
+    delete[] ZeroMatrix;
+    delete[] ZerosMatrix;
+    delete[] ProductResult;
+    delete[] results;
+
     MPI_Finalize();
     
     return 0;
