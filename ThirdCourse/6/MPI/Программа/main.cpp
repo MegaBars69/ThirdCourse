@@ -56,6 +56,7 @@ int main(int argc, char* argv[])
     a.k = proc_num;
     a.l = l;
     a.K = k;
+    a.nomer_v_okne = proc_num;
     a.rows = get_rows(n, m, p, proc_num);
     a.last_line_isnt_fool = (l != 0 && (k%p) == proc_num);
 
@@ -103,7 +104,7 @@ int main(int argc, char* argv[])
     memset(U, 0, (m+1)*(m+1)*sizeof(double));
     memset(ProductResult, 0, m*m*sizeof(double));
     memset(results, 0, n*sizeof(double));
-    memset(buf, 0, (n + m)*m*sizeof(double));
+    memset(buf, 0, (2*n + m)*m*sizeof(double));
     memset(ZeroMatrix, 0, m*m*sizeof(double));
 
     for (int i = 0; i < k+1; i++)
