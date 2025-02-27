@@ -37,8 +37,11 @@ class Args
         int l = 0;
         int K = 0;
         int rows = 0;
+        int max_rows = 0;
+        int active_procceses = 0; 
 
         int cur_str = 0;
+        int cur_global_str = 0;
         int nomer_v_okne = 0;
         int shag = 0;
         

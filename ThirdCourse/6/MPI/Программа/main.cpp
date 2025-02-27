@@ -56,17 +56,17 @@ int main(int argc, char* argv[])
 
     a.n = n;
     a.m = m;
-    a.p = (n/m + (l == 0 ? 0 : 1) >= p ? p : n/m + (l == 0 ? 0 : 1));
+    a.active_procceses = a.p = (n/m + (l == 0 ? 0 : 1) >= p ? p : n/m + (l == 0 ? 0 : 1));
     a.k = proc_num;
     a.l = l;
     a.K = k;
     a.r = r;
     a.nomer_v_okne = proc_num;
     a.rows = get_rows(n, m, p, proc_num);
-    a.max_rows = ma;
+    a.max_rows = max_rows;
     a.last_line_isnt_fool = (l != 0 && (k%p) == proc_num);
 
-    double* A = new double[n*m*(max_rows+1)];
+    double* A = new double[n*m*(max_rows+p)];
     double* B = new double[n*m*(max_rows+1)];
     double* buf = new double[(2*n + m)*m];
     double* U = new double[(m+1)*(m+1)];
@@ -111,6 +111,7 @@ int main(int argc, char* argv[])
     memset(results, 0, n*sizeof(double));
     memset(buf, 0, (2*n + m)*m*sizeof(double));
     memset(ZeroMatrix, 0, m*m*sizeof(double));
+    memset(A, 0, n*m*(max_rows + p)*sizeof(double));
 
     for (int i = 0; i < k+1; i++)
     {
