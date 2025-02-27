@@ -921,7 +921,7 @@ void SecondStep(Args* aA)
 
     int step;
 
-    int send_size = (k+1 - shag)*m*m;
+    int send_size = ((l == 0 ? k : k+1) - shag)*m*m;
 
 
     block_size_row = (s < k ? m : l);
@@ -936,18 +936,19 @@ void SecondStep(Args* aA)
         if (Nomer < b)
         {
             bi = (K + p*(aA->cur_str) + p - b);
-            pa = A + s*m*n + shag*block_size_row*m;
-            pb = B + s*m*n;
-
-            Proc_num_pair = (Nomer + two_in_the_power_of_a + shag)%p;
-            MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-            MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-
-            down_block_size_row = (bi < k ? m : l);
-            pa_down = buf_pa;
-            pb_down = buf_pb;
+            
             if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
-            {            
+            {   
+                pa = A + s*m*n + shag*block_size_row*m;
+                pb = B + s*m*n;
+
+                Proc_num_pair = (Nomer + two_in_the_power_of_a + shag)%p;
+                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+
+                down_block_size_row = (bi < k ? m : l);
+                pa_down = buf_pa;
+                pb_down = buf_pb;         
                 ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true) ;
 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
@@ -980,6 +981,17 @@ void SecondStep(Args* aA)
             }
             else if (bi == up_bound - 1 && l > 0)
             {
+                pa = A + s*m*n + shag*block_size_row*m;
+                pb = B + s*m*n;
+
+                Proc_num_pair = (Nomer + two_in_the_power_of_a + shag)%p;
+                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+
+                down_block_size_row = (bi < k ? m : l);
+                pa_down = buf_pa;
+                pb_down = buf_pb;
+           
                 ZeroOut(pa, pa_down, U, m, down_block_size_row, norm) ;
 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
@@ -1014,20 +1026,21 @@ void SecondStep(Args* aA)
         else if(Nomer >= two_in_the_power_of_a)
         {
             bi = (K + p*(aA->cur_str));
-            pa = A + s*m*n + shag*block_size_row*m;
-            pb = B + s*m*n;
-
-            Proc_num_pair = (Nomer - two_in_the_power_of_a + shag)%p;
-            MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-            MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);  
-            down_block_size_row = (bi < k ? m : l);
-            pa_down = pa;
-            pb_down = pb;
-            pa = buf_pa;
-            pb = buf_pb;
 
             if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
-            {      
+            {  
+                pa = A + s*m*n + shag*block_size_row*m;
+                pb = B + s*m*n;
+
+                Proc_num_pair = (Nomer - two_in_the_power_of_a + shag)%p;
+                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);  
+                down_block_size_row = (bi < k ? m : l);
+                pa_down = pa;
+                pb_down = pb;
+                pa = buf_pa;
+                pb = buf_pb;    
+            
                 ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true) ;
 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
@@ -1060,6 +1073,18 @@ void SecondStep(Args* aA)
             }
             else if (bi == up_bound - 1 && l > 0)
             {
+                pa = A + s*m*n + shag*block_size_row*m;
+                pb = B + s*m*n;
+
+                Proc_num_pair = (Nomer - two_in_the_power_of_a + shag)%p;
+                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);  
+                down_block_size_row = (bi < k ? m : l);
+                pa_down = pa;
+                pb_down = pb;
+                pa = buf_pa;
+                pb = buf_pb;
+
                 ZeroOut(pa, pa_down, U, m, down_block_size_row, norm) ;
 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
@@ -1098,18 +1123,19 @@ void SecondStep(Args* aA)
         if (Nomer % 2 == 1 && (Nomer - 1) < (p-b))
         {
             bi = (K + p*(aA->cur_str) + 1);
-            pa = A + s*m*n + shag*block_size_row*m;
-            pb = B + s*m*n;
-
-            Proc_num_pair = (Nomer + shag)%p;
-            MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-            MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-            down_block_size_row = (bi < k ? m : l);
-            pa_down = buf_pa;
-            pb_down = buf_pb; 
             
             if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
             { 
+                pa = A + s*m*n + shag*block_size_row*m;
+                pb = B + s*m*n;
+
+                Proc_num_pair = (Nomer + shag)%p;
+                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                down_block_size_row = (bi < k ? m : l);
+                pa_down = buf_pa;
+                pb_down = buf_pb; 
+                
                 down_block_size_row = (bi < k ? m : l);
                 //pa_down = A + bi*m*n + shag*down_block_size_row*m;
                 
@@ -1144,7 +1170,17 @@ void SecondStep(Args* aA)
                 } 
             }
             else if ((bi == up_bound - 1) && (l > 0))
-            {     
+            {   
+                pa = A + s*m*n + shag*block_size_row*m;
+                pb = B + s*m*n;
+
+                Proc_num_pair = (Nomer + shag)%p;
+                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                down_block_size_row = (bi < k ? m : l);
+                pa_down = buf_pa;
+                pb_down = buf_pb;   
+                
                 down_block_size_row = (bi < k ? m : l);
                 //pa_down = A + bi*m*n + shag*down_block_size_row*m;
                 
@@ -1182,20 +1218,20 @@ void SecondStep(Args* aA)
         else if (Nomer % 2 == 0 && (Nomer - 1) < (p-b))
         {
             bi = (K + p*(aA->cur_str));
-            pa = A + s*m*n + shag*block_size_row*m;
-            pb = B + s*m*n;
-
-            Proc_num_pair = (Nomer - 2 + shag)%p;
-            MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-            MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-            
-            pa_down = pa;
-            pb_down = pb;
-            pa = buf_pa;
-            pb = buf_pb;
 
             if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
             {
+                pa = A + s*m*n + shag*block_size_row*m;
+                pb = B + s*m*n;
+
+                Proc_num_pair = (Nomer - 2 + shag)%p;
+                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                
+                pa_down = pa;
+                pb_down = pb;
+                pa = buf_pa;
+                pb = buf_pb;
                 down_block_size_row = (bi < k ? m : l);
                 //pa_down = A + bi*m*n + shag*down_block_size_row*m;
                 
@@ -1230,7 +1266,19 @@ void SecondStep(Args* aA)
                 } 
             }
             else if ((bi == up_bound - 1) && (l > 0))
-            {            
+            {   
+                pa = A + s*m*n + shag*block_size_row*m;
+                pb = B + s*m*n;
+
+                Proc_num_pair = (Nomer - 2 + shag)%p;
+                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                
+                pa_down = pa;
+                pb_down = pb;
+                pa = buf_pa;
+                pb = buf_pb;         
+               
                 down_block_size_row = (bi < k ? m : l);
                 //pa_down = A + bi*m*n + shag*down_block_size_row*m;
                 
@@ -1275,17 +1323,17 @@ void SecondStep(Args* aA)
             {
                 bi = x + Nomer + shag - 1;
                 
-                pa = A + s*m*n + shag*block_size_row*m;
-                pb = B + s*m*n;
-
-                Proc_num_pair = (Nomer + x + shag - 1)%p;
-                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-                
-                pa_down = buf_pa;
-                pb_down = buf_pb;
                 if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
                 {
+                    pa = A + s*m*n + shag*block_size_row*m;
+                    pb = B + s*m*n;
+
+                    Proc_num_pair = (Nomer + x + shag - 1)%p;
+                    MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                    MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                    
+                    pa_down = buf_pa;
+                    pb_down = buf_pb;
                     down_block_size_row = (bi < k ? m : l);
                     //pa_down = A + bi*m*n + shag*down_block_size_row*m;
 
@@ -1321,6 +1369,15 @@ void SecondStep(Args* aA)
                 }
                 else if (bi == up_bound - 1 && l > 0)
                 {
+                    pa = A + s*m*n + shag*block_size_row*m;
+                    pb = B + s*m*n;
+
+                    Proc_num_pair = (Nomer + x + shag - 1)%p;
+                    MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                    MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                    
+                    pa_down = buf_pa;
+                    pb_down = buf_pb;
                     down_block_size_row = (bi < k ? m : l);
                     //pa_down = A + bi*m*n + shag*down_block_size_row*m;
 
@@ -1357,20 +1414,22 @@ void SecondStep(Args* aA)
             }
             else if (Nomer % (2*x) != 1 && (Nomer - 1) < (p - b))
             {
-                bi = Nomer - x + shag - 1;
-                pa = A + s*m*n + shag*block_size_row*m;
-                pb = B + s*m*n;
-
-                Proc_num_pair = (Nomer - x + shag - 1)%p;
-                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                bi = Nomer + shag - 1;
                 
-                pa_down = pa;
-                pb_down = pb;
-                pa = buf_pa;
-                pb = buf_pb;
                 if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
                 {
+                    pa = A + s*m*n + shag*block_size_row*m;
+                    pb = B + s*m*n;
+
+                    Proc_num_pair = (Nomer - x + shag - 1)%p;
+                    MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                    MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                    
+                    pa_down = pa;
+                    pb_down = pb;
+                    pa = buf_pa;
+                    pb = buf_pb;
+              
                     down_block_size_row = (bi < k ? m : l);
                     //pa_down = A + bi*m*n + shag*down_block_size_row*m;
 
@@ -1406,6 +1465,18 @@ void SecondStep(Args* aA)
                 }
                 else if (bi == up_bound - 1 && l > 0) 
                 {
+                    pa = A + s*m*n + shag*block_size_row*m;
+                    pb = B + s*m*n;
+
+                    Proc_num_pair = (Nomer - x + shag - 1)%p;
+                    MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                    MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                    
+                    pa_down = pa;
+                    pb_down = pb;
+                    pa = buf_pa;
+                    pb = buf_pb;
+                    
                     down_block_size_row = (bi < k ? m : l);
                     //pa_down = A + bi*m*n + shag*down_block_size_row*m;
 
@@ -1504,12 +1575,12 @@ int InverseMatrixParallel(Args* a)
     for (bi = 0; bi < up_bound; bi++)
     {
         a->shag = bi;
-        PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
+        //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
         if(rows > 0)
         {
             FirstStep(a);
         }
-        PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
+        //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
         
         if(rows > 0)
         {
