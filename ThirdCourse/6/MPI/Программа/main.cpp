@@ -52,18 +52,20 @@ int main(int argc, char* argv[])
         return 0;
     }
     int k = n/m, l = n%m;
+    int max_rows = get_max_rows(n,m,p);
+
     a.n = n;
     a.m = m;
-    a.p = p;
+    a.p = (n/m + (l == 0 ? 0 : 1) >= p ? p : n/m + (l == 0 ? 0 : 1));
     a.k = proc_num;
     a.l = l;
     a.K = k;
     a.r = r;
     a.nomer_v_okne = proc_num;
     a.rows = get_rows(n, m, p, proc_num);
+    a.max_rows = ma;
     a.last_line_isnt_fool = (l != 0 && (k%p) == proc_num);
 
-    int max_rows = get_max_rows(n,m,p);
     double* A = new double[n*m*(max_rows+1)];
     double* B = new double[n*m*(max_rows+1)];
     double* buf = new double[(2*n + m)*m];

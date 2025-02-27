@@ -156,7 +156,7 @@ double Norm(Args *a)
             }
         }
     }   
-    for (int i = 1; i < p; i++)
+    for (int i = 1; i < p && rows > 0; i++)
     {   
         if(a->k != recv_proc_num)
         {
@@ -922,7 +922,7 @@ void SecondStep(Args* aA)
 
     int step;
 
-    int send_size = k+1 - shag;
+    int send_size = (k+1 - shag)*m*m;
 
 
     block_size_row = (s < k ? m : l);
@@ -932,372 +932,26 @@ void SecondStep(Args* aA)
     int Nomer = aA->nomer_v_okne;
     int Proc_num_pair;
       
-    if (Nomer < b)
+    if(p > 1)
     {
-        pa = A + s*m*n + shag*block_size_row*m;
-        pb = B + s*m*n;
-
-        Proc_num_pair = (Nomer + two_in_the_power_of_a + shag)%p;
-        MPI_Sendrecv(pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-        MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-
-        bi = (K + p*(aA->cur_str) + p - b);
-
-        down_block_size_row = (bi < k ? m : l);
-        pa_down = buf_pa;
-        pb_down = buf_pb;
-    
-        if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
-        {            
-            ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true) ;
-
-            for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                            
-                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
-
-            }
-
-            for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-
-                /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
-                {*/
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
-                   /*ZerosMatrix[s*(k+1) + bj] = 1;
-                    if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 1; 
-                    }
-                    else
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                    }
-                    
-                }*/
-            }
-        }
-        else if (bi == up_bound - 1 && l > 0)
-        {
-            ZeroOut(pa, pa_down, U, m, down_block_size_row, norm) ;
-
-            for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                            
-                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
-
-            }
-
-            for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-
-                /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
-                {*/
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
-                    /*ZerosMatrix[s*(k+1) + bj] = 1;
-                    if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 1; 
-                    }
-                    else
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                    }
-                    
-                }*/
-            }
-        }  
-    }
-    else if(Nomer >= two_in_the_power_of_a)
-    {
-        pa = A + s*m*n + shag*block_size_row*m;
-        pb = B + s*m*n;
-
-        Proc_num_pair = (Nomer - two_in_the_power_of_a + shag)%p;
-        MPI_Sendrecv(pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-        MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-
-        bi = (K + p*(aA->cur_str));
-
-        down_block_size_row = (bi < k ? m : l);
-        pa_down = pa;
-        pb_down = pb;
-        pa = buf_pa;
-        pb = buf_pb;
-    
-        if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
-        {            
-            ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true) ;
-
-            for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                            
-                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
-
-            }
-
-            for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-
-                /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
-                {*/
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
-                   /*ZerosMatrix[s*(k+1) + bj] = 1;
-                    if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 1; 
-                    }
-                    else
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                    }
-                    
-                }*/
-            }
-        }
-        else if (bi == up_bound - 1 && l > 0)
-        {
-            ZeroOut(pa, pa_down, U, m, down_block_size_row, norm) ;
-
-            for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                            
-                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
-
-            }
-
-            for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-
-                /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
-                {*/
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
-                    /*ZerosMatrix[s*(k+1) + bj] = 1;
-                    if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 1; 
-                    }
-                    else
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                    }
-                    
-                }*/
-            }
-        } 
-        return; 
-    }
-
-    Nomer++;
-
-    if (Nomer % 2 == 1 && (Nomer - 1) < (p-b))
-    {
-        pa = A + s*m*n + shag*block_size_row*m;
-        pb = B + s*m*n;
-
-        Proc_num_pair = (Nomer + shag)%p;
-        MPI_Sendrecv(pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-        MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-
-        bi = (K + p*(aA->cur_str) + 1);
-
-        down_block_size_row = (bi < k ? m : l);
-        pa_down = buf_pa;
-        pb_down = buf_pb;
-        
-        if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
-        {
-            down_block_size_row = (bi < k ? m : l);
-            //pa_down = A + bi*m*n + shag*down_block_size_row*m;
-            
-            ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
-            
-            for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                            
-                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
-
-            }
-
-            for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                
-                /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
-                {*/
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
-                    /*ZerosMatrix[s*(k+1) + bj] = 1;
-                    if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 1; 
-                    }
-                    else
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                    }
-                    
-                }*/
-            } 
-        }
-        else if ((bi == up_bound - 1) && (l > 0))
-        {
-            down_block_size_row = (bi < k ? m : l);
-            //pa_down = A + bi*m*n + shag*down_block_size_row*m;
-            
-            ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
-            
-            for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                            
-                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
-
-            }
-
-            for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                
-                /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
-                {*/
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
-                    /*ZerosMatrix[s*(k+1) + bj] = 1;
-                    if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 1; 
-                    }
-                    else
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                    }
-                    
-                }*/
-            } 
-        } 
-    }
-
-    if (Nomer % 2 == 0 && (Nomer - 1) < (p-b))
-    {
-        pa = A + s*m*n + shag*block_size_row*m;
-        pb = B + s*m*n;
-
-        Proc_num_pair = (Nomer - 2 + shag)%p;
-        MPI_Sendrecv(pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-        MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-
-        bi = (K + p*(aA->cur_str));
-
-        down_block_size_row = (bi < k ? m : l);
-        pa_down = pa;
-        pb_down = pb;
-        pa = buf_pa;
-        pb = buf_pb;
-        
-        if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
-        {
-            down_block_size_row = (bi < k ? m : l);
-            //pa_down = A + bi*m*n + shag*down_block_size_row*m;
-            
-            ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
-            
-            for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                            
-                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
-
-            }
-
-            for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                
-                /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
-                {*/
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
-                    /*ZerosMatrix[s*(k+1) + bj] = 1;
-                    if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 1; 
-                    }
-                    else
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                    }
-                    
-                }*/
-            } 
-        }
-        else if ((bi == up_bound - 1) && (l > 0))
-        {
-            down_block_size_row = (bi < k ? m : l);
-            //pa_down = A + bi*m*n + shag*down_block_size_row*m;
-            
-            ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
-            
-            for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                            
-                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
-
-            }
-
-            for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
-            {
-                down_block_size_col = (bj < k ? m : l);
-                
-                /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
-                {*/
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
-                    /*ZerosMatrix[s*(k+1) + bj] = 1;
-                    if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 1; 
-                    }
-                    else
-                    {
-                        ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                    }
-                    
-                }*/
-            } 
-        } 
-        return;
-    }
-    
-    for (step = 1; step < a; step++)
-    {
-        x = pow(2,step);
-
-        if (Nomer % (2*x) == 1 && (Nomer - 1) < (p - b))
+        if (Nomer < b)
         {
             pa = A + s*m*n + shag*block_size_row*m;
             pb = B + s*m*n;
 
-            Proc_num_pair = (Nomer + x + shag - 1)%p;
-            MPI_Sendrecv(pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+            Proc_num_pair = (Nomer + two_in_the_power_of_a + shag)%p;
+            MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
             MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-            
+
+            bi = (K + p*(aA->cur_str) + p - b);
+
+            down_block_size_row = (bi < k ? m : l);
             pa_down = buf_pa;
             pb_down = buf_pb;
-            bi = x + Nomer + shag - 1;
-
-            if(((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound)) && bi < shag + two_in_the_power_of_a)
-            {
-                down_block_size_row = (bi < k ? m : l);
-                //pa_down = A + bi*m*n + shag*down_block_size_row*m;
-
-                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
+        
+            if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
+            {            
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true) ;
 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                 {
@@ -1314,7 +968,7 @@ void SecondStep(Args* aA)
                     /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
                     {*/
                         ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
-                        /*ZerosMatrix[s*(k+1) + bj] = 1;
+                    /*ZerosMatrix[s*(k+1) + bj] = 1;
                         if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                         {
                             ZerosMatrix[bi*(k + 1) + bj] = 1; 
@@ -1322,17 +976,14 @@ void SecondStep(Args* aA)
                         else
                         {
                             ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                        }   
+                        }
                         
                     }*/
-                } 
+                }
             }
-            else if ((bi == up_bound - 1 && l > 0) && (bi < shag + two_in_the_power_of_a))
+            else if (bi == up_bound - 1 && l > 0)
             {
-                down_block_size_row = (bi < k ? m : l);
-                //pa_down = A + bi*m*n + shag*down_block_size_row*m;
-
-                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm) ;
 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                 {
@@ -1345,7 +996,7 @@ void SecondStep(Args* aA)
                 for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
                 {
                     down_block_size_col = (bj < k ? m : l);
-                    
+
                     /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
                     {*/
                         ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
@@ -1357,33 +1008,32 @@ void SecondStep(Args* aA)
                         else
                         {
                             ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                        }   
+                        }
                         
                     }*/
-                } 
-            }
+                }
+            }  
         }
-        if (Nomer % (2*x) != 1 && (Nomer - 1) < (p - b))
+        else if(Nomer >= two_in_the_power_of_a)
         {
             pa = A + s*m*n + shag*block_size_row*m;
             pb = B + s*m*n;
 
-            Proc_num_pair = (Nomer - x + shag - 1)%p;
-            MPI_Sendrecv(pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+            Proc_num_pair = (Nomer - two_in_the_power_of_a + shag)%p;
+            MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
             MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-            
+
+            bi = (K + p*(aA->cur_str));
+
+            down_block_size_row = (bi < k ? m : l);
             pa_down = pa;
             pb_down = pb;
             pa = buf_pa;
             pb = buf_pb;
-            bi = x + Nomer + shag - 1;
-
-            if(((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound)) && bi < shag + two_in_the_power_of_a)
-            {
-                down_block_size_row = (bi < k ? m : l);
-                //pa_down = A + bi*m*n + shag*down_block_size_row*m;
-
-                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
+        
+            if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
+            {            
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true) ;
 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                 {
@@ -1400,6 +1050,38 @@ void SecondStep(Args* aA)
                     /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
                     {*/
                         ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                    /*ZerosMatrix[s*(k+1) + bj] = 1;
+                        if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
+                        {
+                            ZerosMatrix[bi*(k + 1) + bj] = 1; 
+                        }
+                        else
+                        {
+                            ZerosMatrix[bi*(k + 1) + bj] = 0; 
+                        }
+                        
+                    }*/
+                }
+            }
+            else if (bi == up_bound - 1 && l > 0)
+            {
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm) ;
+
+                for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
+                {
+                    down_block_size_col = (bj < k ? m : l);
+                                
+                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
+
+                }
+
+                for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
+                {
+                    down_block_size_col = (bj < k ? m : l);
+
+                    /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
+                    {*/
+                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
                         /*ZerosMatrix[s*(k+1) + bj] = 1;
                         if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                         {
@@ -1408,18 +1090,73 @@ void SecondStep(Args* aA)
                         else
                         {
                             ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                        }   
+                        }
+                        
+                    }*/
+                }
+            } 
+            return; 
+        }
+
+        Nomer++;
+
+        if (Nomer % 2 == 1 && (Nomer - 1) < (p-b))
+        {
+            pa = A + s*m*n + shag*block_size_row*m;
+            pb = B + s*m*n;
+
+            Proc_num_pair = (Nomer + shag)%p;
+            MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+            MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+
+            bi = (K + p*(aA->cur_str) + 1);
+
+            down_block_size_row = (bi < k ? m : l);
+            pa_down = buf_pa;
+            pb_down = buf_pb;
+            
+            if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
+            {
+                down_block_size_row = (bi < k ? m : l);
+                //pa_down = A + bi*m*n + shag*down_block_size_row*m;
+                
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
+                
+                for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
+                {
+                    down_block_size_col = (bj < k ? m : l);
+                                
+                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
+
+                }
+
+                for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
+                {
+                    down_block_size_col = (bj < k ? m : l);
+                    
+                    /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
+                    {*/
+                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                        /*ZerosMatrix[s*(k+1) + bj] = 1;
+                        if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
+                        {
+                            ZerosMatrix[bi*(k + 1) + bj] = 1; 
+                        }
+                        else
+                        {
+                            ZerosMatrix[bi*(k + 1) + bj] = 0; 
+                        }
                         
                     }*/
                 } 
             }
-            else if ((bi == up_bound - 1 && l > 0) && (bi < shag + two_in_the_power_of_a))
+            else if ((bi == up_bound - 1) && (l > 0))
             {
                 down_block_size_row = (bi < k ? m : l);
                 //pa_down = A + bi*m*n + shag*down_block_size_row*m;
-
+                
                 ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
-
+                
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                 {
                     down_block_size_col = (bj < k ? m : l);
@@ -1443,20 +1180,285 @@ void SecondStep(Args* aA)
                         else
                         {
                             ZerosMatrix[bi*(k + 1) + bj] = 0; 
-                        }   
+                        }
+                        
+                    }*/
+                } 
+            } 
+        }
+
+        if (Nomer % 2 == 0 && (Nomer - 1) < (p-b))
+        {
+            pa = A + s*m*n + shag*block_size_row*m;
+            pb = B + s*m*n;
+
+            Proc_num_pair = (Nomer - 2 + shag)%p;
+            MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+            MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+
+            bi = (K + p*(aA->cur_str));
+
+            down_block_size_row = (bi < k ? m : l);
+            pa_down = pa;
+            pb_down = pb;
+            pa = buf_pa;
+            pb = buf_pb;
+            
+            if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
+            {
+                down_block_size_row = (bi < k ? m : l);
+                //pa_down = A + bi*m*n + shag*down_block_size_row*m;
+                
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
+                
+                for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
+                {
+                    down_block_size_col = (bj < k ? m : l);
+                                
+                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
+
+                }
+
+                for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
+                {
+                    down_block_size_col = (bj < k ? m : l);
+                    
+                    /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
+                    {*/
+                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                        /*ZerosMatrix[s*(k+1) + bj] = 1;
+                        if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
+                        {
+                            ZerosMatrix[bi*(k + 1) + bj] = 1; 
+                        }
+                        else
+                        {
+                            ZerosMatrix[bi*(k + 1) + bj] = 0; 
+                        }
                         
                     }*/
                 } 
             }
+            else if ((bi == up_bound - 1) && (l > 0))
+            {
+                down_block_size_row = (bi < k ? m : l);
+                //pa_down = A + bi*m*n + shag*down_block_size_row*m;
+                
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
+                
+                for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
+                {
+                    down_block_size_col = (bj < k ? m : l);
+                                
+                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
+
+                }
+
+                for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
+                {
+                    down_block_size_col = (bj < k ? m : l);
+                    
+                    /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
+                    {*/
+                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
+                        /*ZerosMatrix[s*(k+1) + bj] = 1;
+                        if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
+                        {
+                            ZerosMatrix[bi*(k + 1) + bj] = 1; 
+                        }
+                        else
+                        {
+                            ZerosMatrix[bi*(k + 1) + bj] = 0; 
+                        }
+                        
+                    }*/
+                } 
+            } 
             return;
         }
-        /*if (step < a-1)
-        {
-            reduce_sum<int>(p);
-        }*/
         
+        for (step = 1; step < a; step++)
+        {
+            x = pow(2,step);
+
+            if (Nomer % (2*x) == 1 && (Nomer - 1) < (p - b))
+            {
+                pa = A + s*m*n + shag*block_size_row*m;
+                pb = B + s*m*n;
+
+                Proc_num_pair = (Nomer + x + shag - 1)%p;
+                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                
+                pa_down = buf_pa;
+                pb_down = buf_pb;
+                bi = x + Nomer + shag - 1;
+
+                if(((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound)) && bi < shag + two_in_the_power_of_a)
+                {
+                    down_block_size_row = (bi < k ? m : l);
+                    //pa_down = A + bi*m*n + shag*down_block_size_row*m;
+
+                    ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
+
+                    for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
+                    {
+                        down_block_size_col = (bj < k ? m : l);
+                                    
+                        ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
+
+                    }
+
+                    for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
+                    {
+                        down_block_size_col = (bj < k ? m : l);
+
+                        /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
+                        {*/
+                            ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                            /*ZerosMatrix[s*(k+1) + bj] = 1;
+                            if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
+                            {
+                                ZerosMatrix[bi*(k + 1) + bj] = 1; 
+                            }
+                            else
+                            {
+                                ZerosMatrix[bi*(k + 1) + bj] = 0; 
+                            }   
+                            
+                        }*/
+                    } 
+                }
+                else if ((bi == up_bound - 1 && l > 0) && (bi < shag + two_in_the_power_of_a))
+                {
+                    down_block_size_row = (bi < k ? m : l);
+                    //pa_down = A + bi*m*n + shag*down_block_size_row*m;
+
+                    ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
+
+                    for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
+                    {
+                        down_block_size_col = (bj < k ? m : l);
+                                    
+                        ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
+
+                    }
+
+                    for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
+                    {
+                        down_block_size_col = (bj < k ? m : l);
+                        
+                        /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
+                        {*/
+                            ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
+                            /*ZerosMatrix[s*(k+1) + bj] = 1;
+                            if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
+                            {
+                                ZerosMatrix[bi*(k + 1) + bj] = 1; 
+                            }
+                            else
+                            {
+                                ZerosMatrix[bi*(k + 1) + bj] = 0; 
+                            }   
+                            
+                        }*/
+                    } 
+                }
+            }
+            if (Nomer % (2*x) != 1 && (Nomer - 1) < (p - b))
+            {
+                pa = A + s*m*n + shag*block_size_row*m;
+                pb = B + s*m*n;
+
+                Proc_num_pair = (Nomer - x + shag - 1)%p;
+                MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
+                
+                pa_down = pa;
+                pb_down = pb;
+                pa = buf_pa;
+                pb = buf_pb;
+                bi = x + Nomer + shag - 1;
+
+                if(((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound)) && bi < shag + two_in_the_power_of_a)
+                {
+                    down_block_size_row = (bi < k ? m : l);
+                    //pa_down = A + bi*m*n + shag*down_block_size_row*m;
+
+                    ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
+
+                    for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
+                    {
+                        down_block_size_col = (bj < k ? m : l);
+                                    
+                        ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
+
+                    }
+
+                    for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
+                    {
+                        down_block_size_col = (bj < k ? m : l);
+
+                        /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
+                        {*/
+                            ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                            /*ZerosMatrix[s*(k+1) + bj] = 1;
+                            if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
+                            {
+                                ZerosMatrix[bi*(k + 1) + bj] = 1; 
+                            }
+                            else
+                            {
+                                ZerosMatrix[bi*(k + 1) + bj] = 0; 
+                            }   
+                            
+                        }*/
+                    } 
+                }
+                else if ((bi == up_bound - 1 && l > 0) && (bi < shag + two_in_the_power_of_a))
+                {
+                    down_block_size_row = (bi < k ? m : l);
+                    //pa_down = A + bi*m*n + shag*down_block_size_row*m;
+
+                    ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
+
+                    for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
+                    {
+                        down_block_size_col = (bj < k ? m : l);
+                                    
+                        ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
+
+                    }
+
+                    for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
+                    {
+                        down_block_size_col = (bj < k ? m : l);
+                        
+                        /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
+                        {*/
+                            ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row);
+                            /*ZerosMatrix[s*(k+1) + bj] = 1;
+                            if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
+                            {
+                                ZerosMatrix[bi*(k + 1) + bj] = 1; 
+                            }
+                            else
+                            {
+                                ZerosMatrix[bi*(k + 1) + bj] = 0; 
+                            }   
+                            
+                        }*/
+                    } 
+                }
+                return;
+            }
+            /*if (step < a-1)
+            {
+                reduce_sum<int>(p);
+            }*/
+            
+        }
     }
-    
     //Fird part
     if(K == shag%p)
     {        
@@ -1512,14 +1514,17 @@ int InverseMatrixParallel(Args* a)
     for (bi = 0; bi < up_bound; bi++)
     {
         a->shag = bi;
-        //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
-        FirstStep(a);
-        //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
-        if(p > 1)
+        PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
+        if(rows > 0)
+        {
+            FirstStep(a);
+        }
+        PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
+        
+        if(rows > 0)
         {
             SecondStep(a);
         }
-
         res_l = a->res;     
         
         MPI_Allreduce(&res_l, &res_g, 1, MPI_INT, MPI_MAX, a->comm);
@@ -1536,5 +1541,6 @@ int InverseMatrixParallel(Args* a)
         a->nomer_v_okne = (((a->nomer_v_okne-1)%p) + p)%p;
 
     }
+    
     return 0;
 }
