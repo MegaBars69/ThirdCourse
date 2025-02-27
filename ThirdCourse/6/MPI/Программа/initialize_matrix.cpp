@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstring>
+#include "initialize_matrix.hpp"
 
 using namespace std;
 

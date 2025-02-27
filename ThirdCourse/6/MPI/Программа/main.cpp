@@ -3,7 +3,9 @@
 #include "algorithm.hpp"
 #include <stdio.h>
 #include <iostream>
+#include <cmath>
 #include <fenv.h>
+#define EPSILON pow(10,-16)
 
 using namespace std;
 
@@ -56,6 +58,7 @@ int main(int argc, char* argv[])
     a.k = proc_num;
     a.l = l;
     a.K = k;
+    a.r = r;
     a.nomer_v_okne = proc_num;
     a.rows = get_rows(n, m, p, proc_num);
     a.last_line_isnt_fool = (l != 0 && (k%p) == proc_num);
@@ -187,11 +190,12 @@ int main(int argc, char* argv[])
     a.U = U;
     a.results = results;
     a.norm = Norm(&a);
+    a.norm *= EPSILON;
 
-    if (proc_num == 0)
+    /*if (proc_num == 0)
     {
         a.PrintInfo();
-    }
+    }*/
     
     InverseMatrixParallel(&a);
     if(proc_num == 0)

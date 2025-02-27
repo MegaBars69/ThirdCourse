@@ -443,6 +443,7 @@ void ZeroOut(double* Diag, double* Down, double* U, int m, int row_size, double 
             for (i = 0; i < up_bound; i++, pu++)
             {
                 *pu = (*pu)/norm_xk;
+                Down[i*m + j] = 0;
             }
         
             //Applying Reflection
@@ -1112,7 +1113,7 @@ void SecondStep(Args* aA)
         pa_down = buf_pa;
         pb_down = buf_pb;
         
-        if((Nomer < p) && ((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound)))
+        if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
         {
             down_block_size_row = (bi < k ? m : l);
             //pa_down = A + bi*m*n + shag*down_block_size_row*m;
@@ -1147,7 +1148,7 @@ void SecondStep(Args* aA)
                 }*/
             } 
         }
-        else if ((Nomer < p) && (bi == up_bound - 1 && l > 0))
+        else if ((bi == up_bound - 1) && (l > 0))
         {
             down_block_size_row = (bi < k ? m : l);
             //pa_down = A + bi*m*n + shag*down_block_size_row*m;
@@ -1201,7 +1202,7 @@ void SecondStep(Args* aA)
         pa = buf_pa;
         pb = buf_pb;
         
-        if((Nomer < p) && ((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound)))
+        if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
         {
             down_block_size_row = (bi < k ? m : l);
             //pa_down = A + bi*m*n + shag*down_block_size_row*m;
@@ -1236,7 +1237,7 @@ void SecondStep(Args* aA)
                 }*/
             } 
         }
-        else if ((Nomer < p) && (bi == up_bound - 1 && l > 0))
+        else if ((bi == up_bound - 1) && (l > 0))
         {
             down_block_size_row = (bi < k ? m : l);
             //pa_down = A + bi*m*n + shag*down_block_size_row*m;
@@ -1505,19 +1506,29 @@ int InverseMatrixParallel(Args* a)
 {
     int K = a->K, p = a->p;
     int k = a->k;
-    int bi, rows = a->rows;
+    int bi, rows = a->rows, up_bound = (a->l == 0 ? K : K+1);
+    int res_l, res_g = 0; 
 
-    for (bi = 0; bi < rows; bi++)
+    for (bi = 0; bi < up_bound; bi++)
     {
         a->shag = bi;
+        //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
         FirstStep(a);
-         
-        SecondStep(a);
-             
-        if (a->res > 0)
+        //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
+        if(p > 1)
+        {
+            SecondStep(a);
+        }
+
+        res_l = a->res;     
+        
+        MPI_Allreduce(&res_l, &res_g, 1, MPI_INT, MPI_MAX, a->comm);
+        a->res = res_g;
+        if (res_g > 0)
         {
             return 1;
         }
+
         if (k == bi%p)
         {
             a->cur_str++;
