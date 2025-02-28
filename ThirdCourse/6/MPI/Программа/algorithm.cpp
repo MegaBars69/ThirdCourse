@@ -1127,7 +1127,7 @@ void SecondStep(Args* aA)
 
     int step;
 
-    int send_size = ((l == 0 ? k : k+1) - shag)*m*m;
+    int send_size = n*m;//((l == 0 ? k : k+1) - shag)*m*m;
 
 
     int Nomer = aA->nomer_v_okne;
@@ -1848,7 +1848,7 @@ int InverseMatrixParallel(Args* a)
             FirstStep(a);
         
             PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
-        
+            cur_global_str %= 5;
             SecondStep(a);
         }
         res_l = a->res;     

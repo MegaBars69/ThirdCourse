@@ -189,7 +189,7 @@ int main(int argc, char* argv[])
         cout<<"A"<<endl;
     }
 
-    PrintMatrix(A, n, m, p, proc_num, r,buf, comm);
+    PrintMatrix(A, n, m, p, proc_num, r, buf, comm);
     MPI_Barrier(comm);
 
     a.A = A;
