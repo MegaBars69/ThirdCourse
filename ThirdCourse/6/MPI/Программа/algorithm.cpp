@@ -1127,7 +1127,7 @@ void SecondStep(Args* aA)
 
     int step;
 
-    int send_size = n*m;//((l == 0 ? k : k+1) - shag)*m*m;
+    int send_size = /*n*m;*/((l == 0 ? k : k+1) - shag)*m*m;
 
 
     int Nomer = aA->nomer_v_okne;
@@ -1338,6 +1338,11 @@ void SecondStep(Args* aA)
                 pb = B + s*m*n;
 
                 Proc_num_pair = (Nomer + shag)%p;
+                /*aA->PrintInfo();
+                aA->PLM();
+                cout<<"SEND SIZE = "<<send_size<<endl; 
+                for(int g = 0; g < send_size;g++)
+                    cout<<pa[g]<<" ";*/
                 MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                 MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                 down_block_size_row = (bi < k ? m : l);
@@ -1842,12 +1847,12 @@ int InverseMatrixParallel(Args* a)
     for (bi = 0; bi < up_bound; bi++)
     {
         a->shag = bi;
-        PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
+        //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
         if(rows > 0)
         {
             FirstStep(a);
         
-            PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
+            //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
             cur_global_str %= 5;
             SecondStep(a);
         }

@@ -50,7 +50,7 @@ class Args
             PrintLocalMatrix(A, n, m, p ,k, r);
         }
 
-        void PrintInfo() const
+        void PrintInfo() 
         {
             printf("Number of proces: %d \n", k);
             printf("n: %d \n", n);            
@@ -79,6 +79,12 @@ class Args
             
             
             printf("res: %lf \n", res);
+            std::cout<<"BUFFER"<<": ";
+            for(cur_global_str = 0; cur_global_str < (2*n + m)*m; cur_global_str++)
+            {
+                std::cout<<buf[cur_global_str]<<" ";
+            }
+            std::cout<<std::endl;
         }
 };
 
