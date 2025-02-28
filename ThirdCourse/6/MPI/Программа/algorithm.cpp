@@ -24,7 +24,7 @@ double get_fun_time()
     return buf.tv_sec + buf.tv_sec/1e6;
 }*/
 
-double get_fun_time() {
+double get_full_time() {
     struct timeval buf;
     gettimeofday(&buf, 0);
     return (double)(buf.tv_sec) + (double)(buf.tv_usec)/1000000.;
@@ -106,6 +106,217 @@ double Discrepancy(Args* a)
     return final_answer; 
 }
 */
+void block_mult_add(double* A, int av, int ag, double* B, int bg, double* C) {
+    int av_reminder = av % 3;
+    int bg_reminder = bg % 3;
+    int _av = av - av_reminder;
+    int _bg = bg - bg_reminder;
+    int i = 0, j = 0, q = 0;
+    double c00, c01, c02, c10, c11, c12, c20, c21, c22;
+    for(i = 0; i < _av; i += 3) {
+        for(j = 0; j < _bg; j+= 3) {
+            c00 = 0; c01 = 0; c02 = 0;
+            c10 = 0; c11 = 0; c12 = 0;
+            c20 = 0; c21 = 0; c22 = 0;
+            for(q = 0; q < ag; ++q) {
+                c00 += A[ag * (i) + q] * B[bg * q + (j)];
+                c01 += A[ag * (i) + q] * B[bg * q + (j + 1)];
+                c02 += A[ag * (i) + q] * B[bg * q + (j + 2)];
+                c10 += A[ag * (i + 1) + q] * B[bg * q + (j)];
+                c11 += A[ag * (i + 1) + q] * B[bg * q + (j + 1)];
+                c12 += A[ag * (i + 1) + q] * B[bg * q + (j + 2)];
+                c20 += A[ag * (i + 2) + q] * B[bg * q + (j)];
+                c21 += A[ag * (i + 2) + q] * B[bg * q + (j + 1)];
+                c22 += A[ag * (i + 2) + q] * B[bg * q + (j + 2)];
+            }
+            C[bg * (i) + (j)] += c00;
+            C[bg * (i) + (j + 1)] += c01;
+            C[bg * (i) + (j + 2)] +=c02;
+            C[bg * (i + 1) + (j)] += c10;
+            C[bg * (i + 1) + (j + 1)] += c11;
+            C[bg * (i + 1) + (j + 2)] += c12;
+            C[bg * (i + 2) + (j)] += c20;
+            C[bg * (i + 2) + (j + 1)] += c21;
+            C[bg * (i + 2) + (j + 2)] += c22;
+        }
+        for(;j < bg; ++j) {
+            c00 = 0;
+            c10 = 0;
+            c20 = 0;
+            for(q = 0; q < ag; ++q) {
+                c00 += A[ag * (i) + q] * B[bg * q + (j)];
+                c10 += A[ag * (i + 1) + q] * B[bg * q + (j)];
+                c20 += A[ag * (i + 2) + q] * B[bg * q + (j)];
+            }
+            C[bg * (i) + (j)] += c00;
+            C[bg * (i + 1) + (j)] += c10;
+            C[bg * (i + 2) + (j)] += c20;
+        }
+    }
+    for(; i < av; ++i) {
+        for(j = 0; j < _bg; j+= 3) {
+            c00 = 0; c01 = 0; c02 = 0;
+            for(q = 0; q < ag; ++q) {
+                c00 += A[ag * (i) + q] * B[bg * q + (j)];
+                c01 += A[ag * (i) + q] * B[bg * q + (j + 1)];
+                c02 += A[ag * (i) + q] * B[bg * q + (j + 2)];
+            }
+            C[bg * (i) + (j)] += c00;
+            C[bg * (i) + (j + 1)] += c01;
+            C[bg * (i) + (j + 2)] += c02;
+        }
+        for(;j < bg; ++j) {
+            c00 = 0;
+            for(q = 0; q < ag; ++q) {
+                c00 += A[ag * (i) + q] * B[bg * q + (j)];
+            }
+            C[bg * (i) + (j)] += c00;
+        }
+    }
+}
+double calculate_discrepancy(double* matrix, double* inverse, int n, int m, double* tmp_block_m
+        , double* tmp_line_n, int proc_num, int p, MPI_Comm comm, double* inverse_buf) 
+{
+    int k = n / m;
+    int l = n - m * k;
+    int el_in_blcok_line = k * m * m + l * m;
+    int i_glob = 0, j = 0, q = 0;
+    bool small_row = (l != 0 && k%p == proc_num) ? true : false;
+    double sum = 0;
+    int max_rows = get_max_rows(n, m, p);
+    int rows = get_rows(n, m, p, proc_num);
+    rows = (small_row == true) ? rows - 1 : rows;
+    memset(tmp_line_n, 0, n * sizeof(double));
+    for(i_glob = 0; i_glob < k; ++i_glob) {
+        for(j = 0; j < rows; ++j) {
+            memcpy(inverse_buf + j * m * m, inverse + j * el_in_blcok_line + i_glob * m * m, m * m * sizeof(double));
+        }
+        if (small_row == true) {
+            memcpy(inverse_buf  + j * m * m, inverse + j * el_in_blcok_line + i_glob * m * l, m * l * sizeof(double));
+        }
+        MPI_Allgather(inverse_buf, max_rows * m * m, MPI_DOUBLE, matrix + max_rows * el_in_blcok_line
+                , max_rows * m * m, MPI_DOUBLE, comm);
+        for(q = 0; q < rows; ++q) {
+            memset(tmp_block_m, 0, m * m * sizeof(double));
+            for(j = 0; j < k; ++j) {
+                int proc_j = j % p;
+                int j_loc = j / p; 
+                block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, m
+                        , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
+                        , m, tmp_block_m);
+            }
+            int proc_j = j % p;
+            int j_loc = j / p; 
+            block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, l
+                    , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
+                    , m, tmp_block_m); 
+            if ((q * p + proc_num) == i_glob) {
+                for(int s = 0; s < m; ++s) {
+                    tmp_block_m[s * m + s] -= 1;
+                }
+            }
+            for(int w = 0; w < m; ++w) {
+                sum = 0;
+                for(int v = 0; v < m; ++v) {
+                    sum += fabs(tmp_block_m[v * m + w]);
+                }
+                tmp_line_n[i_glob * m + w] += sum;
+            }
+        }
+        if (small_row == true) {
+            memset(tmp_block_m, 0, m * m * sizeof(double));
+            for(j = 0; j < k; ++j) {
+                int proc_j = j % p;
+                int j_loc = j / p; 
+                block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, m
+                        , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
+                        , m, tmp_block_m);
+        
+            }
+            int proc_j = j % p;
+            int j_loc = j / p; 
+            block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, l
+                    , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
+                    , m, tmp_block_m); 
+            for(int w = 0; w < m; ++w) {
+                sum = 0;
+                for(int v = 0; v < l; ++v) {
+                    sum += fabs(tmp_block_m[v * m + w]);
+                }
+                tmp_line_n[i_glob * m + w] += sum;
+            }
+        }
+    }
+
+    if (l != 0) {
+        for(j = 0; j < rows; ++j) {
+            memcpy(inverse_buf + j * l * m, inverse + j * el_in_blcok_line + i_glob * m * m, l * m * sizeof(double));
+        }
+        if (small_row == true) {
+            memcpy(inverse_buf  + j * l * m, inverse + j * el_in_blcok_line + i_glob * m * l, l * l * sizeof(double));
+        }
+
+        MPI_Allgather(inverse_buf, max_rows * m * l, MPI_DOUBLE, matrix + max_rows * el_in_blcok_line
+                , max_rows * m * l, MPI_DOUBLE, comm);
+        for(q = 0; q < rows; ++q) {
+            memset(tmp_block_m, 0, m * m * sizeof(double));
+            for(j = 0; j < k; ++j) {
+                int proc_j = j % p;
+                int j_loc = j / p; 
+                block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, m
+                        , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * l + j_loc * l * m
+                        , l, tmp_block_m);
+            }
+            int proc_j = j % p;
+            int j_loc = j / p; 
+            block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, l
+                    , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
+                    , l, tmp_block_m); 
+            for(int w = 0; w < l; ++w) {
+                sum = 0;
+                for(int v = 0; v < m; ++v) {
+                    sum += fabs(tmp_block_m[v * l + w]);
+                }
+                tmp_line_n[i_glob * m + w] += sum;
+            }
+        }
+        if (small_row == true) {
+            memset(tmp_block_m, 0, m * m * sizeof(double));
+            for(j = 0; j < k; ++j) {
+                int proc_j = j % p;
+                int j_loc = j / p; 
+                block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, m
+                        , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
+                        , l, tmp_block_m);
+        
+            }
+            int proc_j = j % p;
+            int j_loc = j / p; 
+            block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, l
+                    , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
+                    , l, tmp_block_m); 
+            if ((q * p + proc_num) == i_glob) {
+                for(int s = 0; s < l; ++s) {
+                    tmp_block_m[s * l + s] -= 1;
+                }
+            }
+            for(int w = 0; w < l; ++w) {
+                sum = 0;
+                for(int v = 0; v < l; ++v) {
+                    sum += fabs(tmp_block_m[v * l + w]);
+                }
+                tmp_line_n[i_glob * m + w] += sum;
+            }
+        }
+    }
+    MPI_Allreduce(tmp_line_n, inverse_buf, n, MPI_DOUBLE, MPI_SUM, comm);
+
+    double max = inverse_buf[0];
+    for(int i = 0; i < n; ++i) {
+        if(inverse_buf[i] > max) max = inverse_buf[i];
+    }
+    return max;
+}
 
 double Norm(Args *a)
 {
@@ -160,12 +371,6 @@ double Norm(Args *a)
     {   
         if(a->k != recv_proc_num)
         {
-            if(a->k == 0)
-            {
-                cout<<send_proc_num<<"  "<<recv_proc_num<<endl;
-            }
-            //MPI_Send(result_copy, n, MPI_DOUBLE, send_proc_num, 0, comm);
-
             MPI_Status st;
             MPI_Sendrecv( result_copy, n, MPI_DOUBLE, send_proc_num,0, buf, n, MPI_DOUBLE, recv_proc_num, 0, comm, &st);
 
@@ -918,15 +1123,12 @@ void SecondStep(Args* aA)
     int up_bound = (l > 0 ? k+1: k);
 
     int s = aA->cur_str;
+    int prev_s = K + p*s;
 
     int step;
 
     int send_size = ((l == 0 ? k : k+1) - shag)*m*m;
 
-
-    block_size_row = (s < k ? m : l);
-    
-    pa = A + s*m*n + shag*block_size_row*m;
 
     int Nomer = aA->nomer_v_okne;
     int Proc_num_pair;
@@ -936,7 +1138,8 @@ void SecondStep(Args* aA)
         if (Nomer < b)
         {
             bi = (K + p*(aA->cur_str) + p - b);
-            
+            block_size_row = (prev_s < k ? m : l);
+
             if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
             {   
                 pa = A + s*m*n + shag*block_size_row*m;
@@ -1026,6 +1229,7 @@ void SecondStep(Args* aA)
         else if(Nomer >= two_in_the_power_of_a)
         {
             bi = (K + p*(aA->cur_str));
+            block_size_row = (prev_s < k ? m : l);
 
             if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
             {  
@@ -1036,6 +1240,7 @@ void SecondStep(Args* aA)
                 MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                 MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);  
                 down_block_size_row = (bi < k ? m : l);
+                block_size_row = m;
                 pa_down = pa;
                 pb_down = pb;
                 pa = buf_pa;
@@ -1079,6 +1284,8 @@ void SecondStep(Args* aA)
                 Proc_num_pair = (Nomer - two_in_the_power_of_a + shag)%p;
                 MPI_Sendrecv(pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                 MPI_Sendrecv(pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, n*m, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);  
+                
+                block_size_row = m;
                 down_block_size_row = (bi < k ? m : l);
                 pa_down = pa;
                 pb_down = pb;
@@ -1123,7 +1330,8 @@ void SecondStep(Args* aA)
         if (Nomer % 2 == 1 && (Nomer - 1) < (p-b))
         {
             bi = (K + p*(aA->cur_str) + 1);
-            
+            block_size_row = m;
+
             if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
             { 
                 pa = A + s*m*n + shag*block_size_row*m;
@@ -1218,6 +1426,7 @@ void SecondStep(Args* aA)
         else if (Nomer % 2 == 0 && (Nomer - 1) < (p-b))
         {
             bi = (K + p*(aA->cur_str));
+            block_size_row = (prev_s < k ? m : l);
 
             if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
             {
@@ -1232,6 +1441,7 @@ void SecondStep(Args* aA)
                 pb_down = pb;
                 pa = buf_pa;
                 pb = buf_pb;
+                block_size_row = m;
                 down_block_size_row = (bi < k ? m : l);
                 //pa_down = A + bi*m*n + shag*down_block_size_row*m;
                 
@@ -1278,7 +1488,8 @@ void SecondStep(Args* aA)
                 pb_down = pb;
                 pa = buf_pa;
                 pb = buf_pb;         
-               
+
+                block_size_row = m;
                 down_block_size_row = (bi < k ? m : l);
                 //pa_down = A + bi*m*n + shag*down_block_size_row*m;
                 
@@ -1322,7 +1533,8 @@ void SecondStep(Args* aA)
             if (Nomer % (2*x) == 1 && (Nomer - 1) < (p - b))
             {
                 bi = x + Nomer + shag - 1;
-                
+                block_size_row = m;
+
                 if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
                 {
                     pa = A + s*m*n + shag*block_size_row*m;
@@ -1415,7 +1627,8 @@ void SecondStep(Args* aA)
             else if (Nomer % (2*x) != 1 && (Nomer - 1) < (p - b))
             {
                 bi = Nomer + shag - 1;
-                
+                block_size_row = (bi < k ? m : l);
+
                 if((bi < up_bound - 1 && l > 0) || (l == 0 && bi < up_bound))
                 {
                     pa = A + s*m*n + shag*block_size_row*m;
@@ -1430,7 +1643,8 @@ void SecondStep(Args* aA)
                     pa = buf_pa;
                     pb = buf_pb;
               
-                    down_block_size_row = (bi < k ? m : l);
+                    down_block_size_row = block_size_row;
+                    block_size_row = m;
                     //pa_down = A + bi*m*n + shag*down_block_size_row*m;
 
                     ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
@@ -1478,6 +1692,7 @@ void SecondStep(Args* aA)
                     pb = buf_pb;
                     
                     down_block_size_row = (bi < k ? m : l);
+                    block_size_row = m;
                     //pa_down = A + bi*m*n + shag*down_block_size_row*m;
 
                     ZeroOut(pa, pa_down, U, m, down_block_size_row, norm);
@@ -1521,7 +1736,8 @@ void SecondStep(Args* aA)
     }
     //Fird part
     if(K == shag%p)
-    {        
+    {   
+        block_size_row = (prev_s < k ? m : l);     
         pa = A + s*m*n + shag*block_size_row*m;
 
         if(InverseTriungleBlock(pa, U, block_size_row, norm) != 0)
@@ -1563,6 +1779,57 @@ void SecondStep(Args* aA)
 
 }
 
+void ThirdStep(Args *a)
+{
+    double* A = a->A, *B = a->B, *pb, *buf = a->buf;
+    int n = a->n, m = a->m, p = a->p, K = a->k;
+    int l = n%m;
+    int bj, s;
+    int k = (n-l)/m;
+    int bi,  r, new_s;
+    int rows = a->rows;
+    int owner;
+    int block_size_col, size = a->s, block_size_row;
+    int up_bound = (l > 0 ? k+1 : k);
+    MPI_Comm comm = a->comm;
+    MPI_Status st;
+   
+    s = K + p*(a->cur_str - 1);
+    new_s = a->cur_str-1;
+    for (bi = up_bound - 1; bi > 0; bi -= 1)
+    {
+        owner = bi%p;
+        block_size_row = (bi< k ? m : l);
+        if(owner != K)
+        {
+            pb = buf;
+        }
+        else
+        {
+            pb = B + new_s*m*n;
+        }
+
+        MPI_Bcast(pb, n*block_size_row, MPI_DOUBLE, owner, comm);
+        if(bi <= s)
+        {
+            s = s - p;
+            new_s =  new_s - 1;
+        }
+        for (bj = 0; bj < up_bound; bj++)
+        {
+            block_size_col = (bj < k ? m : l);      
+
+            for (r = new_s ; r >= 0; r --)
+            {
+                /*if ((size == 3 && (r <= bj || bj == 0)) || size != 3)
+                {*/
+                    MinusEqualBlockMul(B + r*m*n + bj*m*m, A + r*m*n + bi*m*m, pb + bj*block_size_row*m, m, block_size_row, block_size_col);
+                //}
+            }
+            
+        }
+    }    
+}
 
 int InverseMatrixParallel(Args* a)
 {
@@ -1575,15 +1842,13 @@ int InverseMatrixParallel(Args* a)
     for (bi = 0; bi < up_bound; bi++)
     {
         a->shag = bi;
-        //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
+        PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
         if(rows > 0)
         {
             FirstStep(a);
-        }
-        //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
         
-        if(rows > 0)
-        {
+            PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
+        
             SecondStep(a);
         }
         res_l = a->res;     
@@ -1602,6 +1867,7 @@ int InverseMatrixParallel(Args* a)
         a->nomer_v_okne = (((a->nomer_v_okne-1)%p) + p)%p;
         
     }
+    ThirdStep(a);
     
     return 0;
 }
