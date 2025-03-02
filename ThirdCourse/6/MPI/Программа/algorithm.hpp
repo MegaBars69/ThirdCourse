@@ -44,6 +44,7 @@ class Args
         int cur_global_str = 0;
         int nomer_v_okne = 0;
         int shag = 0;
+        int send_size = 0;
         
         void PLM() const 
         {
@@ -53,20 +54,22 @@ class Args
         void PrintInfo() 
         {
             printf("Number of proces: %d \n", k);
+            printf("SEND SIZE: %d \n", send_size);            
+            printf("SHAG: %d \n", shag);            
+
             printf("n: %d \n", n);            
             printf("p: %d \n", p);
             printf("m: %d \n", m);
-            printf("M: %d \n", M);
-            printf("r: %d \n", r);
-            printf("s: %d \n", s);
+            //printf("r: %d \n", r);
+            //printf("s: %d \n", s);
             printf("l: %d \n", l);
-            printf("K: %d \n", K);
-            printf("Norm: %lf \n", norm);
+            //printf("K: %d \n", K);
+            //printf("Norm: %lf \n", norm);
             printf("nomer_v_okne: %d \n", nomer_v_okne);
-            printf("cur_str: %d \n", cur_str);
-            printf("cpu time: %lf \n", cpu_time);
-            printf("cpu time of all_threads: %lf \n", cpu_time_of_all_threads);
-            printf("astr time: %lf \n",astr_time);
+            //printf("cur_str: %d \n", cur_str);
+            //printf("cpu time: %lf \n", cpu_time);
+            //printf("cpu time of all_threads: %lf \n", cpu_time_of_all_threads);
+           // printf("astr time: %lf \n",astr_time);
 
             if (!last_line_isnt_fool)
             {
@@ -77,14 +80,16 @@ class Args
                 printf("Last row is bad\n");
             }
             
-            
-            printf("res: %lf \n", res);
-            std::cout<<"BUFFER"<<": ";
+            PrintLocalMatrix(A, n, m, p ,k, r);
+            //printf("res: %lf \n", res);
+            /*std::cout<<"BUFFER"<<": ";
             for(cur_global_str = 0; cur_global_str < (2*n + m)*m; cur_global_str++)
             {
                 std::cout<<buf[cur_global_str]<<" ";
             }
             std::cout<<std::endl;
+            */
+
         }
 };
 
