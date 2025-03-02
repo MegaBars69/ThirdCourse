@@ -67,8 +67,8 @@ int main(int argc, char* argv[])
     a.max_rows = max_rows;
     a.last_line_isnt_fool = (l != 0 && (k%p) == proc_num);
 
-    double* A = new double[n*m*(max_rows+p)];
-    double* B = new double[n*m*(max_rows+1)];
+    double* A = new double/*[n*m*(max_rows+p)]*/ [(max_rows + 1) * m * n + p * m * m];
+    double* B = new double/*[n*m*(max_rows+p)]*/ [(max_rows + 1) * m * n + p * m * m];
     double* buf = new double[(2*n + m)*m];
     double* U = new double[(m+1)*(m+1)];
     bool* ZerosMatrix = new bool[(k+1)*(k+1)];
@@ -109,6 +109,8 @@ int main(int argc, char* argv[])
         MPI_Finalize();
         return 0;
     }
+    memset(A, 0, ((max_rows + 1) * m * n + p * m * m) * sizeof(double));
+    memset(B, 0, ((max_rows + 1) * m * n + p * m * m) * sizeof(double));
     memset(U, 0, (m+1)*(m+1)*sizeof(double));
     memset(ProductResult, 0, m*m*sizeof(double));
     memset(results, 0, n*sizeof(double));
@@ -224,8 +226,8 @@ int main(int argc, char* argv[])
 
         MPI_Barrier(comm);
         t2 = get_full_time();
-        //r1 = calculate_discrepancy(A, B, n, m, tmp_row_matrix, tmp_row_inverse, proc_num, p, comm, tmp_row_matrix);
-        //r2 = calculate_discrepancy(B, A, n, m, tmp_row_matrix, tmp_row_inverse, proc_num, p, comm, tmp_row_matrix);
+        r1 = calculate_discrepancy(A, B, n, m, tmp_row_matrix, tmp_row_inverse, proc_num, p, comm, tmp_row_matrix);
+        r2 = calculate_discrepancy(B, A, n, m, tmp_row_matrix, tmp_row_inverse, proc_num, p, comm, tmp_row_matrix);
         t2 = get_full_time() - t2;
     }
     if(proc_num == 0)

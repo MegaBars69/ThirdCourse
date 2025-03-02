@@ -372,6 +372,7 @@ double Norm(Args *a)
         if(a->k != recv_proc_num)
         {
             MPI_Status st;
+            //cout<<"Send: "<<send_proc_num<<"  Recv:"<<recv_proc_num<<endl;
             MPI_Sendrecv( result_copy, n, MPI_DOUBLE, send_proc_num,0, buf, n, MPI_DOUBLE, recv_proc_num, 0, comm, &st);
 
             //MPI_Recv(buf, n, MPI_DOUBLE, recv_proc_num, 0, comm, &st);
@@ -381,8 +382,8 @@ double Norm(Args *a)
                 results[j] += buf[j];
             }
             
-            send_proc_num = (send_proc_num + 1)%p;  
-            recv_proc_num = (recv_proc_num - 1)%p;          
+            send_proc_num = (send_proc_num + 1 + p)%p;  
+            recv_proc_num = (recv_proc_num - 1 + p)%p;          
         }
     }
 
@@ -1125,17 +1126,8 @@ void SecondStepUpgr(Args* aA)
     int prev_s = K + p*s;
 
     int step;
-    //int send_size_a = /*n*m;*/(k - shag)*m*m + (l == 0 ? 0 : m*l);
     int send_size_a = aA->send_size;
-    for(int z = 0; z < p; z++)
-    {
-        if(K == z)
-        {
-            aA->PrintInfo();
-        }
-        MPI_Barrier(comm); 
-    }
-//    int send_size_a = /*n*m;*/((l == 0 ? k : k+1) - shag)*m*m;
+    
     int send_size_b = n*m;
 
     int Nomer = aA->nomer_v_okne;
@@ -1152,10 +1144,8 @@ void SecondStepUpgr(Args* aA)
             
             Proc_num_pair = (Nomer + shag + (Nomer < b? two_in_the_power_of_a : -two_in_the_power_of_a))%p;
             
-            cout<<"Shag "<<shag<<"   Proc: "<<aA->k<<" to "<<Proc_num_pair<<" "<<send_size_a<<" blocks"<<" row: "<<bi<<"  Nomer < b or Nomer >= 2^a"<<endl;
             MPI_Sendrecv(pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
             MPI_Sendrecv(pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-
             if(Nomer < b)
             {
                 down_block_size_row = (bi < k ? m : l);
@@ -1218,7 +1208,6 @@ void SecondStepUpgr(Args* aA)
 
             Proc_num_pair = (Nomer + shag - (Nomer % 2 == 1 ? 0 : 2))%p;
             
-            cout<<"Shag "<<shag<<"   Proc: "<<aA->k<<" to "<<Proc_num_pair<<" "<<send_size_a<<" blocks"<<" row: "<<bi<<"  Odd and even"<<endl;
             MPI_Sendrecv(pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
             MPI_Sendrecv(pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
 
@@ -1287,11 +1276,9 @@ void SecondStepUpgr(Args* aA)
                 pb = B + s*m*n;
 
                 Proc_num_pair = (Nomer + shag - 1 + (Nomer%(2*x) == 1 ? x : -x))%p;
-
-                cout<<"Shag "<<shag<<"   Proc: "<<aA->k<<" to "<<Proc_num_pair<<" "<<send_size_a<<" blocks"<<" row: "<<bi<<"  log(p)"<<endl;
+                
                 MPI_Sendrecv(pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                 MPI_Sendrecv(pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
-                
                 if(Nomer % (2*x) == 1)
                 {
                     pa_down = buf_pa;
@@ -1427,6 +1414,7 @@ void SecondStep(Args* aA)
 
     int Nomer = aA->nomer_v_okne;
     int Proc_num_pair;
+    bool down_is_triangle = false;
 
     if(p > 1)
     {
@@ -1442,20 +1430,20 @@ void SecondStep(Args* aA)
 
                 Proc_num_pair = (Nomer + two_in_the_power_of_a + shag)%p;
 
-                cout<<"Shag "<<shag<<"   Proc: "<<aA->k<<" to "<<Proc_num_pair<<" "<<send_size_a<<" blocks"<<" row: "<<bi<<endl;
                 MPI_Sendrecv(pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                 MPI_Sendrecv(pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
 
                 down_block_size_row = (bi < k ? m : l);
                 pa_down = buf_pa;
-                pb_down = buf_pb;         
-                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true) ;
+                pb_down = buf_pb;
+                down_is_triangle = !(bi == up_bound - 1 && l > 0);         
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, down_is_triangle);
 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                 {
                     down_block_size_col = (bj < k ? m : l);
                                 
-                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                 }
 
@@ -1465,7 +1453,7 @@ void SecondStep(Args* aA)
 
                     /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
                     {*/
-                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                     /*ZerosMatrix[s*(k+1) + bj] = 1;
                         if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                         {
@@ -1492,7 +1480,6 @@ void SecondStep(Args* aA)
 
                 Proc_num_pair = (Nomer - two_in_the_power_of_a + shag)%p;
 
-                cout<<"Shag "<<shag<<"   Proc: "<<aA->k<<" to "<<Proc_num_pair<<" "<<send_size_a<<" blocks"<<" row: "<<bi<<endl;
                 MPI_Sendrecv(pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                 MPI_Sendrecv(pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);  
                 down_block_size_row = (bi < k ? m : l);
@@ -1501,14 +1488,15 @@ void SecondStep(Args* aA)
                 pb_down = pb;
                 pa = buf_pa;
                 pb = buf_pb;    
-            
-                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true) ;
+                down_is_triangle = !(bi == up_bound - 1 && l > 0);         
+
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, down_is_triangle) ;
 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                 {
                     down_block_size_col = (bj < k ? m : l);
                                 
-                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                 }
 
@@ -1518,7 +1506,7 @@ void SecondStep(Args* aA)
 
                     /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
                     {*/
-                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                     /*ZerosMatrix[s*(k+1) + bj] = 1;
                         if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                         {
@@ -1549,28 +1537,24 @@ void SecondStep(Args* aA)
                 pb = B + s*m*n;
 
                 Proc_num_pair = (Nomer + shag)%p;
-                /*aA->PrintInfo();
-                aA->PLM();
-                cout<<"SEND SIZE = "<<send_size<<endl; 
-                for(int g = 0; g < send_size;g++)
-                    cout<<pa[g]<<" ";*/
-                cout<<"Shag "<<shag<<"   Proc: "<<aA->k<<" to "<<Proc_num_pair<<" "<<send_size_a<<" blocks"<<" row: "<<bi<<endl;
+                
                 MPI_Sendrecv(pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                 MPI_Sendrecv(pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                 down_block_size_row = (bi < k ? m : l);
                 pa_down = buf_pa;
                 pb_down = buf_pb; 
-                
+                down_is_triangle = !(bi == up_bound - 1 && l > 0);         
+
                 down_block_size_row = (bi < k ? m : l);
                 //pa_down = A + bi*m*n + shag*down_block_size_row*m;
                 
-                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, down_is_triangle);
                 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                 {
                     down_block_size_col = (bj < k ? m : l);
                                 
-                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                 }
 
@@ -1580,7 +1564,7 @@ void SecondStep(Args* aA)
                     
                     /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
                     {*/
-                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                         /*ZerosMatrix[s*(k+1) + bj] = 1;
                         if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                         {
@@ -1607,7 +1591,6 @@ void SecondStep(Args* aA)
                 pb = B + s*m*n;
 
                 Proc_num_pair = (Nomer - 2 + shag)%p;
-                cout<<"Shag "<<shag<<"   Proc: "<<aA->k<<" to "<<Proc_num_pair<<" "<<send_size_a<<" blocks"<<" row: "<<bi<<endl;
 
                 MPI_Sendrecv(pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                 MPI_Sendrecv(pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
@@ -1619,14 +1602,15 @@ void SecondStep(Args* aA)
                 block_size_row = m;
                 down_block_size_row = (bi < k ? m : l);
                 //pa_down = A + bi*m*n + shag*down_block_size_row*m;
-                
-                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
+                down_is_triangle = !(bi == up_bound - 1 && l > 0);         
+
+                ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, down_is_triangle);
                 
                 for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                 {
                     down_block_size_col = (bj < k ? m : l);
                                 
-                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                 }
 
@@ -1636,7 +1620,7 @@ void SecondStep(Args* aA)
                     
                     /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
                     {*/
-                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                         /*ZerosMatrix[s*(k+1) + bj] = 1;
                         if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                         {
@@ -1668,8 +1652,7 @@ void SecondStep(Args* aA)
                     pb = B + s*m*n;
 
                     Proc_num_pair = (Nomer + x + shag - 1)%p;
-                
-                    cout<<"Shag "<<shag<<"   Proc: "<<aA->k<<" to "<<Proc_num_pair<<" "<<send_size_a<<" blocks"<<" row: "<<bi<<endl;
+
                     MPI_Sendrecv(pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                     MPI_Sendrecv(pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                     
@@ -1677,14 +1660,15 @@ void SecondStep(Args* aA)
                     pb_down = buf_pb;
                     down_block_size_row = (bi < k ? m : l);
                     //pa_down = A + bi*m*n + shag*down_block_size_row*m;
+                    down_is_triangle = !(bi == up_bound - 1 && l > 0);         
 
-                    ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
+                    ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, down_is_triangle);
 
                     for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                     {
                         down_block_size_col = (bj < k ? m : l);
                                     
-                        ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                        ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                     }
 
@@ -1694,7 +1678,7 @@ void SecondStep(Args* aA)
 
                         /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
                         {*/
-                            ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                            ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                             /*ZerosMatrix[s*(k+1) + bj] = 1;
                             if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                             {
@@ -1721,7 +1705,6 @@ void SecondStep(Args* aA)
 
                     Proc_num_pair = (Nomer - x + shag - 1)%p;
                     
-                    cout<<"Shag "<<shag<<"   Proc: "<<aA->k<<" to "<<Proc_num_pair<<" "<<send_size_a<<" blocks"<<" row: "<<bi<<endl;
                     MPI_Sendrecv(pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, buf_pa, send_size_a, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                     MPI_Sendrecv(pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, buf_pb, send_size_b, MPI_DOUBLE, Proc_num_pair, 0, comm, &st);
                     
@@ -1733,14 +1716,15 @@ void SecondStep(Args* aA)
                     down_block_size_row = block_size_row;
                     block_size_row = m;
                     //pa_down = A + bi*m*n + shag*down_block_size_row*m;
+                    down_is_triangle = !(bi == up_bound - 1 && l > 0);         
 
-                    ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, true);
+                    ZeroOut(pa, pa_down, U, m, down_block_size_row, norm, down_is_triangle);
 
                     for (bj = shag+1, pa_down_side = pa_down + down_block_size_row*m, pa_side = pa + m*m; bj < up_bound; bj++, pa_down_side += down_block_size_row*m, pa_side += m*m)
                     {
                         down_block_size_col = (bj < k ? m : l);
                                     
-                        ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                        ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                     }
 
@@ -1750,7 +1734,7 @@ void SecondStep(Args* aA)
 
                         /*if (ZerosMatrix[s*(k+1) + bj] || ZerosMatrix[bi*(k + 1) + bj])
                         {*/
-                            ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, true);
+                            ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                             /*ZerosMatrix[s*(k+1) + bj] = 1;
                             if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                             {
@@ -1881,23 +1865,19 @@ int InverseMatrixParallel(Args* a)
     for (bi = 0; bi < up_bound; bi++)
     {
         a->shag = bi;
-        send_size =(K - bi)*m*m + (l == 0 ? 0 : m*l);
-        MPI_Allreduce(&send_size, &a->send_size, 1, MPI_INT, MPI_MAX, a->comm);
+        a->send_size =(K - bi)*m*m + (l == 0 ? 0 : m*l);
 
-        //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
         if(rows > 0)
         {
             FirstStep(a);
         
-            //PrintMatrix(a->A, a->n,a->m,p,k,a->r,a->buf, a->comm);
-            cur_global_str %= 5;
-            SecondStepUpgr(a);
+            SecondStep(a);
         }
         res_l = a->res;     
         
         MPI_Allreduce(&res_l, &res_g, 1, MPI_INT, MPI_MAX, a->comm);
         a->res = res_g;
-        if (res_g > 0)
+        if (a->res > 0)
         {
             return 1;
         }
