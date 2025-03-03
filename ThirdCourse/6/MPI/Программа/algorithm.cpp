@@ -38,74 +38,7 @@ double get_cpu_time()
     return buf.ru_utime.tv_sec + buf.ru_utime.tv_usec/1e6;
 }
 
-/*
-double Discrepancy(Args* a)
-{
-    double * A = a->A, InversedA = a->B, Column = a->results, ProductResult = a->ProductResult, Sum = a->ZeroMatrix;
-    int n = a->n, m = a->m;
-    int l = n%m;
-    int k = (n-l)/m;
-    int block_size_row, block_size_col, m12;
-    double final_answer = 0, sum = 0;
 
-    for (int j = 0; j < m; j++)
-    {
-        Column[j] = 0;
-    }
-    
-    for (int bj = 0; bj < k+1; bj++)
-    {
-        block_size_col = (bj < k ? m : l);
-        for (int bi = 0; bi < k+1; bi++)
-        {
-            block_size_row = (bi < k ? m : l);
-            for (int i = 0; i < m; i++)
-            {
-                for (int j = 0; j < m; j++)
-                {
-                    Sum[i*m + j] = 0;
-                    ProductResult[i*m +j] = 0;
-                }  
-            }       
-            for (int s = 0; s < k+1; s++)
-            {
-                m12 = (s < k ? m : l);
-                BlockMul((A + bi*m*n + s*m*block_size_row), (InversedA + s*m*n + bj*m*m12), ProductResult,block_size_row, m12, block_size_col);
-                MatrixPlusEqual(Sum, ProductResult, block_size_row, block_size_col);
-            }
-            if (bi == bj)
-            {
-                for (int i = 0; i < block_size_row; i++)
-                {
-                    Sum[i*block_size_row + i] -= 1;
-                }
-                
-            }
-            
-            for (int j = 0; j < block_size_col; j++)
-            {
-                sum = 0;
-                for (int i = 0; i < block_size_row; i++)
-                {
-                    sum += fabs(Sum[i*m + j]);
-                }
-                Column[j] += sum;
-            }
-        }
-        for (int j = 0; j < block_size_col; j++)
-        { 
-            double el = Column[j];
-            final_answer = (final_answer > el ? final_answer : el);
-        }
-        for (int j = 0; j < block_size_col; j++)
-        {
-            Column[j] = 0;
-        }  
-    }
-
-    return final_answer; 
-}
-*/
 
 void ReplaceWith(double*A, double*B, int row_size, int col_size)
 {
@@ -120,222 +53,138 @@ void ReplaceWith(double*A, double*B, int row_size, int col_size)
     
 }
 
-void block_mult_add(double* A, int av, int ag, double* B, int bg, double* C) {
-    int av_reminder = av % 3;
-    int bg_reminder = bg % 3;
-    int _av = av - av_reminder;
-    int _bg = bg - bg_reminder;
-    int i = 0, j = 0, q = 0;
-    double c00, c01, c02, c10, c11, c12, c20, c21, c22;
-    for(i = 0; i < _av; i += 3) {
-        for(j = 0; j < _bg; j+= 3) {
-            c00 = 0; c01 = 0; c02 = 0;
-            c10 = 0; c11 = 0; c12 = 0;
-            c20 = 0; c21 = 0; c22 = 0;
-            for(q = 0; q < ag; ++q) {
-                c00 += A[ag * (i) + q] * B[bg * q + (j)];
-                c01 += A[ag * (i) + q] * B[bg * q + (j + 1)];
-                c02 += A[ag * (i) + q] * B[bg * q + (j + 2)];
-                c10 += A[ag * (i + 1) + q] * B[bg * q + (j)];
-                c11 += A[ag * (i + 1) + q] * B[bg * q + (j + 1)];
-                c12 += A[ag * (i + 1) + q] * B[bg * q + (j + 2)];
-                c20 += A[ag * (i + 2) + q] * B[bg * q + (j)];
-                c21 += A[ag * (i + 2) + q] * B[bg * q + (j + 1)];
-                c22 += A[ag * (i + 2) + q] * B[bg * q + (j + 2)];
-            }
-            C[bg * (i) + (j)] += c00;
-            C[bg * (i) + (j + 1)] += c01;
-            C[bg * (i) + (j + 2)] +=c02;
-            C[bg * (i + 1) + (j)] += c10;
-            C[bg * (i + 1) + (j + 1)] += c11;
-            C[bg * (i + 1) + (j + 2)] += c12;
-            C[bg * (i + 2) + (j)] += c20;
-            C[bg * (i + 2) + (j + 1)] += c21;
-            C[bg * (i + 2) + (j + 2)] += c22;
-        }
-        for(;j < bg; ++j) {
-            c00 = 0;
-            c10 = 0;
-            c20 = 0;
-            for(q = 0; q < ag; ++q) {
-                c00 += A[ag * (i) + q] * B[bg * q + (j)];
-                c10 += A[ag * (i + 1) + q] * B[bg * q + (j)];
-                c20 += A[ag * (i + 2) + q] * B[bg * q + (j)];
-            }
-            C[bg * (i) + (j)] += c00;
-            C[bg * (i + 1) + (j)] += c10;
-            C[bg * (i + 2) + (j)] += c20;
-        }
-    }
-    for(; i < av; ++i) {
-        for(j = 0; j < _bg; j+= 3) {
-            c00 = 0; c01 = 0; c02 = 0;
-            for(q = 0; q < ag; ++q) {
-                c00 += A[ag * (i) + q] * B[bg * q + (j)];
-                c01 += A[ag * (i) + q] * B[bg * q + (j + 1)];
-                c02 += A[ag * (i) + q] * B[bg * q + (j + 2)];
-            }
-            C[bg * (i) + (j)] += c00;
-            C[bg * (i) + (j + 1)] += c01;
-            C[bg * (i) + (j + 2)] += c02;
-        }
-        for(;j < bg; ++j) {
-            c00 = 0;
-            for(q = 0; q < ag; ++q) {
-                c00 += A[ag * (i) + q] * B[bg * q + (j)];
-            }
-            C[bg * (i) + (j)] += c00;
-        }
-    }
-}
-/*
-double calculate_discrepancy(double* matrix, double* inverse, int n, int m, double* tmp_block_m
-    , double* tmp_line_n, int proc_num, int p, MPI_Comm comm, double* inverse_buf) 
-    {
-int k = n / m;
-int l = n - m * k;
-int el_in_blcok_line = k * m * m + l * m;
-int i_glob = 0, j = 0, q = 0;
-bool small_row = (l != 0 && k%p == proc_num) ? true : false;
-double sum = 0;
-int max_rows = get_max_rows(n, m, p);
-int rows = get_rows(n, m, p, proc_num);
-rows = (small_row == true) ? rows - 1 : rows;
-memset(tmp_line_n, 0, n * sizeof(double));
-for(i_glob = 0; i_glob < k; ++i_glob) {
-    for(j = 0; j < rows; ++j) {
-        memcpy(inverse_buf + j * m * m, inverse + j * el_in_blcok_line + i_glob * m * m, m * m * sizeof(double));
-    }
-    if (small_row == true) {
-        memcpy(inverse_buf  + j * m * m, inverse + j * el_in_blcok_line + i_glob * m * l, m * l * sizeof(double));
-    }
-    MPI_Allgather(inverse_buf, max_rows * m * m, MPI_DOUBLE, matrix + max_rows * el_in_blcok_line
-            , max_rows * m * m, MPI_DOUBLE, comm);
-    for(q = 0; q < rows; ++q) {
-        memset(tmp_block_m, 0, m * m * sizeof(double));
-        for(j = 0; j < k; ++j) {
-            int proc_j = j % p;
-            int j_loc = j / p; 
-            block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, m
-                    , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
-                    , m, tmp_block_m);
-        }
-        int proc_j = j % p;
-        int j_loc = j / p; 
-        block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, l
-                , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
-                , m, tmp_block_m); 
-        if ((q * p + proc_num) == i_glob) {
-            for(int s = 0; s < m; ++s) {
-                tmp_block_m[s * m + s] -= 1;
-            }
-        }
-        for(int w = 0; w < m; ++w) {
-            sum = 0;
-            for(int v = 0; v < m; ++v) {
-                sum += fabs(tmp_block_m[v * m + w]);
-            }
-            tmp_line_n[i_glob * m + w] += sum;
-        }
-    }
-    if (small_row == true) {
-        memset(tmp_block_m, 0, m * m * sizeof(double));
-        for(j = 0; j < k; ++j) {
-            int proc_j = j % p;
-            int j_loc = j / p; 
-            block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, m
-                    , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
-                    , m, tmp_block_m);
-    
-        }
-        int proc_j = j % p;
-        int j_loc = j / p; 
-        block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, l
-                , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
-                , m, tmp_block_m); 
-        for(int w = 0; w < m; ++w) {
-            sum = 0;
-            for(int v = 0; v < l; ++v) {
-                sum += fabs(tmp_block_m[v * m + w]);
-            }
-            tmp_line_n[i_glob * m + w] += sum;
-        }
-    }
-}
 
-if (l != 0) {
-    for(j = 0; j < rows; ++j) {
-        memcpy(inverse_buf + j * l * m, inverse + j * el_in_blcok_line + i_glob * m * m, l * m * sizeof(double));
-    }
-    if (small_row == true) {
-        memcpy(inverse_buf  + j * l * m, inverse + j * el_in_blcok_line + i_glob * m * l, l * l * sizeof(double));
-    }
-
-    MPI_Allgather(inverse_buf, max_rows * m * l, MPI_DOUBLE, matrix + max_rows * el_in_blcok_line
-            , max_rows * m * l, MPI_DOUBLE, comm);
-    for(q = 0; q < rows; ++q) {
-        memset(tmp_block_m, 0, m * m * sizeof(double));
-        for(j = 0; j < k; ++j) {
-            int proc_j = j % p;
-            int j_loc = j / p; 
-            block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, m
-                    , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * l + j_loc * l * m
-                    , l, tmp_block_m);
-        }
-        int proc_j = j % p;
-        int j_loc = j / p; 
-        block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, l
-                , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
-                , l, tmp_block_m); 
-        for(int w = 0; w < l; ++w) {
-            sum = 0;
-            for(int v = 0; v < m; ++v) {
-                sum += fabs(tmp_block_m[v * l + w]);
-            }
-            tmp_line_n[i_glob * m + w] += sum;
-        }
-    }
-    if (small_row == true) {
-        memset(tmp_block_m, 0, m * m * sizeof(double));
-        for(j = 0; j < k; ++j) {
-            int proc_j = j % p;
-            int j_loc = j / p; 
-            block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, m
-                    , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
-                    , l, tmp_block_m);
-    
-        }
-        int proc_j = j % p;
-        int j_loc = j / p; 
-        block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, l
-                , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
-                , l, tmp_block_m); 
-        if ((q * p + proc_num) == i_glob) {
-            for(int s = 0; s < l; ++s) {
-                tmp_block_m[s * l + s] -= 1;
-            }
-        }
-        for(int w = 0; w < l; ++w) {
-            sum = 0;
-            for(int v = 0; v < l; ++v) {
-                sum += fabs(tmp_block_m[v * l + w]);
-            }
-            tmp_line_n[i_glob * m + w] += sum;
-        }
-    }
-}
-MPI_Allreduce(tmp_line_n, inverse_buf, n, MPI_DOUBLE, MPI_SUM, comm);
-
-double max = inverse_buf[0];
-for(int i = 0; i < n; ++i) {
-    if(inverse_buf[i] > max) max = inverse_buf[i];
-}
-return max;
-}
-*/
-double calculate_discrepancy(Args* a) 
+void PlusEqualBlockMul(double* Main, double *a, double* b, int n1, int m12, int n2)
 {
-    double* A = a->A, *B = a->B; 
+    int l_col = n2%3;
+    int l_row= n1%3;
+    int k_col = (n2-l_col)/3;
+    int k_row = (n1-l_row)/3; 
+    int bi, bj, r;
+    
+    double s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
+
+    for ( bi = 0; bi < k_row; bi++)
+    {
+        for ( bj = 0; bj < k_col; bj++)
+        {
+            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
+            for ( r = 0; r < m12; r++)
+            {
+                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3];
+                s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s02 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2];
+                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3];
+                s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s12 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3];
+                s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s22 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 2];
+            }
+            Main[bi*3*n2 + bj*3] += s00; Main[bi*3*n2 + bj*3 + 1] += s01; Main[bi*3*n2 + bj*3 + 2] += s02;
+            Main[(bi*3 + 1)*n2 + bj*3] += s10; Main[(bi*3 + 1)*n2 + bj*3 + 1] += s11; Main[(bi*3 + 1)*n2 + bj*3 + 2] += s12;
+            Main[(bi*3 + 2)*n2 + bj*3] += s20; Main[(bi*3 + 2)*n2 + bj*3 + 1] += s21; Main[(bi*3 + 2)*n2 + bj*3 + 2] += s22;
+        }
+        if (l_col != 0)
+        {
+
+            s00 = 0, s01 = 0, s10 = 0, s11 = 0, s20 = 0, s21 = 0;
+            for ( r = 0; r < m12; r++)
+            {
+                if(l_col > 1)
+                { 
+                    s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                    s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                    s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3 + 1];
+
+                }
+                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3];
+                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3];
+                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3];
+            }
+
+            Main[bi*3*n2 + k_col*3] += s00; 
+            Main[(bi*3 + 1)*n2 + k_col*3] += s10;
+            Main[(bi*3 + 2)*n2 + k_col*3] += s20;
+            if(l_col > 1)
+            { 
+                Main[bi*3*n2 + k_col*3 + 1] += s01; 
+                Main[(bi*3 + 1)*n2 + k_col*3 + 1] += s11;
+                Main[(bi*3 + 2)*n2 + k_col*3 + 1] += s21;
+            }
+        }
+            
+    }
+
+    if(l_row != 0)
+    {
+        for ( bj = 0; bj < k_col; bj++)
+        {
+            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0;
+            for ( r = 0; r < m12; r++)
+            {
+                
+                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3];
+                s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s02 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                if(l_row > 1)
+                {
+                    s10 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3];
+                    s11 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
+                    s12 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                }
+            }
+
+            Main[(k_row*3)*n2 + bj*3] += s00; Main[(k_row*3 )*n2 + bj*3 + 1] += s01; Main[(k_row*3 )*n2 + bj*3 + 2] += s02;
+            if (l_row > 1)
+            {
+                Main[(k_row*3  + 1)*n2 + bj*3] += s10; Main[(k_row*3 + 1)*n2 + bj*3 + 1] += s11; Main[(k_row*3 + 1)*n2 + bj*3 + 2] += s12;
+            }
+            
+        }
+        if(l_col != 0)
+        {
+            s00 = 0, s01 = 0, s10 = 0, s11 = 0;
+            for ( r = 0; r < m12; r++)
+            {
+                
+                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 ];
+                if (l_col > 1)
+                {
+                    s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                }
+                if(l_row > 1)
+                {
+                    s10 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 ];
+                }
+                if (l_col > 1 && l_row > 1)
+                {
+                    s11 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                }
+                
+            }
+
+            Main[(k_row*3)*n2 + k_col*3] += s00;
+            if (l_col>1)
+            {
+                Main[(k_row*3)*n2 + k_col*3 + 1] += s01;
+            }
+            
+            if (l_row > 1)
+            {
+                Main[(k_row*3 + 1)*n2 + k_col*3] += s10;
+            }
+            if (l_row > 1 && l_col>1)
+            {
+                Main[(k_row*3 + 1)*n2 + k_col*3 + 1] += s11;
+            }
+            
+        }     
+    }       
+}
+
+double Discrepancy(double* A, double* B, Args* a) 
+{
     int n = a->n, m = a->m;
     double* buf_block = a->buf, *buf_line = a->buf + (n+m)*m;
     int K = a->k, p = a->p;
@@ -343,9 +192,9 @@ double calculate_discrepancy(Args* a)
     double* B_buf = a->buf;
     int k = a->K;
     int l = a->l;
-    int owner_of_j, j_loc, i;
+    int owner_of_j, j_loc, i, diag_in_block, ii, jj, s;
     int lol = k * m * m + l * m;
-    int bi = 0, j = 0, q = 0;
+    int bi = 0, j = 0, bi_loc = 0;
     bool last_line_isnt_full = ((l != 0 && k%p == K) ? true : false);
     double sum = 0;
     double final_result;
@@ -359,22 +208,19 @@ double calculate_discrepancy(Args* a)
     
     for(bi = 0; bi < k; bi++) 
     {
-        for(j = 0; j < rows; ++j) 
+        for(j = 0; j < rows; j++) 
         {
-            //memcpy(B_buf + j * m * m, B + j * lol + bi * m * m, m * m * sizeof(double));
-            ReplaceWith(B_buf + j * m * m, B + j * lol + bi * m * m, m * m, m*m);
+            ReplaceWith(B_buf + j * m * m, B + j * lol + bi * m * m, m, m);
         }
         if (last_line_isnt_full == true) 
         {
-            //memcpy(B_buf  + j * m * m, B + j * lol + bi * m * l, m * l * sizeof(double));
-            ReplaceWith(B_buf  + j * m * m, B + j * lol + bi * m * l, m * l, m * l);
+            ReplaceWith(B_buf  + j * m * m, B + j * lol + bi * m * l, m, l);
         }
 
         MPI_Allgather(B_buf, max_rows * m * m, MPI_DOUBLE, A + max_rows * lol, max_rows * m * m, MPI_DOUBLE, comm);
         
-        for(q = 0; q < rows; ++q) 
+        for(bi_loc = 0; bi_loc < rows; bi_loc++) 
         {
-            memset(buf_block, 0, m * m * sizeof(double));
             for (i = 0; i <  m * m; i++)
             {
                 buf_block[i] = 0;
@@ -384,121 +230,137 @@ double calculate_discrepancy(Args* a)
             {
                 owner_of_j  = j % p;
                 j_loc = j / p; 
-                block_mult_add(A + q * lol + j * m * m, m, m, A  + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, m, buf_block);
+                PlusEqualBlockMul(buf_block, A + bi_loc * lol + j * m * m, A  + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, m, m,m);
             }
             owner_of_j  = j % p;
             j_loc = j / p; 
-            block_mult_add(A + q * lol + j * m * m, m, l, A + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, m, buf_block); 
-            if ((q * p + K) == bi) 
+            PlusEqualBlockMul(buf_block, A + bi_loc * lol + j * m * m, A + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, m, l,m);
+ 
+            if ((bi_loc * p + K) == bi) 
             {
-                for(int s = 0; s < m; ++s)
+                for(diag_in_block = 0; diag_in_block < m; diag_in_block++)
                 {
-                    buf_block[s * m + s] -= 1;
+                    buf_block[diag_in_block * m + diag_in_block] -= 1;
                 }
             }
-            for(int w = 0; w < m; ++w) 
+            for(ii = 0; ii < m; ii++) 
             {
                 sum = 0;
-                for(int v = 0; v < m; ++v) 
+                for(jj = 0; jj < m; jj++) 
                 {
-                    sum += fabs(buf_block[v * m + w]);
+                    sum += fabs(buf_block[jj * m + ii]);
                 }
-                buf_line[bi * m + w] += sum;
+                buf_line[bi * m + ii] += sum;
             }
         }
         if (last_line_isnt_full == true) 
         {
-            memset(buf_block, 0, m * m * sizeof(double));
-            for(j = 0; j < k; ++j) 
+            for (i = 0; i < m*m; i++)
+            {
+                buf_block[i] = 0;
+            }
+            
+            for(j = 0; j < k; j++) 
             {
                 owner_of_j  = j % p;
                 j_loc = j / p; 
-                block_mult_add(A + q * lol + j * m * l, l, m, A  + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, m, buf_block);
+                PlusEqualBlockMul(buf_block, A + bi_loc * lol + j * m * l, A  + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, l, m,m);
             }
 
             owner_of_j  = j % p;
             j_loc = j / p; 
-            block_mult_add(A + q * lol + j * m * l, l, l, A + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, m, buf_block); 
-            for(int w = 0; w < m; ++w) 
+            PlusEqualBlockMul(buf_block, A + bi_loc * lol + j * m * l, A + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, l, l, m);
+
+            for( ii = 0; ii < m; ii++) 
             {
                 sum = 0;
-                for(int v = 0; v < l; ++v) 
+                for( jj = 0; jj < l; jj++) 
                 {
-                    sum += fabs(buf_block[v * m + w]);
+                    sum += fabs(buf_block[jj * m + ii]);
                 }
-                buf_line[bi * m + w] += sum;
+                buf_line[bi * m + ii] += sum;
             }
         }
     }
 
     if (l != 0) 
     {
-        for(j = 0; j < rows; ++j) 
+        for(j = 0; j < rows; j++) 
         {
-            memcpy(B_buf + j * l * m, B + j * lol + bi * m * m, l * m * sizeof(double));
+            ReplaceWith(B_buf + j * l * m, B + j * lol + bi * m * m, l, m);
         }
         if (last_line_isnt_full == true) 
         {
-            memcpy(B_buf  + j * l * m, B + j * lol + bi * m * l, l * l * sizeof(double));
+            ReplaceWith(B_buf  + j * l * m, B + j * lol + bi * m * l, l, l); 
         }
 
         MPI_Allgather(B_buf, max_rows * m * l, MPI_DOUBLE, A + max_rows * lol, max_rows * m * l, MPI_DOUBLE, comm);
-        for(q = 0; q < rows; ++q) 
+        for(bi_loc = 0; bi_loc < rows; bi_loc++) 
         {
-            memset(buf_block, 0, m * m * sizeof(double));
+            for (i = 0; i < m*m; i++)
+            {
+                buf_block[i] = 0;
+            }
+            
             for(j = 0; j < k; ++j) 
             {
                 owner_of_j  = j % p;
                 j_loc = j / p; 
-                block_mult_add(A + q * lol + j * m * m, m, m, A  + max_rows * lol + owner_of_j * max_rows * m * l + j_loc * l * m, l, buf_block);
+                PlusEqualBlockMul(buf_block,A + bi_loc * lol + j * m * m, A  + max_rows * lol + owner_of_j * max_rows * m * l + j_loc * l * m, m, m, l);
             }
             owner_of_j  = j % p;
             j_loc = j / p; 
-            block_mult_add(A + q * lol + j * m * m, m, l, A + max_rows * lol + owner_of_j * max_rows * l * m + j_loc * l * m, l, buf_block); 
-            for(int w = 0; w < l; ++w) 
+            PlusEqualBlockMul(buf_block, A + bi_loc * lol + j * m * m,  A + max_rows * lol + owner_of_j * max_rows * l * m + j_loc * l * m, m, l, l);
+
+            for(ii = 0; ii < l; ii++) 
             {
                 sum = 0;
-                for(int v = 0; v < m; ++v) 
+                for(jj = 0; jj < m; jj++) 
                 {
-                    sum += fabs(buf_block[v * l + w]);
+                    sum += fabs(buf_block[jj * l + ii]);
                 }
-                buf_line[bi * m + w] += sum;
+                buf_line[bi * m + ii] += sum;
             }
         }
         if (last_line_isnt_full == true)
         {
-            memset(buf_block, 0, m * m * sizeof(double));
-            for(j = 0; j < k; ++j) 
+            for (i = 0; i < m*m; i++)
+            {
+                buf_block[i] = 0;
+            }
+            for(j = 0; j < k; j++) 
             {
                 owner_of_j  = j % p;
                 j_loc = j / p; 
-                block_mult_add(A + q * lol + j * m * l, l, m, A  + max_rows * lol + owner_of_j * max_rows * l * m + j_loc * l * m, l, buf_block); 
+                PlusEqualBlockMul(buf_block, A + bi_loc * lol + j * m * l,  A  + max_rows * lol + owner_of_j * max_rows * l * m + j_loc * l * m, l, m, l);
             }
             owner_of_j  = j % p;
             j_loc = j / p; 
-            block_mult_add(A + q * lol + j * m * l, l, l, A + max_rows * lol + owner_of_j * max_rows * l * m + j_loc * l * m, l, buf_block); 
-            if ((q * p + K) == bi) 
+            PlusEqualBlockMul(buf_block, A + bi_loc * lol + j * m * l, A + max_rows * lol + owner_of_j * max_rows * l * m + j_loc * l * m, l, l, l);
+
+            if ((bi_loc * p + K) == bi) 
             {
-                for(int s = 0; s < l; ++s) 
+                for(s = 0; s < l; s++) 
                 {
                     buf_block[s * l + s] -= 1;
                 }
             }
-            for(int w = 0; w < l; ++w) 
+            for( ii = 0; ii < l; ii++) 
             {
                 sum = 0;
-                for(int v = 0; v < l; ++v) 
+                for(jj = 0; jj < l; jj++) 
                 {
-                    sum += fabs(buf_block[v * l + w]);
+                    sum += fabs(buf_block[jj * l + ii]);
                 }
-                buf_line[bi * m + w] += sum;
+                buf_line[bi * m + ii] += sum;
             }
         }
     }
+    
     MPI_Allreduce(buf_line, B_buf, n, MPI_DOUBLE, MPI_SUM, comm);
 
     final_result= B_buf[0];
-    for(int i = 0; i < n; ++i) 
+    for(i = 0; i < n; i++) 
     {
         if(B_buf[i] > final_result)
         { 

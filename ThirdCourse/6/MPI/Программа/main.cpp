@@ -5,7 +5,8 @@
 #include <iostream>
 #include <cmath>
 #include <fenv.h>
-#define EPSILON pow(10,-16)
+#include <cstring>
+#define EPSILON pow(10,-15)
 
 using namespace std;
 
@@ -14,7 +15,7 @@ int main(int argc, char* argv[])
     int n = 0, m = 0, r = 0, s = 0, p = 0, proc_num = 0;
     double r1 = -1, r2 = -1, t1 = 0, t2 = 0;
     int er_l = 0, er_g = 0;
-    int inv_res = 0;
+    int inv_res_l = 0, inv_res_g;
     Args a;
     MPI_Comm comm = MPI_COMM_WORLD;
     MPI_Init(&argc, &argv);
@@ -69,14 +70,13 @@ int main(int argc, char* argv[])
 
     double* A = new double/*[n*m*(max_rows+p)]*/ [(max_rows + 1) * m * n + p * m * m];
     double* B = new double/*[n*m*(max_rows+p)]*/ [(max_rows + 1) * m * n + p * m * m];
-    double* buf = new double[(2*n + m)*m];
+    double* buf = new double[2*(n + m)*m];
     double* U = new double[(m+1)*(m+1)];
     bool* ZerosMatrix = new bool[(k+1)*(k+1)];
     double* ZeroMatrix = new double[m*m];
     double* ProductResult = new double[m*m];
     double* results = new double[n];
-    double* tmp_row_matrix = new double[m * n + m * m];
-    double* tmp_row_inverse = new double[m * n + m * m];
+
 
     if(A == nullptr || B == nullptr || buf == nullptr || U == nullptr || ZerosMatrix == nullptr || ProductResult == nullptr)
     {
@@ -114,11 +114,10 @@ int main(int argc, char* argv[])
     memset(U, 0, (m+1)*(m+1)*sizeof(double));
     memset(ProductResult, 0, m*m*sizeof(double));
     memset(results, 0, n*sizeof(double));
-    memset(buf, 0, (2*n + m)*m*sizeof(double));
+    memset(buf, 0, 2*(n + m)*m*sizeof(double));
     memset(ZeroMatrix, 0, m*m*sizeof(double));
 
-    memset(tmp_row_matrix, 0, (n * m + m * m) * sizeof(double));
-    memset(tmp_row_inverse, 0, (n * m  + m * m) * sizeof(double));
+   
     //memset(A, 0, n*m*(max_rows + p)*sizeof(double));
 
     for (int i = 0; i < k+1; i++)
@@ -176,8 +175,6 @@ int main(int argc, char* argv[])
         delete[] ProductResult;
         delete[] results;
         
-        delete[] tmp_row_matrix;
-        delete[] tmp_row_inverse;
         MPI_Finalize();
 
         return 0;
@@ -205,16 +202,21 @@ int main(int argc, char* argv[])
     a.norm = Norm(&a);
     a.norm *= EPSILON;
 
-    /*if (proc_num == 0)
-    {
-        a.PrintInfo();
-    }*/
+
     MPI_Barrier(comm);
     t1 = get_full_time();
-    inv_res = InverseMatrixParallel(&a);
+    inv_res_l = InverseMatrixParallel(&a);
     t1 = get_full_time() - t1;
-    if (inv_res == 0 && n <= 11000) 
+    
+    MPI_Allreduce(&inv_res_l, &inv_res_g, 1, MPI_INT, MPI_MAX, comm);
+    if (inv_res_g == 0 && n <= 11000) 
     {
+        if(proc_num == 0)
+        {
+            cout<<"Inversed A"<<endl;
+        }
+        PrintMatrix(B, n, m, p, proc_num, r,buf, comm);
+
         if (s == 0)
         {
             er_l = ReadMatrixFromFile(A, n, m, p, proc_num, argv[5], buf, comm);
@@ -226,16 +228,19 @@ int main(int argc, char* argv[])
 
         MPI_Barrier(comm);
         t2 = get_full_time();
-        r1 = calculate_discrepancy(A, B, n, m, tmp_row_matrix, tmp_row_inverse, proc_num, p, comm, tmp_row_matrix);
-        r2 = calculate_discrepancy(B, A, n, m, tmp_row_matrix, tmp_row_inverse, proc_num, p, comm, tmp_row_matrix);
+        r1 = Discrepancy(A, B, &a);
+        r2 = Discrepancy(B, A, &a);
         t2 = get_full_time() - t2;
     }
-    if(proc_num == 0)
+    else if(inv_res_g != 0)
     {
-        cout<<"Inversed A"<<endl;
+        if(proc_num == 0)
+        {
+            cout<<"Matrix is singular"<<endl;
+        }
     }
+    
 
-    PrintMatrix(B, n, m, p, proc_num, r,buf, comm);
     //PrintMatrix(A, n, m, p, proc_num, r,buf, comm);
 
     if(proc_num == 0) 
@@ -251,9 +256,6 @@ int main(int argc, char* argv[])
     delete[] ZerosMatrix;
     delete[] ProductResult;
     delete[] results;
-
-    delete[] tmp_row_matrix;
-    delete[] tmp_row_inverse;
 
     MPI_Finalize();
     
