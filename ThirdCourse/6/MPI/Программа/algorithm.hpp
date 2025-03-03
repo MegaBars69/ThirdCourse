@@ -104,7 +104,7 @@ void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int ro
 void BlockMul(double *a, double* b, double* c, int n1, int m12, int n2);
 double Norm(Args* a);
 double calculate_discrepancy(double* matrix, double* inverse, int n, int m, double* tmp_block_m
-        , double* tmp_line_n, int proc_num, int p, MPI_Comm comm, double* inverse_buf);
+    , double* tmp_line_n, int proc_num, int p, MPI_Comm comm, double* inverse_buf) ;
 void FirstStep(double* A, double* B, double* U, double norm, int n, int m, int p, int K, int shag, Args *a);
 
 int InverseMatrixParallel(Args* a);

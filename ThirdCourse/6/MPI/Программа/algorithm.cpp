@@ -106,6 +106,20 @@ double Discrepancy(Args* a)
     return final_answer; 
 }
 */
+
+void ReplaceWith(double*A, double*B, int row_size, int col_size)
+{
+    for (int i = 0; i < row_size; i++)
+    {
+        for (int j = 0; j < col_size; j++, A++, B++)
+        {
+            *A = *B;
+        }
+        
+    }
+    
+}
+
 void block_mult_add(double* A, int av, int ag, double* B, int bg, double* C) {
     int av_reminder = av % 3;
     int bg_reminder = bg % 3;
@@ -174,148 +188,324 @@ void block_mult_add(double* A, int av, int ag, double* B, int bg, double* C) {
         }
     }
 }
+/*
 double calculate_discrepancy(double* matrix, double* inverse, int n, int m, double* tmp_block_m
-        , double* tmp_line_n, int proc_num, int p, MPI_Comm comm, double* inverse_buf) 
+    , double* tmp_line_n, int proc_num, int p, MPI_Comm comm, double* inverse_buf) 
+    {
+int k = n / m;
+int l = n - m * k;
+int el_in_blcok_line = k * m * m + l * m;
+int i_glob = 0, j = 0, q = 0;
+bool small_row = (l != 0 && k%p == proc_num) ? true : false;
+double sum = 0;
+int max_rows = get_max_rows(n, m, p);
+int rows = get_rows(n, m, p, proc_num);
+rows = (small_row == true) ? rows - 1 : rows;
+memset(tmp_line_n, 0, n * sizeof(double));
+for(i_glob = 0; i_glob < k; ++i_glob) {
+    for(j = 0; j < rows; ++j) {
+        memcpy(inverse_buf + j * m * m, inverse + j * el_in_blcok_line + i_glob * m * m, m * m * sizeof(double));
+    }
+    if (small_row == true) {
+        memcpy(inverse_buf  + j * m * m, inverse + j * el_in_blcok_line + i_glob * m * l, m * l * sizeof(double));
+    }
+    MPI_Allgather(inverse_buf, max_rows * m * m, MPI_DOUBLE, matrix + max_rows * el_in_blcok_line
+            , max_rows * m * m, MPI_DOUBLE, comm);
+    for(q = 0; q < rows; ++q) {
+        memset(tmp_block_m, 0, m * m * sizeof(double));
+        for(j = 0; j < k; ++j) {
+            int proc_j = j % p;
+            int j_loc = j / p; 
+            block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, m
+                    , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
+                    , m, tmp_block_m);
+        }
+        int proc_j = j % p;
+        int j_loc = j / p; 
+        block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, l
+                , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
+                , m, tmp_block_m); 
+        if ((q * p + proc_num) == i_glob) {
+            for(int s = 0; s < m; ++s) {
+                tmp_block_m[s * m + s] -= 1;
+            }
+        }
+        for(int w = 0; w < m; ++w) {
+            sum = 0;
+            for(int v = 0; v < m; ++v) {
+                sum += fabs(tmp_block_m[v * m + w]);
+            }
+            tmp_line_n[i_glob * m + w] += sum;
+        }
+    }
+    if (small_row == true) {
+        memset(tmp_block_m, 0, m * m * sizeof(double));
+        for(j = 0; j < k; ++j) {
+            int proc_j = j % p;
+            int j_loc = j / p; 
+            block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, m
+                    , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
+                    , m, tmp_block_m);
+    
+        }
+        int proc_j = j % p;
+        int j_loc = j / p; 
+        block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, l
+                , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
+                , m, tmp_block_m); 
+        for(int w = 0; w < m; ++w) {
+            sum = 0;
+            for(int v = 0; v < l; ++v) {
+                sum += fabs(tmp_block_m[v * m + w]);
+            }
+            tmp_line_n[i_glob * m + w] += sum;
+        }
+    }
+}
+
+if (l != 0) {
+    for(j = 0; j < rows; ++j) {
+        memcpy(inverse_buf + j * l * m, inverse + j * el_in_blcok_line + i_glob * m * m, l * m * sizeof(double));
+    }
+    if (small_row == true) {
+        memcpy(inverse_buf  + j * l * m, inverse + j * el_in_blcok_line + i_glob * m * l, l * l * sizeof(double));
+    }
+
+    MPI_Allgather(inverse_buf, max_rows * m * l, MPI_DOUBLE, matrix + max_rows * el_in_blcok_line
+            , max_rows * m * l, MPI_DOUBLE, comm);
+    for(q = 0; q < rows; ++q) {
+        memset(tmp_block_m, 0, m * m * sizeof(double));
+        for(j = 0; j < k; ++j) {
+            int proc_j = j % p;
+            int j_loc = j / p; 
+            block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, m
+                    , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * l + j_loc * l * m
+                    , l, tmp_block_m);
+        }
+        int proc_j = j % p;
+        int j_loc = j / p; 
+        block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, l
+                , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
+                , l, tmp_block_m); 
+        for(int w = 0; w < l; ++w) {
+            sum = 0;
+            for(int v = 0; v < m; ++v) {
+                sum += fabs(tmp_block_m[v * l + w]);
+            }
+            tmp_line_n[i_glob * m + w] += sum;
+        }
+    }
+    if (small_row == true) {
+        memset(tmp_block_m, 0, m * m * sizeof(double));
+        for(j = 0; j < k; ++j) {
+            int proc_j = j % p;
+            int j_loc = j / p; 
+            block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, m
+                    , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
+                    , l, tmp_block_m);
+    
+        }
+        int proc_j = j % p;
+        int j_loc = j / p; 
+        block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, l
+                , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
+                , l, tmp_block_m); 
+        if ((q * p + proc_num) == i_glob) {
+            for(int s = 0; s < l; ++s) {
+                tmp_block_m[s * l + s] -= 1;
+            }
+        }
+        for(int w = 0; w < l; ++w) {
+            sum = 0;
+            for(int v = 0; v < l; ++v) {
+                sum += fabs(tmp_block_m[v * l + w]);
+            }
+            tmp_line_n[i_glob * m + w] += sum;
+        }
+    }
+}
+MPI_Allreduce(tmp_line_n, inverse_buf, n, MPI_DOUBLE, MPI_SUM, comm);
+
+double max = inverse_buf[0];
+for(int i = 0; i < n; ++i) {
+    if(inverse_buf[i] > max) max = inverse_buf[i];
+}
+return max;
+}
+*/
+double calculate_discrepancy(Args* a) 
 {
-    int k = n / m;
-    int l = n - m * k;
-    int el_in_blcok_line = k * m * m + l * m;
-    int i_glob = 0, j = 0, q = 0;
-    bool small_row = (l != 0 && k%p == proc_num) ? true : false;
+    double* A = a->A, *B = a->B; 
+    int n = a->n, m = a->m;
+    double* buf_block = a->buf, *buf_line = a->buf + (n+m)*m;
+    int K = a->k, p = a->p;
+    MPI_Comm comm = a->comm;
+    double* B_buf = a->buf;
+    int k = a->K;
+    int l = a->l;
+    int owner_of_j, j_loc, i;
+    int lol = k * m * m + l * m;
+    int bi = 0, j = 0, q = 0;
+    bool last_line_isnt_full = ((l != 0 && k%p == K) ? true : false);
     double sum = 0;
-    int max_rows = get_max_rows(n, m, p);
-    int rows = get_rows(n, m, p, proc_num);
-    rows = (small_row == true) ? rows - 1 : rows;
-    memset(tmp_line_n, 0, n * sizeof(double));
-    for(i_glob = 0; i_glob < k; ++i_glob) {
-        for(j = 0; j < rows; ++j) {
-            memcpy(inverse_buf + j * m * m, inverse + j * el_in_blcok_line + i_glob * m * m, m * m * sizeof(double));
+    double final_result;
+    int max_rows = a->max_rows;
+    int rows = a->rows - (last_line_isnt_full == true ?  1 : 0);
+
+    for (i = 0; i < n; i++)
+    {
+        buf_line[i] = 0;
+    }
+    
+    for(bi = 0; bi < k; bi++) 
+    {
+        for(j = 0; j < rows; ++j) 
+        {
+            //memcpy(B_buf + j * m * m, B + j * lol + bi * m * m, m * m * sizeof(double));
+            ReplaceWith(B_buf + j * m * m, B + j * lol + bi * m * m, m * m, m*m);
         }
-        if (small_row == true) {
-            memcpy(inverse_buf  + j * m * m, inverse + j * el_in_blcok_line + i_glob * m * l, m * l * sizeof(double));
+        if (last_line_isnt_full == true) 
+        {
+            //memcpy(B_buf  + j * m * m, B + j * lol + bi * m * l, m * l * sizeof(double));
+            ReplaceWith(B_buf  + j * m * m, B + j * lol + bi * m * l, m * l, m * l);
         }
-        MPI_Allgather(inverse_buf, max_rows * m * m, MPI_DOUBLE, matrix + max_rows * el_in_blcok_line
-                , max_rows * m * m, MPI_DOUBLE, comm);
-        for(q = 0; q < rows; ++q) {
-            memset(tmp_block_m, 0, m * m * sizeof(double));
-            for(j = 0; j < k; ++j) {
-                int proc_j = j % p;
-                int j_loc = j / p; 
-                block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, m
-                        , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
-                        , m, tmp_block_m);
-            }
-            int proc_j = j % p;
-            int j_loc = j / p; 
-            block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, l
-                    , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
-                    , m, tmp_block_m); 
-            if ((q * p + proc_num) == i_glob) {
-                for(int s = 0; s < m; ++s) {
-                    tmp_block_m[s * m + s] -= 1;
-                }
-            }
-            for(int w = 0; w < m; ++w) {
-                sum = 0;
-                for(int v = 0; v < m; ++v) {
-                    sum += fabs(tmp_block_m[v * m + w]);
-                }
-                tmp_line_n[i_glob * m + w] += sum;
-            }
-        }
-        if (small_row == true) {
-            memset(tmp_block_m, 0, m * m * sizeof(double));
-            for(j = 0; j < k; ++j) {
-                int proc_j = j % p;
-                int j_loc = j / p; 
-                block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, m
-                        , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
-                        , m, tmp_block_m);
+
+        MPI_Allgather(B_buf, max_rows * m * m, MPI_DOUBLE, A + max_rows * lol, max_rows * m * m, MPI_DOUBLE, comm);
         
+        for(q = 0; q < rows; ++q) 
+        {
+            memset(buf_block, 0, m * m * sizeof(double));
+            for (i = 0; i <  m * m; i++)
+            {
+                buf_block[i] = 0;
             }
-            int proc_j = j % p;
-            int j_loc = j / p; 
-            block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, l
-                    , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * m * m + j_loc * m * m
-                    , m, tmp_block_m); 
-            for(int w = 0; w < m; ++w) {
-                sum = 0;
-                for(int v = 0; v < l; ++v) {
-                    sum += fabs(tmp_block_m[v * m + w]);
+            
+            for(j = 0; j < k; ++j) 
+            {
+                owner_of_j  = j % p;
+                j_loc = j / p; 
+                block_mult_add(A + q * lol + j * m * m, m, m, A  + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, m, buf_block);
+            }
+            owner_of_j  = j % p;
+            j_loc = j / p; 
+            block_mult_add(A + q * lol + j * m * m, m, l, A + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, m, buf_block); 
+            if ((q * p + K) == bi) 
+            {
+                for(int s = 0; s < m; ++s)
+                {
+                    buf_block[s * m + s] -= 1;
                 }
-                tmp_line_n[i_glob * m + w] += sum;
+            }
+            for(int w = 0; w < m; ++w) 
+            {
+                sum = 0;
+                for(int v = 0; v < m; ++v) 
+                {
+                    sum += fabs(buf_block[v * m + w]);
+                }
+                buf_line[bi * m + w] += sum;
+            }
+        }
+        if (last_line_isnt_full == true) 
+        {
+            memset(buf_block, 0, m * m * sizeof(double));
+            for(j = 0; j < k; ++j) 
+            {
+                owner_of_j  = j % p;
+                j_loc = j / p; 
+                block_mult_add(A + q * lol + j * m * l, l, m, A  + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, m, buf_block);
+            }
+
+            owner_of_j  = j % p;
+            j_loc = j / p; 
+            block_mult_add(A + q * lol + j * m * l, l, l, A + max_rows * lol + owner_of_j * max_rows * m * m + j_loc * m * m, m, buf_block); 
+            for(int w = 0; w < m; ++w) 
+            {
+                sum = 0;
+                for(int v = 0; v < l; ++v) 
+                {
+                    sum += fabs(buf_block[v * m + w]);
+                }
+                buf_line[bi * m + w] += sum;
             }
         }
     }
 
-    if (l != 0) {
-        for(j = 0; j < rows; ++j) {
-            memcpy(inverse_buf + j * l * m, inverse + j * el_in_blcok_line + i_glob * m * m, l * m * sizeof(double));
+    if (l != 0) 
+    {
+        for(j = 0; j < rows; ++j) 
+        {
+            memcpy(B_buf + j * l * m, B + j * lol + bi * m * m, l * m * sizeof(double));
         }
-        if (small_row == true) {
-            memcpy(inverse_buf  + j * l * m, inverse + j * el_in_blcok_line + i_glob * m * l, l * l * sizeof(double));
+        if (last_line_isnt_full == true) 
+        {
+            memcpy(B_buf  + j * l * m, B + j * lol + bi * m * l, l * l * sizeof(double));
         }
 
-        MPI_Allgather(inverse_buf, max_rows * m * l, MPI_DOUBLE, matrix + max_rows * el_in_blcok_line
-                , max_rows * m * l, MPI_DOUBLE, comm);
-        for(q = 0; q < rows; ++q) {
-            memset(tmp_block_m, 0, m * m * sizeof(double));
-            for(j = 0; j < k; ++j) {
-                int proc_j = j % p;
-                int j_loc = j / p; 
-                block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, m
-                        , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * m * l + j_loc * l * m
-                        , l, tmp_block_m);
+        MPI_Allgather(B_buf, max_rows * m * l, MPI_DOUBLE, A + max_rows * lol, max_rows * m * l, MPI_DOUBLE, comm);
+        for(q = 0; q < rows; ++q) 
+        {
+            memset(buf_block, 0, m * m * sizeof(double));
+            for(j = 0; j < k; ++j) 
+            {
+                owner_of_j  = j % p;
+                j_loc = j / p; 
+                block_mult_add(A + q * lol + j * m * m, m, m, A  + max_rows * lol + owner_of_j * max_rows * m * l + j_loc * l * m, l, buf_block);
             }
-            int proc_j = j % p;
-            int j_loc = j / p; 
-            block_mult_add(matrix + q * el_in_blcok_line + j * m * m, m, l
-                    , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
-                    , l, tmp_block_m); 
-            for(int w = 0; w < l; ++w) {
+            owner_of_j  = j % p;
+            j_loc = j / p; 
+            block_mult_add(A + q * lol + j * m * m, m, l, A + max_rows * lol + owner_of_j * max_rows * l * m + j_loc * l * m, l, buf_block); 
+            for(int w = 0; w < l; ++w) 
+            {
                 sum = 0;
-                for(int v = 0; v < m; ++v) {
-                    sum += fabs(tmp_block_m[v * l + w]);
+                for(int v = 0; v < m; ++v) 
+                {
+                    sum += fabs(buf_block[v * l + w]);
                 }
-                tmp_line_n[i_glob * m + w] += sum;
+                buf_line[bi * m + w] += sum;
             }
         }
-        if (small_row == true) {
-            memset(tmp_block_m, 0, m * m * sizeof(double));
-            for(j = 0; j < k; ++j) {
-                int proc_j = j % p;
-                int j_loc = j / p; 
-                block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, m
-                        , matrix  + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
-                        , l, tmp_block_m);
-        
+        if (last_line_isnt_full == true)
+        {
+            memset(buf_block, 0, m * m * sizeof(double));
+            for(j = 0; j < k; ++j) 
+            {
+                owner_of_j  = j % p;
+                j_loc = j / p; 
+                block_mult_add(A + q * lol + j * m * l, l, m, A  + max_rows * lol + owner_of_j * max_rows * l * m + j_loc * l * m, l, buf_block); 
             }
-            int proc_j = j % p;
-            int j_loc = j / p; 
-            block_mult_add(matrix + q * el_in_blcok_line + j * m * l, l, l
-                    , matrix + max_rows * el_in_blcok_line + proc_j * max_rows * l * m + j_loc * l * m
-                    , l, tmp_block_m); 
-            if ((q * p + proc_num) == i_glob) {
-                for(int s = 0; s < l; ++s) {
-                    tmp_block_m[s * l + s] -= 1;
+            owner_of_j  = j % p;
+            j_loc = j / p; 
+            block_mult_add(A + q * lol + j * m * l, l, l, A + max_rows * lol + owner_of_j * max_rows * l * m + j_loc * l * m, l, buf_block); 
+            if ((q * p + K) == bi) 
+            {
+                for(int s = 0; s < l; ++s) 
+                {
+                    buf_block[s * l + s] -= 1;
                 }
             }
-            for(int w = 0; w < l; ++w) {
+            for(int w = 0; w < l; ++w) 
+            {
                 sum = 0;
-                for(int v = 0; v < l; ++v) {
-                    sum += fabs(tmp_block_m[v * l + w]);
+                for(int v = 0; v < l; ++v) 
+                {
+                    sum += fabs(buf_block[v * l + w]);
                 }
-                tmp_line_n[i_glob * m + w] += sum;
+                buf_line[bi * m + w] += sum;
             }
         }
     }
-    MPI_Allreduce(tmp_line_n, inverse_buf, n, MPI_DOUBLE, MPI_SUM, comm);
+    MPI_Allreduce(buf_line, B_buf, n, MPI_DOUBLE, MPI_SUM, comm);
 
-    double max = inverse_buf[0];
-    for(int i = 0; i < n; ++i) {
-        if(inverse_buf[i] > max) max = inverse_buf[i];
+    final_result= B_buf[0];
+    for(int i = 0; i < n; ++i) 
+    {
+        if(B_buf[i] > final_result)
+        { 
+            final_result= B_buf[i];
+        }
     }
-    return max;
+    return final_result;
 }
 
 double Norm(Args *a)
@@ -940,19 +1130,6 @@ void BlockMul(double *a, double* b, double* c, int n1, int m12, int n2)
     }       
 }
 
-void ReplaceWith(double*A, double*B, int row_size, int col_size)
-{
-    for (int i = 0; i < row_size; i++)
-    {
-        for (int j = 0; j < col_size; j++, A++, B++)
-        {
-            *A = *B;
-        }
-        
-    }
-    
-}
-
 bool MatrixIsZero(double* A, int col_size, int row_size, double eps)
 {
     int i,j;
@@ -1002,13 +1179,13 @@ void FirstStep(Args *a)
     int k = a->K;
     int K = a->k;
     int rows = a->rows;
-    int block_size_row = m, block_size_col, size = a->s, down_block_size_row = m, down_block_size_col;
+    int block_size_row = m, block_size_col, /*size = a->s,*/ down_block_size_row = m, down_block_size_col;
     double* pa, *pa_side, *pa_down, *pa_down_side, *pb, *pb_down; 
-    bool* ZerosMatrix = a->ZerosMatrix;
-    int up_bound = rows;
+    //bool* ZerosMatrix = a->ZerosMatrix;
+    //int up_bound = rows;
     int rows_up_bound = rows;
     int col_up_bound = (l > 0 ? k+1: k);
-    double eps = (a->norm > 10 && size != 4?  EPSILON : a->norm);
+    //double eps = (a->norm > 10 && size != 4?  EPSILON : a->norm);
     bool last_line_isnt_fool = a->last_line_isnt_fool;
 
     int s = (a->cur_str);
@@ -1116,9 +1293,9 @@ void SecondStepUpgr(Args* aA)
     double* pa, *pa_side, *pa_down, *pa_down_side, *pb, *pb_down; 
     double* buf_pa = aA->buf, *buf_pb = (aA->buf + n*m);
     double* ZeroMatrix = aA->ZeroMatrix;
-    bool* ZerosMatrix = aA->ZerosMatrix;
+    //bool* ZerosMatrix = aA->ZerosMatrix;
     
-    double eps = (aA->norm > 10 && size != 4 ? EPSILON : aA->norm);
+    //double eps = (aA->norm > 10 && size != 4 ? EPSILON : aA->norm);
     
     int up_bound = (l > 0 ? k+1: k);
 
@@ -1398,9 +1575,9 @@ void SecondStep(Args* aA)
     double* pa, *pa_side, *pa_down, *pa_down_side, *pb, *pb_down; 
     double* buf_pa = aA->buf, *buf_pb = (aA->buf + n*m);
     double* ZeroMatrix = aA->ZeroMatrix;
-    bool* ZerosMatrix = aA->ZerosMatrix;
+    //bool* ZerosMatrix = aA->ZerosMatrix;
     
-    double eps = (aA->norm > 10 && size != 4 ? EPSILON : aA->norm);
+    //double eps = (aA->norm > 10 && size != 4 ? EPSILON : aA->norm);
     
     int up_bound = (l > 0 ? k+1: k);
 
@@ -1807,12 +1984,12 @@ void ThirdStep(Args *a)
     int bj, s;
     int k = (n-l)/m;
     int bi,  r, new_s;
-    int rows = a->rows;
+    //int rows = a->rows;
     int owner;
     int block_size_col, size = a->s, block_size_row;
     int up_bound = (l > 0 ? k+1 : k);
     MPI_Comm comm = a->comm;
-    MPI_Status st;
+    //MPI_Status st;
    
     s = K + p*(a->cur_str - 1);
     new_s = a->cur_str-1;
@@ -1841,10 +2018,10 @@ void ThirdStep(Args *a)
 
             for (r = new_s ; r >= 0; r --)
             {
-                /*if ((size == 3 && (r <= bj || bj == 0)) || size != 3)
-                {*/
+                if ((size == 3 && (r <= bj || bj == 0)) || size != 3)
+                {
                     MinusEqualBlockMul(B + r*m*n + bj*m*m, A + r*m*n + bi*m*m, pb + bj*block_size_row*m, m, block_size_row, block_size_col);
-                //}
+                }
             }
             
         }
@@ -1859,8 +2036,8 @@ int InverseMatrixParallel(Args* a)
     int l = a->l;
     int bi, rows = a->rows, up_bound = (a->l == 0 ? K : K+1);
     int res_l, res_g = 0; 
-    int cur_global_str = k;
-    int send_size;
+    //int cur_global_str = k;
+    //int send_size;
 
     for (bi = 0; bi < up_bound; bi++)
     {
