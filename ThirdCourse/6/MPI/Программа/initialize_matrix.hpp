@@ -1,6 +1,6 @@
 #ifndef HEADER2  
 #define HEADER2
-
+#include "algorithm.hpp"
 int get_max_rows(int n, int m, int p);
 int get_rows(int n, int m, int p, int k);
 void FormulaMatrixInitialization(double* A, int n, int m, int p, int K, int s);

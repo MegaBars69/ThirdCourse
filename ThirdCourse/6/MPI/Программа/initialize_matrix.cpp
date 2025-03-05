@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <cstring>
 #include "initialize_matrix.hpp"
+#include "algorithm.hpp"
 
 using namespace std;
 
@@ -187,6 +188,7 @@ void PrintLocalMatrix(double* A,  int n, int m, int p, int K, int r)
     }    
     cout<<endl;
 }
+
 
 void PrintAllData(double* A, int n, int m, int p, int K)
 {

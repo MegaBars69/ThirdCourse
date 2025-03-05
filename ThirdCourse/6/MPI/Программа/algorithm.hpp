@@ -45,11 +45,6 @@ class Args
         int nomer_v_okne = 0;
         int shag = 0;
         int send_size = 0;
-        
-        void PLM() const 
-        {
-            PrintLocalMatrix(A, n, m, p ,k, r);
-        }
 
         void PrintInfo() 
         {
@@ -80,7 +75,16 @@ class Args
                 printf("Last row is bad\n");
             }
             
-            PrintLocalMatrix(A, n, m, p ,k, r);
+            //PrintLocalMatrix(A, n, m, p ,k, r);
+            /*
+            for(int bi = 0; bi< max_rows;bi++)
+            {
+                for (int bj = 0; bj < K+1; bj++)
+                {
+                    std::cout<<ZerosMatrix[bi*(K+1) + bj]<<" ";
+                }
+                std::cout<<std::endl;
+            }*/
             //printf("res: %lf \n", res);
             /*std::cout<<"BUFFER"<<": ";
             for(cur_global_str = 0; cur_global_str < (2*n + m)*m; cur_global_str++)
@@ -105,6 +109,7 @@ void BlockMul(double *a, double* b, double* c, int n1, int m12, int n2);
 double Norm(Args* a);
 void FirstStep(double* A, double* B, double* U, double norm, int n, int m, int p, int K, int shag, Args *a);
 double Discrepancy(double* A, double* B, Args* a) ;
+void PrintZeros(Args *a);
 
 int InverseMatrixParallel(Args* a);
 #endif

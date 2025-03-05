@@ -61,6 +61,7 @@ int main(int argc, char* argv[])
     a.active_procceses = a.p = (n/m + (l == 0 ? 0 : 1) >= p ? p : n/m + (l == 0 ? 0 : 1));
     a.k = proc_num;
     a.l = l;
+    a.s = s;
     a.K = k;
     a.r = r;
     a.nomer_v_okne = proc_num;
@@ -72,7 +73,7 @@ int main(int argc, char* argv[])
     double* B = new double/*[n*m*(max_rows+p)]*/ [(max_rows + 1) * m * n + p * m * m];
     double* buf = new double[2*(n + m)*m];
     double* U = new double[(m+1)*(m+1)];
-    bool* ZerosMatrix = new bool[(k+1)*(k+1)];
+    bool* ZerosMatrix = new bool[(k+1)*max_rows];
     double* ZeroMatrix = new double[m*m];
     double* ProductResult = new double[m*m];
     double* results = new double[n];
@@ -116,19 +117,21 @@ int main(int argc, char* argv[])
     memset(results, 0, n*sizeof(double));
     memset(buf, 0, 2*(n + m)*m*sizeof(double));
     memset(ZeroMatrix, 0, m*m*sizeof(double));
+    memset(ZerosMatrix, 0, (k+1)*max_rows*sizeof(bool));
 
    
     //memset(A, 0, n*m*(max_rows + p)*sizeof(double));
-
-    for (int i = 0; i < k+1; i++)
+    
+    for (int i = 0; i < max_rows; i++)
     {
+        int glob_i = i*p + proc_num;
         for (int j = 0; j < k + 1; j++)
         {
-            ZerosMatrix[i*(k+1) + j] = (i == j);
+            ZerosMatrix[i*(k+1) + j] = (glob_i == j);
         }
-        
     }
 
+    
     if (s == 0)
     {
         er_l = ReadMatrixFromFile(A, n, m, p, proc_num, argv[5], buf, comm);
@@ -201,7 +204,6 @@ int main(int argc, char* argv[])
     a.results = results;
     a.norm = Norm(&a);
     a.norm *= EPSILON;
-
 
     MPI_Barrier(comm);
     t1 = get_full_time();
