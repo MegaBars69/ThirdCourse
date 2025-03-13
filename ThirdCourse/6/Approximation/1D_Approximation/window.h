@@ -15,6 +15,15 @@ private:
   int n;
   double (*f) (double);
 
+  // Перечисление для типов аппроксимации
+  enum ApproximationType {
+    SPLINE,
+    CHEBYSHEV,
+    BOTH
+  };
+
+  ApproximationType currentApproximation; // Текущий тип аппроксимации
+
 public:
   Window (QWidget *parent);
 
@@ -23,11 +32,14 @@ public:
 
   int parse_command_line (int argc, char *argv[]);
   QPointF l2g (double x_loc, double y_loc, double y_min, double y_max);
+
 public slots:
   void change_func ();
+  void toggle_approximation(); // Метод для переключения типа аппроксимации
 
 protected:
   void paintEvent (QPaintEvent *event);
+  void keyPressEvent(QKeyEvent *event) override; // Обработчик нажатий клавиш
 };
 
 #endif

@@ -53,11 +53,12 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = main.cpp \
-		window.cpp moc_window.cpp approximation.cpp
+		window.cpp moc_window.cpp chebyshov_approximation.cpp spline_approximation.cpp
 OBJECTS       = main.o \
 		window.o \
 		moc_window.o \
-		approximation.o 
+		chebyshov_approximation.o \
+		spline_approximation.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -377,7 +378,7 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 main.o: main.cpp window.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
-window.o: window.cpp approximation.hpp \
+window.o: window.cpp chebyshov_approximation.hpp spline_approximation.hpp\
 		window.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o window.o window.cpp
 

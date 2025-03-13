@@ -27,6 +27,9 @@ int main (int argc, char *argv[])
   action = tool_bar->addAction ("&Change function", graph_area, SLOT (change_func ()));
   action->setShortcut (QString ("0"));
 
+  action = tool_bar->addAction ("&Change approximation", graph_area, SLOT (toggle_approximation ()));
+  action->setShortcut (QString ("1"));
+
   action = tool_bar->addAction ("E&xit", window, SLOT (close ()));
   action->setShortcut (QString ("Ctrl+X"));
 
