@@ -30,7 +30,19 @@ int main (int argc, char *argv[])
   action = tool_bar->addAction ("&Change approximation", graph_area, SLOT (toggle_approximation ()));
   action->setShortcut (QString ("1"));
 
-  action = tool_bar->addAction ("E&xit", window, SLOT (close ()));
+  action = tool_bar->addAction ("&Zoom in", graph_area, SLOT (zoom_in()));
+  action->setShortcut (QString ("2"));
+
+  action = tool_bar->addAction ("&Zoom out", graph_area, SLOT (zoom_out ()));
+  action->setShortcut (QString ("3"));
+
+  action = tool_bar->addAction ("&points +", graph_area, SLOT (increase_points ()));
+  action->setShortcut (QString ("4"));
+
+  action = tool_bar->addAction ("&points -", graph_area, SLOT (decrease_points ()));
+  action->setShortcut (QString ("5"));
+
+  action = tool_bar->addAction ("&Exit", window, SLOT (close ()));
   action->setShortcut (QString ("Ctrl+X"));
 
   tool_bar->setMaximumHeight (30);

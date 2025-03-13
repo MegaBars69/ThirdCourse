@@ -57,6 +57,7 @@ void ChebyshovAproximation(int n, double* f, double* a, double*g, double* g2, do
 
 double ChebyshovValue(double X, double A, double B, int n, double* a)
 {
+    X/=2;
     double z = (2*X-(B+A))/(B-A);
     double T_i_2 = 1, T_i_1 = z, T_i=0;
     double Pf;

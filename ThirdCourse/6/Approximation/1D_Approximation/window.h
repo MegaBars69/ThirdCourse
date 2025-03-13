@@ -12,14 +12,15 @@ private:
   const char *f_name;
   double a;
   double b;
-  int n;
+  int n; // Количество точек аппроксимации
   double (*f) (double);
 
   // Перечисление для типов аппроксимации
   enum ApproximationType {
     SPLINE,
     CHEBYSHEV,
-    BOTH
+    BOTH,
+    ERRORS
   };
 
   ApproximationType currentApproximation; // Текущий тип аппроксимации
@@ -36,6 +37,10 @@ public:
 public slots:
   void change_func ();
   void toggle_approximation(); // Метод для переключения типа аппроксимации
+  void zoom_in();  // Уменьшение отрезка [a, b] в 2 раза
+  void zoom_out(); // Увеличение отрезка [a, b] в 2 раза
+  void increase_points(); // Увеличение количества точек в 2 раза
+  void decrease_points(); // Уменьшение количества точек в 2 раза
 
 protected:
   void paintEvent (QPaintEvent *event);
