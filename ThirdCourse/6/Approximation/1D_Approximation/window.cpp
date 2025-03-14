@@ -237,6 +237,22 @@ QPointF Window::l2g (double x_loc, double y_loc, double y_min, double y_max)
   return QPointF (x_gl, y_gl);
 }
 
+void drawSmiley(QPainter &painter, int x, int y, int size) {
+  // Рисуем лицо
+  painter.drawEllipse(x, y, size, size);
+
+  // Рисуем глаза
+  painter.setBrush(Qt::black);
+  painter.drawEllipse(x + size / 4, y + size / 4, size / 8, size / 8); // Левый глаз
+  painter.drawEllipse(x + 3 * size / 4 - size / 8, y + size / 4, size / 8, size / 8); // Правый глаз
+
+  // Рисуем улыбку
+  QPainterPath smile;
+  smile.moveTo(x + size / 4, y + size / 2);
+  smile.quadTo(x + size / 2, y + 3 * size / 4, x + 3 * size / 4, y + size / 2);
+  painter.drawPath(smile);
+}
+
 void Window::paintEvent (QPaintEvent *)
 {
   QPainter painter (this);
@@ -249,9 +265,10 @@ void Window::paintEvent (QPaintEvent *)
   double max, gmax; 
   const char* prefix = "max{|Fmax||,|Fmin|} = ";
   char* strochka;
+  QColor brightCyan(29, 177, 222);
   QPen pen_black(Qt::black, 2, Qt::SolidLine);
   QPen pen_red(Qt::red, 0, Qt::SolidLine);
-  QPen pen_blue(Qt::blue, 3, Qt::SolidLine);
+  QPen pen_blue(brightCyan, 3, Qt::SolidLine);
   QPen pen_green(Qt::green, 3, Qt::SolidLine);
   QPen pen_grid(Qt::lightGray, 0, Qt::DotLine); 
   
@@ -542,15 +559,15 @@ void Window::paintEvent (QPaintEvent *)
   {
     painter.setPen ("black");
     painter.drawText (0, 45, "Chebyshev Approximation");
-    painter.setBrush(Qt::blue);
-    painter.drawRect(210, 35, 10, 10);
+    painter.setBrush(brightCyan);
+    drawSmiley(painter, 210, 35, 20); 
   }
   else if(currentApproximation == SPLINE)
   {
     painter.setPen ("black");
     painter.drawText (0, 45, "Spline Approximation");
     painter.setBrush(Qt::green);
-    painter.drawRect(170, 35, 10, 10);
+    drawSmiley(painter, 170, 35, 20); 
   }
   else if(currentApproximation == BOTH)
   {
@@ -558,9 +575,9 @@ void Window::paintEvent (QPaintEvent *)
     painter.drawText (0, 45, "Spline Approximation");
     painter.drawText (0, 70, "Chebyshev Approximation");
     painter.setBrush(Qt::green);
-    painter.drawRect(170, 35, 10, 10);
-    painter.setBrush(Qt::blue);
-    painter.drawRect(210, 60, 10, 10);
+    drawSmiley(painter, 170, 35, 20); 
+    painter.setBrush(brightCyan);
+    drawSmiley(painter, 210, 60, 20); 
   }
   else if(currentApproximation == ERRORS)
   {
@@ -576,7 +593,7 @@ void Window::paintEvent (QPaintEvent *)
   auto draw_x_mark = [&](double x_value) {
     QPointF mark_pos = l2g(x_value, 0, min_y, max_y);
     painter.drawLine(mark_pos.x(), mark_pos.y() - 5, mark_pos.x(), mark_pos.y() + 5);
-    painter.drawText(mark_pos.x()*0.96 + 5, mark_pos.y() + 20, QString::number(x_value));
+    painter.drawText(mark_pos.x()*0.97 + 5, mark_pos.y() - 20, QString::number(x_value));
   };
 
   draw_x_mark(a);
