@@ -8,12 +8,13 @@ class Window : public QWidget
   Q_OBJECT
 
 private:
-  int func_id;
-  const char *f_name;
-  double a;
-  double b;
-  int n; // Количество точек аппроксимации
-  double (*f) (double);
+  int func_id = 0;
+  const char *f_name= nullptr;
+  double a = -1;
+  double b = 1;
+  int n = 0; 
+  int p = 0;
+  double (*f) (double) = nullptr;
 
   // Перечисление для типов аппроксимации
   enum ApproximationType {
@@ -23,7 +24,7 @@ private:
     ERRORS
   };
 
-  ApproximationType currentApproximation; // Текущий тип аппроксимации
+  ApproximationType currentApproximation = SPLINE; // Текущий тип аппроксимации
 
 public:
   Window (QWidget *parent);
@@ -41,7 +42,8 @@ public slots:
   void zoom_out(); // Увеличение отрезка [a, b] в 2 раза
   void increase_points(); // Увеличение количества точек в 2 раза
   void decrease_points(); // Уменьшение количества точек в 2 раза
-
+  void point_down();
+  void point_up();
 protected:
   void paintEvent (QPaintEvent *event);
   void keyPressEvent(QKeyEvent *event) override; // Обработчик нажатий клавиш

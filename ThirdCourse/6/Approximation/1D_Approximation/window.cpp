@@ -1,4 +1,3 @@
-
 #include <QPainter>
 #include <stdio.h>
 #include <iostream>
@@ -61,7 +60,7 @@ Window::Window (QWidget *parent) : QWidget (parent)
   b = DEFAULT_B;
   n = DEFAULT_N;
   func_id = 0;
-  currentApproximation = SPLINE; // По умолчанию используем сплайн
+  currentApproximation = SPLINE;
   change_func ();
 }
 
@@ -93,7 +92,6 @@ int Window::parse_command_line (int argc, char *argv[])
   return 0;
 }
 
-/// change current function for drawing
 void Window::change_func ()
 {
   func_id = (func_id + 1) % 7;
@@ -133,7 +131,6 @@ void Window::change_func ()
 }
 void Window::toggle_approximation()
 {
-  // Циклическое переключение между типами аппроксимации
   if (currentApproximation == SPLINE)
     currentApproximation = CHEBYSHEV;
   else if (currentApproximation == CHEBYSHEV)
@@ -149,42 +146,52 @@ void Window::toggle_approximation()
     currentApproximation = SPLINE;
   }
 
-  update(); // Обновляем график
+  update();
 }
 
 void Window::zoom_in()
 {
-  // Уменьшаем отрезок [a, b] в 2 раза
   double center = (a + b) / 2.0;
-  double half_length = (b - a) / 4.0; // Уменьшаем длину отрезка в 2 раза
+  double half_length = (b - a) / 4.0;
   a = center - half_length;
   b = center + half_length;
-  update(); // Перерисовываем график
+  update();
 }
 
 void Window::zoom_out()
 {
-  // Увеличиваем отрезок [a, b] в 2 раза
   double center = (a + b) / 2.0;
-  double half_length = (b - a); // Увеличиваем длину отрезка в 2 раза
+  double half_length = (b - a);
   a = center - half_length;
   b = center + half_length;
-  update(); // Перерисовываем график
+  update();
 }
 
 void Window::increase_points()
 {
-  n *= 2; // Увеличиваем количество точек в 2 раза
-  update(); // Перерисовываем график
+  n *= 2;
+  update();
 }
 
 void Window::decrease_points()
 {
-  if (n > 2) // Минимальное количество точек — 2
+  if (n > 2)
   {
-    n /= 2; // Уменьшаем количество точек в 2 раза
-    update(); // Перерисовываем график
+    n /= 2;
+    update();
   }
+}
+
+void Window::point_down()
+{
+  p--;
+  update();
+}
+
+void Window::point_up()
+{
+  p++;
+  update();
 }
 
 void Window::keyPressEvent(QKeyEvent *event)
@@ -199,19 +206,27 @@ void Window::keyPressEvent(QKeyEvent *event)
   }
   else if (event->key() == Qt::Key_2)
   {
-    zoom_in(); // Уменьшаем отрезок [a, b] в 2 раза
+    zoom_in();
   }
   else if (event->key() == Qt::Key_3)
   {
-    zoom_out(); // Увеличиваем отрезок [a, b] в 2 раза
+    zoom_out();
   }
   else if (event->key() == Qt::Key_4)
   {
-    increase_points(); // Увеличиваем количество точек в 2 раза
+    increase_points();
   }
   else if (event->key() == Qt::Key_5)
   {
-    decrease_points(); // Уменьшаем количество точек в 2 раза
+    decrease_points();
+  }
+  else if (event->key() == Qt::Key_6)
+  {
+    point_up();
+  }
+  else if (event->key() == Qt::Key_7)
+  {
+    point_down();
   }
 }
 
@@ -222,7 +237,6 @@ QPointF Window::l2g (double x_loc, double y_loc, double y_min, double y_max)
   return QPointF (x_gl, y_gl);
 }
 
-/// render graph
 void Window::paintEvent (QPaintEvent *)
 {
   QPainter painter (this);
@@ -232,17 +246,16 @@ void Window::paintEvent (QPaintEvent *)
   double step = 0;
   double xm = 0;
   double delta_y, delta_x = (b - a) / M;
-  double max; 
-  const char* prefix;
+  double max, gmax; 
+  const char* prefix = "max{|Fmax||,|Fmin|} = ";
   char* strochka;
   QPen pen_black(Qt::black, 2, Qt::SolidLine);
   QPen pen_red(Qt::red, 0, Qt::SolidLine);
   QPen pen_blue(Qt::blue, 3, Qt::SolidLine);
   QPen pen_green(Qt::green, 3, Qt::SolidLine);
-  QPen pen_grid(Qt::lightGray, 0, Qt::DotLine); // Перо для сетки
+  QPen pen_grid(Qt::lightGray, 0, Qt::DotLine); 
   
-  // Вычисляем min_y и max_y для текущей функции
-  max_y = min_y = f(a); // Инициализируем min_y и max_y значением функции в точке a
+  max_y = min_y = f(a); 
   for (x1 = a; x1 <= b; x1 += delta_x)
   {
     y1 = f(x1);
@@ -252,19 +265,15 @@ void Window::paintEvent (QPaintEvent *)
       max_y = y1;
   }
   
-  // Добавляем небольшой отступ для красоты
   delta_y = 0.1 * (max_y - min_y);
   min_y -= delta_y;
   max_y += delta_y;
-  
-  // Рисуем клетчатую бумагу (сетку)
+  gmax = (fabs(min_y) < fabs(max_y) ? fabs(max_y) : fabs(min_y));
   painter.setPen(pen_grid);
 
-  // Шаг сетки (можно настроить)
-  double grid_step_x = (b - a) / 20.0; // Шаг по оси X
-  double grid_step_y = (max_y - min_y) / 20.0; // Шаг по оси Y (автоматически рассчитывается)
+  double grid_step_x = (b - a) / 20.0;
+  double grid_step_y = (max_y - min_y) / 20.0;
   
-  // Вертикальные линии сетки
   for (double x = a; x <= b; x += grid_step_x)
   {
     QPointF start = l2g(x, min_y, min_y, max_y);
@@ -288,7 +297,6 @@ void Window::paintEvent (QPaintEvent *)
     }
   }
   
-  // Горизонтальные линии сетки
   for (double y = min_y; y <= max_y; y += grid_step_y)
   {
     QPointF start = l2g(a, y, min_y, max_y);
@@ -304,30 +312,35 @@ void Window::paintEvent (QPaintEvent *)
   double *z = new double[n];
   double *F = new double[n];
   double *dF = new double[n];
+  strochka = new char[strlen(prefix) + 20]; 
   memset(alpha, 0, n*sizeof(double));
   memset(g, 0, n*sizeof(double));
   memset(g2, 0, n*sizeof(double));
   memset(z, 0, n*sizeof(double));
   memset(c, 0, 4*n*sizeof(double));
 
-  if ((n<=50) && (currentApproximation == CHEBYSHEV || currentApproximation == BOTH)) // Используем аппроксимацию Чебышева
+  if ((n<=50) && (currentApproximation == CHEBYSHEV || currentApproximation == BOTH))
   {
     painter.setPen (pen_blue);
 
     for (int m = 0; m < n; m++)
     {
       xm = (a + b) / 2 + (b - a) * cos(PI * (2 * m + 1) / (2 * n));
-      F[m] = f(xm);
+      if(m != n/2)
+      {
+        F[m] = f(xm);
+      }
+      else
+      {
+        F[m] = f(xm) + p*0.1*gmax;
+      }
     }
     ChebyshovAproximation(n, F, alpha, g, g2, z);
 
-    // calculate min and max for current function
     max_y = min_y = 0;
     for (x1 = a; x1 - b < 1.e-6; x1 += delta_x)
       {
         y1 = ChebyshovValue(x1, a,b,n,alpha);
-        //std::cout<<"("<<x1<<", "<<y1<<")"<<"\n";
-        //y1 = f(x1);
         if (y1 < min_y)
           min_y = y1;
         if (y1 > max_y)
@@ -337,32 +350,23 @@ void Window::paintEvent (QPaintEvent *)
     delta_y = 0.01 * (max_y - min_y);
     min_y -= delta_y;
     max_y += delta_y;
-    double max = (fabs(min_y) < fabs(max_y) ? fabs(max_y) : fabs(min_y));
-    const char* prefix = "max{|Fmax||,|Fmin|} = "; 
-    char* strochka = new char[strlen(prefix) + 20]; 
+    max = (fabs(min_y) < fabs(max_y) ? fabs(max_y) : fabs(min_y));
+    prefix = "max{|Fmax||,|Fmin|} = "; 
 
     sprintf(strochka, "%s%lf", prefix, max);
     painter.drawText (0, 110, strochka);
 
-    // draw approximated line for graph
     x1 = a;
     y1 = ChebyshovValue(x1, a,b,n,alpha); 
      
-    //y1 = f(x1);
-    //std::cout<<"Chebyshev ";
     for (x2 = x1 + delta_x; x2 - b < 1.e-6; x2 += delta_x) 
       {
         y2 = ChebyshovValue(x2, a,b,n,alpha);
-        //std::cout<<"("<<x2<<", "<<y2<<")"<<"\n";
-
-        //y2 = f(x2);
-        // local coords are converted to draw coords
         painter.drawLine (L2G(x1, y1), L2G(x2, y2));
 
         x1 = x2, y1 = y2;
       }
     x2 = b;
-    //y2 = f(x2);
     y2 = ChebyshovValue(x2, a,b,n,alpha);
     painter.drawLine (L2G(x1, y1), L2G(x2, y2));
   }
@@ -375,7 +379,14 @@ void Window::paintEvent (QPaintEvent *)
     {
       xm = (a + m*step);
       z[m] = xm;
-      F[m] = f(xm);
+      if(m != n/2)
+      {
+        F[m] = f(xm);
+      }
+      else
+      {
+        F[m] = f(xm) + p*0.1*gmax;
+      }
     }
     CalculateDiferences(dF, z, F, n);
     double left_derivative = derivativeF(f,a);
@@ -383,16 +394,10 @@ void Window::paintEvent (QPaintEvent *)
     CalculateParametrs(A, g, dF, z, left_derivative, right_derivative, n);
     CalculateCoeficients(c, z, g, dF, F, n);
 
-    // calculate min and max for current function
-    //std::cout<<"Spline ";
-    
     max_y = min_y = 0;
     for (x1 = a; x1 - b < 1.e-6; x1 += delta_x)
       {
         y1 = SplineValue(x1, a, b, n, c, z);
-        //std::cout<<"("<<x1<<", "<<y1<<")"<<"\n";
-
-        //y1 = f(x1);
         if (y1 < min_y)
           min_y = y1;
         if (y1 > max_y)
@@ -404,29 +409,21 @@ void Window::paintEvent (QPaintEvent *)
     max_y += delta_y;
     max = (fabs(min_y) < fabs(max_y) ? fabs(max_y) : fabs(min_y));
     prefix = "max{|Fmax||,|Fmin|} = "; 
-    strochka = new char[strlen(prefix) + 20]; 
 
     sprintf(strochka, "%s%lf", prefix, max);
     painter.drawText (0, 130, strochka);
 
-    // draw approximated line for graph
     x1 = a;
     y1 = SplineValue(x1, a, b, n, c, z);
-   // std::cout<<"("<<x1<<", "<<y1<<")"<<"\n";
 
-    //y1 = f(x1);
     for (x2 = x1 + delta_x; x2 - b < 1.e-6; x2 += delta_x) 
       {
         y2 = SplineValue(x2, a, b, n, c, z);
-        //std::cout<<"("<<x2<<", "<<y2<<")"<<"\n";
-        //y2 = f(x2);
-        // local coords are converted to draw coords
         painter.drawLine (L2G(x1, y1), L2G(x2, y2));
 
         x1 = x2, y1 = y2;
       }
     x2 = b;
-    //y2 = f(x2);
     y2 = SplineValue(x2, a, b, n, c, z);
     painter.drawLine (L2G(x1, y1), L2G(x2, y2));
   }
@@ -441,13 +438,10 @@ void Window::paintEvent (QPaintEvent *)
       }
       ChebyshovAproximation(n, F, alpha, g, g2, z);
 
-      // calculate min and max for current function
       max_y = min_y = 0;
       for (x1 = a; x1 - b < 1.e-6; x1 += delta_x)
         {
           y1 = ChebyshovValue(x1, a,b,n,alpha) - f(x1);
-          //std::cout<<"("<<x1<<", "<<y1<<")"<<"\n";
-          //y1 = f(x1);
           if (y1 < min_y)
             min_y = y1;
           if (y1 > max_y)
@@ -459,33 +453,23 @@ void Window::paintEvent (QPaintEvent *)
       max_y += delta_y;
       max = (fabs(min_y) < fabs(max_y) ? fabs(max_y) : fabs(min_y));
       prefix = "max{|Fmax||,|Fmin|} = "; 
-      strochka = new char[strlen(prefix) + 20]; 
 
       sprintf(strochka, "%s%lf", prefix, max);
       painter.drawText (0, 110, strochka);
 
-      // draw approximated line for graph
       x1 = a;
       y1 = ChebyshovValue(x1, a,b,n,alpha); 
       
-      //y1 = f(x1);
-      //std::cout<<"Chebyshev ";
       for (x2 = x1 + delta_x; x2 - b < 1.e-6; x2 += delta_x) 
         {
           y2 = ChebyshovValue(x2, a,b,n,alpha) - f(x2);
-          //std::cout<<"("<<x2<<", "<<y2<<")"<<"\n";
-
-          //y2 = f(x2);
-          // local coords are converted to draw coords
           painter.drawLine (L2G(x1, y1), L2G(x2, y2));
 
           x1 = x2, y1 = y2;
         }
       x2 = b;
-      //y2 = f(x2);
       y2 = ChebyshovValue(x2, a,b,n,alpha);
       painter.drawLine (L2G(x1, y1), L2G(x2, y2));
-
 
       painter.setPen (pen_green);
 
@@ -502,16 +486,10 @@ void Window::paintEvent (QPaintEvent *)
       CalculateParametrs(A, g, dF, z, left_derivative, right_derivative, n);
       CalculateCoeficients(c, z, g, dF, F, n);
 
-      // calculate min and max for current function
-      //std::cout<<"Spline ";
-      
       max_y = min_y = 0;
       for (x1 = a; x1 - b < 1.e-6; x1 += delta_x)
         {
           y1 = SplineValue(x1, a, b, n, c, z) - f(x1);
-          //std::cout<<"("<<x1<<", "<<y1<<")"<<"\n";
-
-          //y1 = f(x1);
           if (y1 < min_y)
             min_y = y1;
           if (y1 > max_y)
@@ -521,65 +499,58 @@ void Window::paintEvent (QPaintEvent *)
       delta_y = 0.01 * (max_y - min_y);
       min_y -= delta_y;
       max_y += delta_y;
-      double max = (fabs(min_y) < fabs(max_y) ? fabs(max_y) : fabs(min_y));
-      const char* prefix = "max{|Fmax||,|Fmin|} = "; 
-      char* strochka = new char[strlen(prefix) + 20]; 
+      max = (fabs(min_y) < fabs(max_y) ? fabs(max_y) : fabs(min_y));
+      prefix = "max{|Fmax||,|Fmin|} = "; 
 
       sprintf(strochka, "%s%lf", prefix, max);
       painter.drawText (0, 130, strochka);
 
-      // draw approximated line for graph
       x1 = a;
       y1 = SplineValue(x1, a, b, n, c, z);
-    // std::cout<<"("<<x1<<", "<<y1<<")"<<"\n";
-
-      //y1 = f(x1);
+      
       for (x2 = x1 + delta_x; x2 - b < 1.e-6; x2 += delta_x) 
         {
           y2 = SplineValue(x2, a, b, n, c, z) - f(x2);
-          //std::cout<<"("<<x2<<", "<<y2<<")"<<"\n";
-          //y2 = f(x2);
-          // local coords are converted to draw coords
           painter.drawLine (L2G(x1, y1), L2G(x2, y2));
 
           x1 = x2, y1 = y2;
         }
       x2 = b;
-      //y2 = f(x2);
       y2 = SplineValue(x2, a, b, n, c, z);
       painter.drawLine (L2G(x1, y1), L2G(x2, y2));
     
   }
-  // draw axis
   painter.setPen (pen_black);
   painter.drawLine (L2G(a, 0), L2G(b, 0));
   painter.drawLine (L2G(0, min_y), L2G(0, max_y));
-
-  // render function name
-  painter.setPen ("black");
+  
+  QFont font2("Arial", 12, QFont::Bold); 
+  painter.setFont(font2);
+  painter.setPen (pen_black);
   painter.drawText (0, 20, f_name);
  
-
   prefix = "n = "; 
-  strochka = new char[strlen(prefix) + 20]; 
-
   sprintf(strochka, "%s%d", prefix, n);
-  painter.setPen ("black");
   painter.drawText (0, 95, strochka);
+
+  prefix = "p = "; 
+
+  sprintf(strochka, "%s%d", prefix, p);
+  painter.drawText (0, 155, strochka);
   
   if(currentApproximation == CHEBYSHEV)
   {
     painter.setPen ("black");
     painter.drawText (0, 45, "Chebyshev Approximation");
     painter.setBrush(Qt::blue);
-    painter.drawRect(180, 35, 10, 10);
+    painter.drawRect(210, 35, 10, 10);
   }
   else if(currentApproximation == SPLINE)
   {
     painter.setPen ("black");
     painter.drawText (0, 45, "Spline Approximation");
     painter.setBrush(Qt::green);
-    painter.drawRect(150, 35, 10, 10);
+    painter.drawRect(170, 35, 10, 10);
   }
   else if(currentApproximation == BOTH)
   {
@@ -587,9 +558,9 @@ void Window::paintEvent (QPaintEvent *)
     painter.drawText (0, 45, "Spline Approximation");
     painter.drawText (0, 70, "Chebyshev Approximation");
     painter.setBrush(Qt::green);
-    painter.drawRect(150, 35, 10, 10);
+    painter.drawRect(170, 35, 10, 10);
     painter.setBrush(Qt::blue);
-    painter.drawRect(180, 60, 10, 10);
+    painter.drawRect(210, 60, 10, 10);
   }
   else if(currentApproximation == ERRORS)
   {
@@ -597,24 +568,20 @@ void Window::paintEvent (QPaintEvent *)
     painter.drawText (0, 45, "ERRORS");
   }
 
-  // Рисуем отметки на оси X
   painter.setPen(pen_black);
   QFont font = painter.font();
-  font.setPointSize(10); // Устанавливаем размер шрифта для меток
+  font.setPointSize(10);
   painter.setFont(font);
 
-  // Функция для отрисовки отметки на оси X
   auto draw_x_mark = [&](double x_value) {
-    QPointF mark_pos = l2g(x_value, 0, min_y, max_y); // Позиция отметки на оси X
-    painter.drawLine(mark_pos.x(), mark_pos.y() - 5, mark_pos.x(), mark_pos.y() + 5); // Маленькая линия (тире)
-    painter.drawText(mark_pos.x()*0.96 + 5, mark_pos.y() + 20, QString::number(x_value)); // Текст с значением
+    QPointF mark_pos = l2g(x_value, 0, min_y, max_y);
+    painter.drawLine(mark_pos.x(), mark_pos.y() - 5, mark_pos.x(), mark_pos.y() + 5);
+    painter.drawText(mark_pos.x()*0.96 + 5, mark_pos.y() + 20, QString::number(x_value));
   };
 
-  // Отмечаем концы отрезка [a, b]
   draw_x_mark(a);
   draw_x_mark(b);
 
-  // Отмечаем точки 0, 1, -1, если они попадают в отрезок [a, b]
   if (a <= 0 && b >= 0) draw_x_mark(0);
   if (a <= 1 && b >= 1) draw_x_mark(1);
   if (a <= -1 && b >= -1) draw_x_mark(-1);
@@ -627,4 +594,5 @@ void Window::paintEvent (QPaintEvent *)
   delete[] dF;
   delete[] c;
   delete[] A;
+  delete[] strochka;
 }

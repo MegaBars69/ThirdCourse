@@ -42,6 +42,12 @@ int main (int argc, char *argv[])
   action = tool_bar->addAction ("&points -", graph_area, SLOT (decrease_points ()));
   action->setShortcut (QString ("5"));
 
+  action = tool_bar->addAction ("", graph_area, SLOT (point_up ()));
+  action->setShortcut (QString ("6"));
+
+  action = tool_bar->addAction ("", graph_area, SLOT (point_down()));
+  action->setShortcut (QString ("7"));
+
   action = tool_bar->addAction ("&Exit", window, SLOT (close ()));
   action->setShortcut (QString ("Ctrl+X"));
 
