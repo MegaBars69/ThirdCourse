@@ -11,10 +11,415 @@
 #include <unistd.h> 
 #include <sys/resource.h>
 #include <sys/sysinfo.h>
+#include <immintrin.h>
 #include "algorithm.hpp"
+#include <algorithm>
+
 #define EPSILON pow(10,-15)
 
 using namespace std;
+/*
+void BlockMul(double *a, double* b, double* c, int n1, int m12, int n2)
+{
+    int l_col = n2%3;
+    int l_row= n1%3;
+    int k_col = (n2-l_col)/3;
+    int k_row = (n1-l_row)/3; 
+    int bi, bj, r;
+    
+    double s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
+
+    for (bi = 0; bi < k_row; bi++)
+    {
+        for (bj = 0; bj < k_col; bj++)
+        {
+            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
+            for (r = 0; r < m12; r++)
+            {
+                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3];
+                s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s02 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2];
+                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3];
+                s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s12 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3];
+                s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s22 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 2];
+            }
+            c[bi*3*n2 + bj*3] = s00; c[bi*3*n2 + bj*3 + 1] = s01; c[bi*3*n2 + bj*3 + 2] = s02;
+            c[(bi*3 + 1)*n2 + bj*3] = s10; c[(bi*3 + 1)*n2 + bj*3 + 1] = s11; c[(bi*3 + 1)*n2 + bj*3 + 2] = s12;
+            c[(bi*3 + 2)*n2 + bj*3] = s20; c[(bi*3 + 2)*n2 + bj*3 + 1] = s21; c[(bi*3 + 2)*n2 + bj*3 + 2] = s22;
+        }
+        if (l_col != 0)
+        {
+
+            s00 = 0, s01 = 0, s10 = 0, s11 = 0, s20 = 0, s21 = 0;
+            for (r = 0; r < m12; r++)
+            {
+                if(l_col > 1)
+                { 
+                    s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                    s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                    s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3 + 1];
+
+                }
+                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3];
+                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3];
+                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3];
+            }
+
+            c[bi*3*n2 + k_col*3] = s00; 
+            c[(bi*3 + 1)*n2 + k_col*3] = s10;
+            c[(bi*3 + 2)*n2 + k_col*3] = s20;
+            if(l_col > 1)
+            { 
+                c[bi*3*n2 + k_col*3 + 1] = s01; 
+                c[(bi*3 + 1)*n2 + k_col*3 + 1] = s11;
+                c[(bi*3 + 2)*n2 + k_col*3 + 1] = s21;
+            }
+        }
+            
+    }
+
+    if(l_row != 0)
+    {
+        for (bj = 0; bj < k_col; bj++)
+        {
+            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0;
+            for (r = 0; r < m12; r++)
+            {
+                
+                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3];
+                s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s02 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                if(l_row > 1)
+                {
+                    s10 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3];
+                    s11 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
+                    s12 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                }
+            }
+
+            c[(k_row*3)*n2 + bj*3] = s00; c[(k_row*3 )*n2 + bj*3 + 1] = s01; c[(k_row*3 )*n2 + bj*3 + 2] = s02;
+            if (l_row > 1)
+            {
+                c[(k_row*3  + 1)*n2 + bj*3] = s10; c[(k_row*3 + 1)*n2 + bj*3 + 1] = s11; c[(k_row*3 + 1)*n2 + bj*3 + 2] = s12;
+            }
+            
+        }
+        if(l_col != 0)
+        {
+            s00 = 0, s01 = 0, s10 = 0, s11 = 0;
+            for (int r = 0; r < m12; r++)
+            {
+                
+                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 ];
+                if (l_col > 1)
+                {
+                    s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                }
+                if(l_row > 1)
+                {
+                    s10 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 ];
+                }
+                if (l_col > 1 && l_row > 1)
+                {
+                    s11 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                }
+                
+            }
+
+            c[(k_row*3)*n2 + k_col*3] = s00;
+            if (l_col>1)
+            {
+                c[(k_row*3)*n2 + k_col*3 + 1] = s01;
+            }
+            
+            if (l_row > 1)
+            {
+                c[(k_row*3 + 1)*n2 + k_col*3] = s10;
+                
+            }
+            if (l_row > 1 && l_col>1)
+            {
+                c[(k_row*3 + 1)*n2 + k_col*3 + 1] = s11;
+            }
+            
+        }     
+    }       
+}
+
+void MinusEqualBlockMul(double* Main, double *a, double* b, int n1, int m12, int n2)
+{
+    int l_col = n2%3;
+    int l_row= n1%3;
+    int k_col = (n2-l_col)/3;
+    int k_row = (n1-l_row)/3; 
+    int bi, bj, r;
+    
+    double s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
+
+    for ( bi = 0; bi < k_row; bi++)
+    {
+        for ( bj = 0; bj < k_col; bj++)
+        {
+            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
+            for ( r = 0; r < m12; r++)
+            {
+                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3];
+                s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s02 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2];
+                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3];
+                s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s12 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3];
+                s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s22 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 2];
+            }
+            Main[bi*3*n2 + bj*3] -= s00; Main[bi*3*n2 + bj*3 + 1] -= s01; Main[bi*3*n2 + bj*3 + 2] -= s02;
+            Main[(bi*3 + 1)*n2 + bj*3] -= s10; Main[(bi*3 + 1)*n2 + bj*3 + 1] -= s11; Main[(bi*3 + 1)*n2 + bj*3 + 2] -= s12;
+            Main[(bi*3 + 2)*n2 + bj*3] -= s20; Main[(bi*3 + 2)*n2 + bj*3 + 1] -= s21; Main[(bi*3 + 2)*n2 + bj*3 + 2] -= s22;
+        }
+        if (l_col != 0)
+        {
+
+            s00 = 0, s01 = 0, s10 = 0, s11 = 0, s20 = 0, s21 = 0;
+            for ( r = 0; r < m12; r++)
+            {
+                if(l_col > 1)
+                { 
+                    s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                    s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                    s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3 + 1];
+
+                }
+                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3];
+                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3];
+                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3];
+            }
+
+            Main[bi*3*n2 + k_col*3] -= s00; 
+            Main[(bi*3 + 1)*n2 + k_col*3] -= s10;
+            Main[(bi*3 + 2)*n2 + k_col*3] -= s20;
+            if(l_col > 1)
+            { 
+                Main[bi*3*n2 + k_col*3 + 1] -= s01; 
+                Main[(bi*3 + 1)*n2 + k_col*3 + 1] -= s11;
+                Main[(bi*3 + 2)*n2 + k_col*3 + 1] -= s21;
+            }
+        }
+            
+    }
+
+    if(l_row != 0)
+    {
+        for ( bj = 0; bj < k_col; bj++)
+        {
+            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0;
+            for ( r = 0; r < m12; r++)
+            {
+                
+                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3];
+                s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
+                s02 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                if(l_row > 1)
+                {
+                    s10 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3];
+                    s11 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
+                    s12 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
+                }
+            }
+
+            Main[(k_row*3)*n2 + bj*3] -= s00; Main[(k_row*3 )*n2 + bj*3 + 1] -= s01; Main[(k_row*3 )*n2 + bj*3 + 2] -= s02;
+            if (l_row > 1)
+            {
+                Main[(k_row*3  + 1)*n2 + bj*3] -= s10; Main[(k_row*3 + 1)*n2 + bj*3 + 1] -= s11; Main[(k_row*3 + 1)*n2 + bj*3 + 2] -= s12;
+            }
+            
+        }
+        if(l_col != 0)
+        {
+            s00 = 0, s01 = 0, s10 = 0, s11 = 0;
+            for ( r = 0; r < m12; r++)
+            {
+                
+                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 ];
+                if (l_col > 1)
+                {
+                    s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                }
+                if(l_row > 1)
+                {
+                    s10 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 ];
+                }
+                if (l_col > 1 && l_row > 1)
+                {
+                    s11 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
+                }
+                
+            }
+
+            Main[(k_row*3)*n2 + k_col*3] -= s00;
+            if (l_col>1)
+            {
+                Main[(k_row*3)*n2 + k_col*3 + 1] -= s01;
+            }
+            
+            if (l_row > 1)
+            {
+                Main[(k_row*3 + 1)*n2 + k_col*3] -= s10;
+            }
+            if (l_row > 1 && l_col>1)
+            {
+                Main[(k_row*3 + 1)*n2 + k_col*3 + 1] -= s11;
+            }
+            
+        }     
+    }       
+}
+*/
+
+void BlockMul(double* a, double* b, double* c,int n1, int m12, int n2) {
+    int n1_reminder = n1 % 4;
+    int n2_reminder = n2 % 4;
+    double s;
+    int i_l = 0;
+    int _n1 = n1 - n1_reminder;
+    int _n2 = n2 - n2_reminder;
+    int i = 0, j = 0, q = 0;
+    __m128d c00, c01, c10, c11, c20, c21, c30, c31;
+    for(i = 0; i < _n1; i += 4) 
+    {
+        for(j = 0; j < _n2; j+= 4)
+        {
+            c00 = _mm_setzero_pd(); c01 = _mm_setzero_pd();
+            c10 = _mm_setzero_pd(); c11 = _mm_setzero_pd();
+            c20 = _mm_setzero_pd(); c21 = _mm_setzero_pd();
+            c30 = _mm_setzero_pd(); c31 = _mm_setzero_pd();
+
+            for(q = 0; q < m12; ++q) 
+            {
+                __m128d a0 = _mm_load1_pd(a + m12 * (i) + q);
+                __m128d a1 = _mm_load1_pd(a + m12 * (i + 1) + q);
+                __m128d a2 = _mm_load1_pd(a + m12 * (i + 2) + q);
+                __m128d a3 = _mm_load1_pd(a + m12 * (i + 3) + q);
+                __m128d b0 = _mm_loadu_pd(b + n2 * q + (j));
+                __m128d b1 = _mm_loadu_pd(b + n2 * q + (j + 2));
+                c00 = _mm_add_pd(c00, _mm_mul_pd(a0, b0));
+                c01 = _mm_add_pd(c01, _mm_mul_pd(a0, b1));
+                c10 = _mm_add_pd(c10, _mm_mul_pd(a1, b0));
+                c11 = _mm_add_pd(c11, _mm_mul_pd(a1, b1));
+                c20 = _mm_add_pd(c20, _mm_mul_pd(a2, b0));
+                c21 = _mm_add_pd(c21, _mm_mul_pd(a2, b1));
+                c30 = _mm_add_pd(c30, _mm_mul_pd(a3, b0));
+                c31 = _mm_add_pd(c31, _mm_mul_pd(a3, b1));
+            }
+            _mm_storeu_pd(c + n2 * (i) + (j), c00);
+            _mm_storeu_pd(c + n2 * (i) + (j + 2), c01);
+            _mm_storeu_pd(c + n2 * (i + 1) + (j), c10);
+            _mm_storeu_pd(c + n2 * (i + 1) + (j + 2), c11);
+            _mm_storeu_pd(c + n2 * (i + 2) + (j), c20);
+            _mm_storeu_pd(c + n2 * (i + 2) + (j + 2), c21);
+            _mm_storeu_pd(c + n2 * (i + 3) + (j), c30);
+            _mm_storeu_pd(c + n2 * (i + 3) + (j + 2), c31);
+        }
+    }
+
+    s = 0;
+    i_l = j;
+    for(;i < n1; ++i) 
+    {
+        for(j = 0; j < n2; ++j) 
+        {
+            s = 0;
+            for(q = 0; q < m12; ++q) 
+            {
+                s += a[m12 * i + q] * b[n2 * q + j];
+            }
+            c[n2 * i + j] = s;
+        }
+    }
+    for(i = 0; i < _n1; ++i) 
+    {
+        for(j = i_l; j < n2; ++j) 
+        {
+            s = 0;
+            for(q = 0; q < m12; ++q) 
+            {
+                s += a[m12 * i + q] * b[n2 * q + j];
+            }
+            c[n2 * i + j] = s;
+        }
+    }
+}
+
+
+void MinusEqualBlockMul(double* c, double* a, double* b, int n1, int m12, int n2) {
+    int n1_reminder = n1 % 4;
+    int n2_reminder = n2 % 4;
+    int i_l;
+    double s;
+    int _n1 = n1 - n1_reminder;
+    int _n2 = n2 - n2_reminder;
+    int i = 0, j = 0, q = 0;
+    __m128d c00, c01, c10, c11, c20, c21, c30, c31;
+    for(i = 0; i < _n1; i += 4) 
+    {
+        for(j = 0; j < _n2; j+= 4) 
+        {
+            c00 = _mm_loadu_pd(c + n2 * (i) + (j));     c01 = _mm_loadu_pd(c + n2 * (i) + (j + 2));
+            c10 = _mm_loadu_pd(c + n2 * (i + 1) + (j)); c11 = _mm_loadu_pd(c + n2 * (i + 1) + (j + 2));
+            c20 = _mm_loadu_pd(c + n2 * (i + 2) + (j)); c21 = _mm_loadu_pd(c + n2 * (i + 2) + (j + 2));
+            c30 = _mm_loadu_pd(c + n2 * (i + 3) + (j)); c31 = _mm_loadu_pd(c + n2 * (i + 3) + (j + 2));
+
+            for(q = 0; q < m12; ++q) 
+            {
+                __m128d a0 = _mm_load1_pd(a + m12 * (i) + q);
+                __m128d a1 = _mm_load1_pd(a + m12 * (i + 1) + q);
+                __m128d a2 = _mm_load1_pd(a + m12 * (i + 2) + q);
+                __m128d a3 = _mm_load1_pd(a + m12 * (i + 3) + q);
+                __m128d b0 = _mm_loadu_pd(b + n2 * q + (j));
+                __m128d b1 = _mm_loadu_pd(b + n2 * q + (j + 2));
+                c00 = _mm_sub_pd(c00, _mm_mul_pd(a0, b0));
+                c01 = _mm_sub_pd(c01, _mm_mul_pd(a0, b1));
+                c10 = _mm_sub_pd(c10, _mm_mul_pd(a1, b0));
+                c11 = _mm_sub_pd(c11, _mm_mul_pd(a1, b1));
+                c20 = _mm_sub_pd(c20, _mm_mul_pd(a2, b0));
+                c21 = _mm_sub_pd(c21, _mm_mul_pd(a2, b1));
+                c30 = _mm_sub_pd(c30, _mm_mul_pd(a3, b0));
+                c31 = _mm_sub_pd(c31, _mm_mul_pd(a3, b1));
+            }
+            _mm_storeu_pd(c + n2 * (i) + (j), c00);
+            _mm_storeu_pd(c + n2 * (i) + (j + 2), c01);
+            _mm_storeu_pd(c + n2 * (i + 1) + (j), c10);
+            _mm_storeu_pd(c + n2 * (i + 1) + (j + 2), c11);
+            _mm_storeu_pd(c + n2 * (i + 2) + (j), c20);
+            _mm_storeu_pd(c + n2 * (i + 2) + (j + 2), c21);
+            _mm_storeu_pd(c + n2 * (i + 3) + (j), c30);
+            _mm_storeu_pd(c + n2 * (i + 3) + (j + 2), c31);
+        }
+    }
+    i_l = j;
+    for(;i < n1; ++i) {
+        for(j = 0; j < n2; ++j) {
+            s = 0;
+            for(q = 0; q < m12; ++q) {
+                s += a[m12 * i + q] * b[n2 * q + j];
+            }
+            c[n2 * i + j] -= s;
+        }
+    }
+    for(i = 0; i < _n1; ++i) {
+        for(j = i_l; j < n2; ++j) {
+            s = 0;
+            for(q = 0; q < m12; ++q) {
+                s += a[m12 * i + q] * b[n2 * q + j];
+            }
+            c[n2 * i + j] -= s;
+        }
+    }
+
+}
 
 void PrintZeros(Args *a)
 {
@@ -456,135 +861,6 @@ double Norm(Args *a)
     return final_norm;
 }
 
-void MinusEqualBlockMul(double* Main, double *a, double* b, int n1, int m12, int n2)
-{
-    int l_col = n2%3;
-    int l_row= n1%3;
-    int k_col = (n2-l_col)/3;
-    int k_row = (n1-l_row)/3; 
-    int bi, bj, r;
-    
-    double s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
-
-    for ( bi = 0; bi < k_row; bi++)
-    {
-        for ( bj = 0; bj < k_col; bj++)
-        {
-            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
-            for ( r = 0; r < m12; r++)
-            {
-                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3];
-                s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
-                s02 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2];
-                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3];
-                s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
-                s12 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
-                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3];
-                s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 1];
-                s22 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 2];
-            }
-            Main[bi*3*n2 + bj*3] -= s00; Main[bi*3*n2 + bj*3 + 1] -= s01; Main[bi*3*n2 + bj*3 + 2] -= s02;
-            Main[(bi*3 + 1)*n2 + bj*3] -= s10; Main[(bi*3 + 1)*n2 + bj*3 + 1] -= s11; Main[(bi*3 + 1)*n2 + bj*3 + 2] -= s12;
-            Main[(bi*3 + 2)*n2 + bj*3] -= s20; Main[(bi*3 + 2)*n2 + bj*3 + 1] -= s21; Main[(bi*3 + 2)*n2 + bj*3 + 2] -= s22;
-        }
-        if (l_col != 0)
-        {
-
-            s00 = 0, s01 = 0, s10 = 0, s11 = 0, s20 = 0, s21 = 0;
-            for ( r = 0; r < m12; r++)
-            {
-                if(l_col > 1)
-                { 
-                    s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
-                    s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
-                    s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3 + 1];
-
-                }
-                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3];
-                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3];
-                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3];
-            }
-
-            Main[bi*3*n2 + k_col*3] -= s00; 
-            Main[(bi*3 + 1)*n2 + k_col*3] -= s10;
-            Main[(bi*3 + 2)*n2 + k_col*3] -= s20;
-            if(l_col > 1)
-            { 
-                Main[bi*3*n2 + k_col*3 + 1] -= s01; 
-                Main[(bi*3 + 1)*n2 + k_col*3 + 1] -= s11;
-                Main[(bi*3 + 2)*n2 + k_col*3 + 1] -= s21;
-            }
-        }
-            
-    }
-
-    if(l_row != 0)
-    {
-        for ( bj = 0; bj < k_col; bj++)
-        {
-            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0;
-            for ( r = 0; r < m12; r++)
-            {
-                
-                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3];
-                s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
-                s02 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2]; 
-                if(l_row > 1)
-                {
-                    s10 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3];
-                    s11 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
-                    s12 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
-                }
-            }
-
-            Main[(k_row*3)*n2 + bj*3] -= s00; Main[(k_row*3 )*n2 + bj*3 + 1] -= s01; Main[(k_row*3 )*n2 + bj*3 + 2] -= s02;
-            if (l_row > 1)
-            {
-                Main[(k_row*3  + 1)*n2 + bj*3] -= s10; Main[(k_row*3 + 1)*n2 + bj*3 + 1] -= s11; Main[(k_row*3 + 1)*n2 + bj*3 + 2] -= s12;
-            }
-            
-        }
-        if(l_col != 0)
-        {
-            s00 = 0, s01 = 0, s10 = 0, s11 = 0;
-            for ( r = 0; r < m12; r++)
-            {
-                
-                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 ];
-                if (l_col > 1)
-                {
-                    s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
-                }
-                if(l_row > 1)
-                {
-                    s10 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 ];
-                }
-                if (l_col > 1 && l_row > 1)
-                {
-                    s11 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
-                }
-                
-            }
-
-            Main[(k_row*3)*n2 + k_col*3] -= s00;
-            if (l_col>1)
-            {
-                Main[(k_row*3)*n2 + k_col*3 + 1] -= s01;
-            }
-            
-            if (l_row > 1)
-            {
-                Main[(k_row*3 + 1)*n2 + k_col*3] -= s10;
-            }
-            if (l_row > 1 && l_col>1)
-            {
-                Main[(k_row*3 + 1)*n2 + k_col*3 + 1] -= s11;
-            }
-            
-        }     
-    }       
-}
-
 double fabs(double a)
 {
     return (a>0 ? a:(-a));
@@ -747,7 +1023,7 @@ void ZeroOut(double* Diag, double* Down, double* U, int m, int row_size, double 
     
 }
 
-void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero, bool down_is_triungle)
+void ApplyMatrixToPairPrev(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero, bool down_is_triungle)
 {
     double s;
     double* pu;
@@ -815,6 +1091,339 @@ void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int ro
     
 }
 
+void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero, bool down_is_triungle)
+{
+    double s;
+    double* pu;
+    int vec_num = 0, j, i;
+    int up_bound = (!down_is_triungle ? row_size : 1);
+    int rasven_bound = col_size - 16;
+    double value = 2.0;
+
+    __m128d s0,s2,s4,s6,s8,s10,s12,s14;
+    __m128d up0, up2, up4, up6, up8, up10, up12, up14, u;
+    for (j = 0; j < col_size; j++)
+    {
+        pu = U + vec_num*(row_size + 1);
+
+        s = 0;
+
+        s += (*pu) * (Up[vec_num*col_size + j]);
+        if (!down_is_zero)
+        {   
+            for (i = 0; i < up_bound; i++)
+            {
+                pu++;
+                s += (*pu) * (Down[i*col_size + j]);
+            }
+        }
+
+        s*=2;
+
+        pu = U + vec_num*(row_size + 1);
+        Up[vec_num*col_size + j] -= s*(*pu);
+        for (i = 0; i < up_bound; i++)
+        {
+            pu++;
+            Down[i*col_size + j] -= s*(*pu);
+        }
+    }           
+    for (vec_num = 1; vec_num < amount_of_vectors; vec_num++)
+    {   
+        if (down_is_triungle)
+        {
+            up_bound += (row_size > up_bound ? 1 : 0);
+        }
+
+        for (j = 0; j < rasven_bound ; j+=16)
+        {
+            s0 = _mm_setzero_pd(); s8 = _mm_setzero_pd();
+            s2 = _mm_setzero_pd(); s10 = _mm_setzero_pd();
+            s4 = _mm_setzero_pd(); s12 = _mm_setzero_pd();
+            s6 = _mm_setzero_pd(); s14 = _mm_setzero_pd();
+            
+            pu = U + vec_num*(row_size + 1);
+
+            u = _mm_load1_pd(pu);
+            up0 = _mm_loadu_pd(Up + vec_num*col_size + j);
+            up2 = _mm_loadu_pd(Up + vec_num*col_size + j + 2);
+            up4 = _mm_loadu_pd(Up + vec_num*col_size + j + 4);
+            up6 = _mm_loadu_pd(Up +vec_num*col_size + j + 6);
+            up8 = _mm_loadu_pd(Up +vec_num*col_size + j + 8);
+            up10 = _mm_loadu_pd(Up +vec_num*col_size + j + 10);
+            up12 = _mm_loadu_pd(Up +vec_num*col_size + j + 12);
+            up14 = _mm_loadu_pd(Up +vec_num*col_size + j + 14);
+            
+            s0 = _mm_add_pd(s0, _mm_mul_pd(u, up0));
+            s2 = _mm_add_pd(s2, _mm_mul_pd(u, up2));
+            s4 = _mm_add_pd(s4, _mm_mul_pd(u, up4));
+            s6 = _mm_add_pd(s6, _mm_mul_pd(u, up6));
+            s8 = _mm_add_pd(s8, _mm_mul_pd(u, up8));
+            s10 = _mm_add_pd(s10, _mm_mul_pd(u, up10));
+            s12 = _mm_add_pd(s12, _mm_mul_pd(u, up12));
+            s14 = _mm_add_pd(s14, _mm_mul_pd(u, up14));
+                    
+            for (i = 0; i < up_bound; i++)
+            {
+                pu++;
+                u = _mm_load1_pd(pu);
+                up0  = _mm_loadu_pd(Down + i*col_size + j);
+                up2  = _mm_loadu_pd(Down + i*col_size + j + 2);
+                up4  = _mm_loadu_pd(Down + i*col_size + j + 4);
+                up6  = _mm_loadu_pd(Down + i*col_size + j + 6);
+                up8  = _mm_loadu_pd(Down + i*col_size + j + 8);
+                up10 = _mm_loadu_pd(Down + i*col_size + j + 10);
+                up12 = _mm_loadu_pd(Down + i*col_size + j + 12);
+                up14 = _mm_loadu_pd(Down + i*col_size + j + 14);
+                    
+                s0 = _mm_add_pd(s0, _mm_mul_pd(u, up0));
+                s2 = _mm_add_pd(s2, _mm_mul_pd(u, up2));
+                s4 = _mm_add_pd(s4, _mm_mul_pd(u, up4));
+                s6 = _mm_add_pd(s6, _mm_mul_pd(u, up6));
+                s8 = _mm_add_pd(s8, _mm_mul_pd(u, up8));
+                s10 = _mm_add_pd(s10, _mm_mul_pd(u, up10));
+                s12 = _mm_add_pd(s12, _mm_mul_pd(u, up12));
+                s14 = _mm_add_pd(s14, _mm_mul_pd(u, up14));
+            }
+            __m128d two = _mm_load1_pd(&value);
+            s0 = _mm_mul_pd(two, s0);
+            s2 = _mm_mul_pd(two, s2);
+            s4 = _mm_mul_pd(two, s4);
+            s6 = _mm_mul_pd(two, s6);
+            s8 = _mm_mul_pd(two, s8);
+            s10 = _mm_mul_pd(two, s10);
+            s12 = _mm_mul_pd(two, s12);
+            s14 = _mm_mul_pd(two, s14);
+            
+            pu = U + vec_num*(row_size + 1);
+
+            u = _mm_load1_pd(pu);
+            up0  = _mm_loadu_pd(Up + vec_num*col_size + j);
+            up2  = _mm_loadu_pd(Up + vec_num*col_size + j + 2);
+            up4  = _mm_loadu_pd(Up + vec_num*col_size + j + 4);
+            up6  = _mm_loadu_pd(Up + vec_num*col_size + j + 6);
+            up8  = _mm_loadu_pd(Up + vec_num*col_size + j + 8);
+            up10 = _mm_loadu_pd(Up + vec_num*col_size + j + 10);
+            up12 = _mm_loadu_pd(Up + vec_num*col_size + j + 12);
+            up14 = _mm_loadu_pd(Up + vec_num*col_size + j + 14);
+
+            up0 = _mm_sub_pd(up0, _mm_mul_pd(u, s0));
+            up2 = _mm_sub_pd(up2, _mm_mul_pd(u, s2));
+            up4 = _mm_sub_pd(up4, _mm_mul_pd(u, s4));
+            up6 = _mm_sub_pd(up6, _mm_mul_pd(u, s6));
+            up8 = _mm_sub_pd(up8, _mm_mul_pd(u, s8));
+            up10 = _mm_sub_pd(up10, _mm_mul_pd(u, s10));
+            up12 = _mm_sub_pd(up12, _mm_mul_pd(u, s12));
+            up14 = _mm_sub_pd(up14, _mm_mul_pd(u, s14));
+
+            _mm_storeu_pd(Up + vec_num*col_size + j, up0);
+            _mm_storeu_pd(Up + vec_num*col_size + j + 2, up2);
+            _mm_storeu_pd(Up + vec_num*col_size + j + 4, up4);
+            _mm_storeu_pd(Up + vec_num*col_size + j + 6, up6);
+            _mm_storeu_pd(Up + vec_num*col_size + j + 8, up8);
+            _mm_storeu_pd(Up + vec_num*col_size + j + 10, up10);
+            _mm_storeu_pd(Up + vec_num*col_size + j + 12, up12);
+            _mm_storeu_pd(Up + vec_num*col_size + j + 14, up14);
+
+            for (i = 0; i < up_bound; i++)
+            {
+                pu++;
+                u = _mm_load1_pd(pu);
+                up0  = _mm_loadu_pd(Down + i*col_size + j);
+                up2  = _mm_loadu_pd(Down + i*col_size + j + 2);
+                up4  = _mm_loadu_pd(Down + i*col_size + j + 4);
+                up6  = _mm_loadu_pd(Down + i*col_size + j + 6);
+                up8  = _mm_loadu_pd(Down + i*col_size + j + 8);
+                up10 = _mm_loadu_pd(Down + i*col_size + j + 10);
+                up12 = _mm_loadu_pd(Down + i*col_size + j + 12);
+                up14 = _mm_loadu_pd(Down + i*col_size + j + 14);
+                
+                up0 = _mm_sub_pd(up0, _mm_mul_pd(u, s0));
+                up2 = _mm_sub_pd(up2, _mm_mul_pd(u, s2));
+                up4 = _mm_sub_pd(up4, _mm_mul_pd(u, s4));
+                up6 = _mm_sub_pd(up6, _mm_mul_pd(u, s6));
+                up8 = _mm_sub_pd(up8, _mm_mul_pd(u, s8));
+                up10 = _mm_sub_pd(up10, _mm_mul_pd(u, s10));
+                up12 = _mm_sub_pd(up12, _mm_mul_pd(u, s12));
+                up14 = _mm_sub_pd(up14, _mm_mul_pd(u, s14));
+
+                _mm_storeu_pd(Down + i*col_size + j, up0);
+                _mm_storeu_pd(Down + i*col_size + j + 2, up2);
+                _mm_storeu_pd(Down + i*col_size + j + 4, up4);
+                _mm_storeu_pd(Down + i*col_size + j + 6, up6);
+                _mm_storeu_pd(Down + i*col_size + j + 8, up8);
+                _mm_storeu_pd(Down + i*col_size + j + 10, up10);
+                _mm_storeu_pd(Down + i*col_size + j + 12, up12);
+                _mm_storeu_pd(Down + i*col_size + j + 14, up14);
+            }
+        }      
+        for (; j < col_size; j++)
+        {
+            pu = U + vec_num*(row_size + 1);
+            
+            s = 0;
+
+            s += (*pu) * (Up[vec_num*col_size + j]);
+        
+            for (i = 0; i < up_bound; i++)
+            {
+                pu++;
+                s += (*pu) * (Down[i*col_size + j]);
+            }
+        
+            s*=2;
+            pu = U + vec_num*(row_size + 1);
+            Up[vec_num*col_size + j] -= s*(*pu);
+
+            for (i = 0; i < up_bound; i++)
+            {
+                pu++;
+                Down[i*col_size + j] -= s*(*pu);
+            }
+        } 
+             
+    }
+    
+}
+
+/*
+void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero, bool down_is_triungle)
+{
+    double s,s0,s1,s2,s3,s4,s5,s6,s7,s8;
+    double* pu;
+    int vec_num = 0, j, i;
+    int up_bound = (!down_is_triungle ? row_size : 1);
+    int rasven_bound = col_size - 9;
+
+    for (j = 0; j < col_size; j++)
+    {
+        pu = U + vec_num*(row_size + 1);
+
+        s = 0;
+
+        s += (*pu) * (Up[vec_num*col_size + j]);
+        if (!down_is_zero)
+        {   
+            for (i = 0; i < up_bound; i++)
+            {
+                pu++;
+                s += (*pu) * (Down[i*col_size + j]);
+            }
+        }
+
+        s*=2;
+
+        pu = U + vec_num*(row_size + 1);
+        Up[vec_num*col_size + j] -= s*(*pu);
+        for (i = 0; i < up_bound; i++)
+        {
+            pu++;
+            Down[i*col_size + j] -= s*(*pu);
+        }
+    }           
+    for (vec_num = 1; vec_num < amount_of_vectors; vec_num++)
+    {   
+        if (down_is_triungle)
+        {
+            up_bound += (row_size > up_bound ? 1 : 0);
+        }
+
+        for (j = 0; j < rasven_bound ; j+=9)
+        {
+            pu = U + vec_num*(row_size + 1);
+            
+            s0 = 0; s1 = 0; s2 = 0; s3 = 0; s4 = 0; s5 = 0; s6 = 0; s7 = 0; s8 = 0;
+
+            s0 += (*pu) * (Up[vec_num*col_size + j]);
+            s1 += (*pu) * (Up[vec_num*col_size + j + 1]);
+            s2 += (*pu) * (Up[vec_num*col_size + j + 2]);
+            s3 += (*pu) * (Up[vec_num*col_size + j + 3]);
+            s4 += (*pu) * (Up[vec_num*col_size + j + 4]);
+            s5 += (*pu) * (Up[vec_num*col_size + j + 5]);
+            s6 += (*pu) * (Up[vec_num*col_size + j + 6]);
+            s7 += (*pu) * (Up[vec_num*col_size + j + 7]);
+            s8 += (*pu) * (Up[vec_num*col_size + j + 8]);
+            
+            //s += (*pu) * (Up[vec_num*col_size + j]);
+        
+            for (i = 0; i < up_bound; i++)
+            {
+                pu++;
+                s0 += (*pu) * (Down[i*col_size + j]);
+                s1 += (*pu) * (Down[i*col_size + j + 1]);
+                s2 += (*pu) * (Down[i*col_size + j + 2]);
+                s3 += (*pu) * (Down[i*col_size + j + 3]);
+                s4 += (*pu) * (Down[i*col_size + j + 4]);
+                s5 += (*pu) * (Down[i*col_size + j + 5]);
+                s6 += (*pu) * (Down[i*col_size + j + 6]);
+                s7 += (*pu) * (Down[i*col_size + j + 7]);
+                s8 += (*pu) * (Down[i*col_size + j + 8]);
+            }
+        
+            s0*=2;
+            s1*=2;
+            s2*=2;
+            s3*=2;
+            s4*=2;
+            s5*=2;
+            s6*=2;
+            s7*=2;
+            s8*=2;
+
+            pu = U + vec_num*(row_size + 1);
+            Up[vec_num*col_size + j] -= s0*(*pu);
+            Up[vec_num*col_size + j + 1] -= s1*(*pu);
+            Up[vec_num*col_size + j + 2] -= s2*(*pu);
+            Up[vec_num*col_size + j + 3] -= s3*(*pu);
+            Up[vec_num*col_size + j + 4] -= s4*(*pu);
+            Up[vec_num*col_size + j + 5] -= s5*(*pu);
+            Up[vec_num*col_size + j + 6] -= s6*(*pu);
+            Up[vec_num*col_size + j + 7] -= s7*(*pu);
+            Up[vec_num*col_size + j + 8] -= s8*(*pu);
+
+            for (i = 0; i < up_bound; i++)
+            {
+                pu++;
+                Down[i*col_size + j] -= s0*(*pu);
+                Down[i*col_size + j + 1] -= s1*(*pu);
+                Down[i*col_size + j + 2] -= s2*(*pu);
+                Down[i*col_size + j + 3] -= s3*(*pu);
+                Down[i*col_size + j + 4] -= s4*(*pu);
+                Down[i*col_size + j + 5] -= s5*(*pu);
+                Down[i*col_size + j + 6] -= s6*(*pu);
+                Down[i*col_size + j + 7] -= s7*(*pu);
+                Down[i*col_size + j + 8] -= s8*(*pu);
+            }
+        }      
+        for (; j < col_size; j++)
+        {
+            pu = U + vec_num*(row_size + 1);
+            
+            s = 0;
+
+            s += (*pu) * (Up[vec_num*col_size + j]);
+        
+            for (i = 0; i < up_bound; i++)
+            {
+                pu++;
+                s += (*pu) * (Down[i*col_size + j]);
+            }
+        
+            s*=2;
+            pu = U + vec_num*(row_size + 1);
+            Up[vec_num*col_size + j] -= s*(*pu);
+
+            for (i = 0; i < up_bound; i++)
+            {
+                pu++;
+                Down[i*col_size + j] -= s*(*pu);
+            }
+        } 
+             
+    }
+    
+}
+*/
 int InverseTriungleBlock(double* A, double* B, int n, double norm)
 {
     double* pa = A, *pb = B;
@@ -868,136 +1477,6 @@ int InverseTriungleBlock(double* A, double* B, int n, double norm)
 double log2(double x)
 {
     return log(x)/log(2);
-}
-
-void BlockMul(double *a, double* b, double* c, int n1, int m12, int n2)
-{
-    int l_col = n2%3;
-    int l_row= n1%3;
-    int k_col = (n2-l_col)/3;
-    int k_row = (n1-l_row)/3; 
-    int bi, bj, r;
-    
-    double s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
-
-    for (bi = 0; bi < k_row; bi++)
-    {
-        for (bj = 0; bj < k_col; bj++)
-        {
-            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0, s20 = 0, s21 = 0, s22 = 0;
-            for (r = 0; r < m12; r++)
-            {
-                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3];
-                s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
-                s02 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2];
-                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3];
-                s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
-                s12 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
-                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3];
-                s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 1];
-                s22 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + bj*3 + 2];
-            }
-            c[bi*3*n2 + bj*3] = s00; c[bi*3*n2 + bj*3 + 1] = s01; c[bi*3*n2 + bj*3 + 2] = s02;
-            c[(bi*3 + 1)*n2 + bj*3] = s10; c[(bi*3 + 1)*n2 + bj*3 + 1] = s11; c[(bi*3 + 1)*n2 + bj*3 + 2] = s12;
-            c[(bi*3 + 2)*n2 + bj*3] = s20; c[(bi*3 + 2)*n2 + bj*3 + 1] = s21; c[(bi*3 + 2)*n2 + bj*3 + 2] = s22;
-        }
-        if (l_col != 0)
-        {
-
-            s00 = 0, s01 = 0, s10 = 0, s11 = 0, s20 = 0, s21 = 0;
-            for (r = 0; r < m12; r++)
-            {
-                if(l_col > 1)
-                { 
-                    s01 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
-                    s11 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
-                    s21 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3 + 1];
-
-                }
-                s00 += a[(bi*3 + 0)*m12 + r] * b[r*n2 + k_col*3];
-                s10 += a[(bi*3 + 1)*m12 + r] * b[r*n2 + k_col*3];
-                s20 += a[(bi*3 + 2)*m12 + r] * b[r*n2 + k_col*3];
-            }
-
-            c[bi*3*n2 + k_col*3] = s00; 
-            c[(bi*3 + 1)*n2 + k_col*3] = s10;
-            c[(bi*3 + 2)*n2 + k_col*3] = s20;
-            if(l_col > 1)
-            { 
-                c[bi*3*n2 + k_col*3 + 1] = s01; 
-                c[(bi*3 + 1)*n2 + k_col*3 + 1] = s11;
-                c[(bi*3 + 2)*n2 + k_col*3 + 1] = s21;
-            }
-        }
-            
-    }
-
-    if(l_row != 0)
-    {
-        for (bj = 0; bj < k_col; bj++)
-        {
-            s00 = 0, s01 = 0, s02 = 0, s10 = 0, s11 = 0, s12 = 0;
-            for (r = 0; r < m12; r++)
-            {
-                
-                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3];
-                s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 1];
-                s02 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + bj*3 + 2]; 
-                if(l_row > 1)
-                {
-                    s10 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3];
-                    s11 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 1];
-                    s12 += a[(k_row*3 + 1)*m12 + r] * b[r*n2 + bj*3 + 2]; 
-                }
-            }
-
-            c[(k_row*3)*n2 + bj*3] = s00; c[(k_row*3 )*n2 + bj*3 + 1] = s01; c[(k_row*3 )*n2 + bj*3 + 2] = s02;
-            if (l_row > 1)
-            {
-                c[(k_row*3  + 1)*n2 + bj*3] = s10; c[(k_row*3 + 1)*n2 + bj*3 + 1] = s11; c[(k_row*3 + 1)*n2 + bj*3 + 2] = s12;
-            }
-            
-        }
-        if(l_col != 0)
-        {
-            s00 = 0, s01 = 0, s10 = 0, s11 = 0;
-            for (int r = 0; r < m12; r++)
-            {
-                
-                s00 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 ];
-                if (l_col > 1)
-                {
-                    s01 += a[(k_row*3 + 0)*m12 + r] * b[r*n2 + k_col*3 + 1];
-                }
-                if(l_row > 1)
-                {
-                    s10 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 ];
-                }
-                if (l_col > 1 && l_row > 1)
-                {
-                    s11 += a[(k_row*3  + 1)*m12 + r] * b[r*n2 + k_col*3 + 1];
-                }
-                
-            }
-
-            c[(k_row*3)*n2 + k_col*3] = s00;
-            if (l_col>1)
-            {
-                c[(k_row*3)*n2 + k_col*3 + 1] = s01;
-            }
-            
-            if (l_row > 1)
-            {
-                c[(k_row*3 + 1)*n2 + k_col*3] = s10;
-                
-            }
-            if (l_row > 1 && l_col>1)
-            {
-                c[(k_row*3 + 1)*n2 + k_col*3 + 1] = s11;
-            }
-            
-        }     
-    }       
 }
 
 bool MatrixIsZero(double* A, int col_size, int row_size, double eps)
@@ -1647,7 +2126,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
             {
                 down_block_size_col = (bj < k ? m : l);
                          
-                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
+                ApplyMatrixToPairPrev(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
 
             }
 
@@ -1655,7 +2134,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
             {
                 down_block_size_col = (bj < k ? m : l);
 
-                ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, ((s == 0) && (bi > bj)));
+                ApplyMatrixToPairPrev(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, ((s == 0) && (bi > bj)));
             }   
         }  
 

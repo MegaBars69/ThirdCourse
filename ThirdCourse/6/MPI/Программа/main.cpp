@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
     t1 = get_full_time() - t1;
     
     MPI_Allreduce(&inv_res_l, &inv_res_g, 1, MPI_INT, MPI_MAX, comm);
-    if (inv_res_g == 0 && n <= 11000) 
+    if (inv_res_g == 0 && n <= 2000) 
     {
         if(proc_num == 0)
         {
