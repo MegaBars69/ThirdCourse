@@ -1,12 +1,13 @@
 #include "chebyshov_approximation.hpp"
 #include <iostream>
 #include <cmath>
-#define PI 3.14159265358980
+#define PI 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808
+#define EPSILON 1e-15
 
 void ChebyshovAproximation(int n, double* f, double* a, double*g, double* g2, double* z)
 {
     double* pg0 = g, *pg1 = g2;
-    double gij = 0, res = 0;
+    double gij = 0.0, res = 0.0;
     double zj;
 
     for (int i = 0; i < n; i++)
@@ -20,10 +21,10 @@ void ChebyshovAproximation(int n, double* f, double* a, double*g, double* g2, do
             }            
             else if(i == 1)
             {
-                zj = cos(((2*j+1)*PI)/(2*n));
+                zj = cos(((2.0*j+1)*PI)/(2.0*n));
                 gij = zj*f[j];
                 pg1[j] = gij;
-                z[j] = 2*zj;
+                z[j] = 2.0*zj;
             }
             else
             {
@@ -48,7 +49,7 @@ void ChebyshovAproximation(int n, double* f, double* a, double*g, double* g2, do
         }
         else
         {
-            a[i] = 2*res/n;
+            a[i] = 2.0*res/n;
         }        
         
         res = 0;
@@ -57,15 +58,14 @@ void ChebyshovAproximation(int n, double* f, double* a, double*g, double* g2, do
 
 double ChebyshovValue(double X, double A, double B, int n, double* a)
 {
-    X/=2;
     double z = (2*X-(B+A))/(B-A);
     double T_i_2 = 1, T_i_1 = z, T_i=0;
-    double Pf;
+    double Pf = 0.0;
     
     Pf = a[0];
     if (n > 0)
     {
-        Pf += a[1]*T_i_1;
+        Pf += a[1] * T_i_1;
     }
     z*=2;
     for (int i = 2; i < n; i++)

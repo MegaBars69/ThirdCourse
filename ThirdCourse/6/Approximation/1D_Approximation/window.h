@@ -14,6 +14,7 @@ private:
   double b = 1;
   int n = 0; 
   int p = 0;
+  bool first = true;
   double (*f) (double) = nullptr;
 
   // Перечисление для типов аппроксимации
@@ -37,6 +38,7 @@ public:
 
 public slots:
   void change_func ();
+  void update_function();
   void toggle_approximation(); // Метод для переключения типа аппроксимации
   void zoom_in();  // Уменьшение отрезка [a, b] в 2 раза
   void zoom_out(); // Увеличение отрезка [a, b] в 2 раза

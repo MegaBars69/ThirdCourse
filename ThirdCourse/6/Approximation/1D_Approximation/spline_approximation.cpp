@@ -3,13 +3,44 @@
 #include "spline_approximation.hpp"
 
 #include <cstring>
-#define EPSILON pow(10,-15)
+#define EPSILON pow(10,-16.1)
 using namespace std;
 double derivativeF(double (*f)(double), double x)
 {
-    double h = 1e-8;
+    double h = 1e-6;
 
     return (f(x+h) - f(x-h)) / (2*h);
+}
+double derivative(double x, int func_id, double (*f)(double))
+{
+    switch (func_id)
+    {
+    case 0:
+        return 0;
+        break;
+    case 1:
+        return 1;
+        break;
+    case 2:
+        return 2*x;
+        break;
+    case 3:
+        return 3*x*x;
+        break;
+    case 4:
+        return 4*x*x*x;
+        break;
+    case 5:
+        return pow(2.718281828459045,x);
+        break;
+    case 6:
+        return (-50*x)/((25*x*x+1)*(25*x*x+1));
+        break;
+    default:
+        return derivativeF(f, x);
+        break;
+    }
+    return -1;
 }
 void GaussSolve(double* A, double* b, int n) 
 {
@@ -129,24 +160,13 @@ void CalculateCoeficients(double* c, double* X, double* d, double* dF, double* F
 {
     double dxi = 0;
     int i,j;
-    for(i = 0, j = 0; i < n; i++, j += 4)
+    for(i = 0, j = 0; i < n-1; i++, j += 4)
     {
-        if(i != n-1)
-        {
-            c[j] = F[i];
-            c[j + 1] = d[i];
-            dxi = X[i+1] - X[i];
-            c[j + 2] = (3*dF[i] - 2*d[i] - d[i+1])/dxi;
-            dxi *= dxi;
-            c[j + 3] = (d[i] + d[i + 1] - 2*dF[i])/dxi;
-        }
-        else
-        {
-            c[j] = F[i];
-            c[j + 1] = 0;
-            c[j + 2] = 0;
-            c[j + 3] = 0;
-        }
+        c[j] = F[i];
+        c[j + 1] = d[i];
+        dxi = X[i+1] - X[i];
+        c[j + 2] = (3*dF[i] - 2*d[i] - d[i+1])/dxi;
+        c[j + 3] = (d[i] + d[i + 1] - 2*dF[i])/(dxi*dxi);
     }
 }
 
@@ -189,12 +209,11 @@ double SplineValue(double x, double a, double b, int n, double* c, double* X, in
     if(i == -1)
     {
         i = FindI(x, a, b, n);
-        if(i > n-1)
+        if(i > n-2)
         {
-            i = n-1;
+            i = n-2;
         }
     }
-    
     j = i*4;
     Pf += c[j];
     dx  = (x-X[i]);

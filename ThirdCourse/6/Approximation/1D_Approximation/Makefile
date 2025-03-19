@@ -37,7 +37,7 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = basic_graph1.0.0
-DISTDIR = /home/me/Documents/ThirdCourse/6/Approximation/graph_qt5/.tmp/basic_graph1.0.0
+DISTDIR = /home/me/Documents/ThirdCourse/6/Approximation/1D_Approximation/.tmp/basic_graph1.0.0
 LINK          = g++
 LFLAGS        = -Wl,-O1
 LIBS          = $(SUBLIBS) /usr/lib/x86_64-linux-gnu/libQt5Widgets.so /usr/lib/x86_64-linux-gnu/libQt5Gui.so /usr/lib/x86_64-linux-gnu/libQt5Core.so -lGL -lpthread   
@@ -53,12 +53,14 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = main.cpp \
-		window.cpp moc_window.cpp chebyshov_approximation.cpp spline_approximation.cpp
+		window.cpp \
+		chebyshov_approximation.cpp \
+		spline_approximation.cpp moc_window.cpp
 OBJECTS       = main.o \
 		window.o \
-		moc_window.o \
 		chebyshov_approximation.o \
-		spline_approximation.o
+		spline_approximation.o \
+		moc_window.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -116,6 +118,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -136,7 +139,9 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		basic_graph.pro window.h main.cpp \
-		window.cpp
+		window.cpp \
+		chebyshov_approximation.cpp \
+		spline_approximation.cpp
 QMAKE_TARGET  = basic_graph
 DESTDIR       = 
 TARGET        = basic_graph
@@ -205,6 +210,7 @@ Makefile: basic_graph.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf \
@@ -283,6 +289,7 @@ Makefile: basic_graph.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/default_pre.prf:
@@ -319,7 +326,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents window.h $(DISTDIR)/
-	$(COPY_FILE) --parents main.cpp window.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents main.cpp window.cpp chebyshov_approximation.cpp spline_approximation.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -357,7 +364,7 @@ compiler_moc_header_clean:
 moc_window.cpp: window.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
-	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/me/Documents/ThirdCourse/6/Approximation/graph_qt5/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/me/Documents/ThirdCourse/6/Approximation/graph_qt5 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include window.h -o moc_window.cpp
+	/usr/lib/qt5/bin/moc $(DEFINES) --include /home/me/Documents/ThirdCourse/6/Approximation/1D_Approximation/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/home/me/Documents/ThirdCourse/6/Approximation/1D_Approximation -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/13 -I/usr/include/x86_64-linux-gnu/c++/13 -I/usr/include/c++/13/backward -I/usr/lib/gcc/x86_64-linux-gnu/13/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include window.h -o moc_window.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -378,9 +385,16 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 main.o: main.cpp window.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
-window.o: window.cpp chebyshov_approximation.hpp spline_approximation.hpp\
+window.o: window.cpp chebyshov_approximation.hpp \
+		spline_approximation.hpp \
 		window.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o window.o window.cpp
+
+chebyshov_approximation.o: chebyshov_approximation.cpp chebyshov_approximation.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o chebyshov_approximation.o chebyshov_approximation.cpp
+
+spline_approximation.o: spline_approximation.cpp spline_approximation.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o spline_approximation.o spline_approximation.cpp
 
 moc_window.o: moc_window.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_window.o moc_window.cpp
