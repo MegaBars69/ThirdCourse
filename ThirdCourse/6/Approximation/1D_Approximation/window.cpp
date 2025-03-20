@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <iostream>
 #include <cmath>
-#define PI 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808
+#include <math.h>
+#define PI M_PI
 #define EPSILON pow(10,-15)
 #include <string>
 #include "chebyshov_approximation.hpp"
@@ -285,7 +286,7 @@ QPointF Window::l2g (double x_loc, double y_loc, double y_min, double y_max)
 void drawSmiley(QPainter &painter, int x, int y, int size) {
   // Рисуем лицо
   painter.drawEllipse(x, y, size, size);
-
+  /*
   // Рисуем глаза
   painter.setBrush(Qt::black);
   painter.drawEllipse(x + size / 4, y + size / 4, size / 8, size / 8); // Левый глаз
@@ -296,6 +297,7 @@ void drawSmiley(QPainter &painter, int x, int y, int size) {
   smile.moveTo(x + size / 4, y + size / 2);
   smile.quadTo(x + size / 2, y + 3 * size / 4, x + 3 * size / 4, y + size / 2);
   painter.drawPath(smile);
+  */
 }
 
 void Window::paintEvent (QPaintEvent *)
@@ -311,10 +313,9 @@ void Window::paintEvent (QPaintEvent *)
   double max, gmax; 
   const char* prefix = "max{|Fmax||,|Fmin|} = ";
   char* strochka;
-  QColor brightCyan(29, 177, 222);
   QPen pen_black(Qt::black, 2, Qt::SolidLine);
   QPen pen_red(Qt::red, 0, Qt::SolidLine);
-  QPen pen_blue(brightCyan, 3, Qt::SolidLine);
+  QPen pen_blue(Qt::blue, 3, Qt::SolidLine);
   QPen pen_green(Qt::green, 3, Qt::SolidLine);
   QPen pen_grid(Qt::lightGray, 0, Qt::DotLine); 
   
@@ -614,15 +615,15 @@ void Window::paintEvent (QPaintEvent *)
   {
     painter.setPen ("black");
     painter.drawText (0, 45, "Chebyshev Approximation");
-    painter.setBrush(brightCyan);
-    drawSmiley(painter, 210, 35, 20); 
+    painter.setBrush(Qt::blue);
+    drawSmiley(painter, 210, 30, 20); 
   }
   else if(currentApproximation == SPLINE)
   {
     painter.setPen ("black");
     painter.drawText (0, 45, "Spline Approximation");
     painter.setBrush(Qt::green);
-    drawSmiley(painter, 170, 35, 20); 
+    drawSmiley(painter, 170, 30, 20); 
   }
   else if(currentApproximation == BOTH)
   {
@@ -630,9 +631,9 @@ void Window::paintEvent (QPaintEvent *)
     painter.drawText (0, 45, "Spline Approximation");
     painter.drawText (0, 70, "Chebyshev Approximation");
     painter.setBrush(Qt::green);
-    drawSmiley(painter, 170, 35, 20); 
-    painter.setBrush(brightCyan);
-    drawSmiley(painter, 210, 60, 20); 
+    drawSmiley(painter, 170, 30, 20); 
+    painter.setBrush(Qt::blue);
+    drawSmiley(painter, 210, 55, 20); 
   }
   else if(currentApproximation == ERRORS)
   {

@@ -1,7 +1,7 @@
 #include "chebyshov_approximation.hpp"
 #include <iostream>
 #include <cmath>
-#define PI 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808
+#define PI M_PI
 #define EPSILON 1e-15
 
 void ChebyshovAproximation(int n, double* f, double* a, double*g, double* g2, double* z)
