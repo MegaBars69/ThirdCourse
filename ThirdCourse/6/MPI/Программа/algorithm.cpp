@@ -279,32 +279,33 @@ void MinusEqualBlockMul(double* Main, double *a, double* b, int n1, int m12, int
 }
 */
 
-void BlockMul(double* a, double* b, double* c,int n1, int m12, int n2) {
-    int n1_reminder = n1 % 4;
-    int n2_reminder = n2 % 4;
+void BlockMul(double* a, double* b, double* c,int n1, int m12, int n2) 
+{
+    int l_row = n1 % 4;
+    int l_col = n2 % 4;
     double s;
     int i_l = 0;
-    int _n1 = n1 - n1_reminder;
-    int _n2 = n2 - n2_reminder;
-    int i = 0, j = 0, q = 0;
+    int k_row = n1 - l_row;
+    int k_col = n2 - l_col;
+    int bi = 0, bj = 0, q = 0;
     __m128d c00, c01, c10, c11, c20, c21, c30, c31;
-    for(i = 0; i < _n1; i += 4) 
+    for(bi = 0; bi < k_row; bi += 4) 
     {
-        for(j = 0; j < _n2; j+= 4)
+        for(bj = 0; bj < k_col; bj += 4)
         {
             c00 = _mm_setzero_pd(); c01 = _mm_setzero_pd();
             c10 = _mm_setzero_pd(); c11 = _mm_setzero_pd();
             c20 = _mm_setzero_pd(); c21 = _mm_setzero_pd();
             c30 = _mm_setzero_pd(); c31 = _mm_setzero_pd();
 
-            for(q = 0; q < m12; ++q) 
+            for(q = 0; q < m12; q++) 
             {
-                __m128d a0 = _mm_load1_pd(a + m12 * (i) + q);
-                __m128d a1 = _mm_load1_pd(a + m12 * (i + 1) + q);
-                __m128d a2 = _mm_load1_pd(a + m12 * (i + 2) + q);
-                __m128d a3 = _mm_load1_pd(a + m12 * (i + 3) + q);
-                __m128d b0 = _mm_loadu_pd(b + n2 * q + (j));
-                __m128d b1 = _mm_loadu_pd(b + n2 * q + (j + 2));
+                __m128d a0 = _mm_load1_pd(a + m12 * (bi) + q);
+                __m128d a1 = _mm_load1_pd(a + m12 * (bi + 1) + q);
+                __m128d a2 = _mm_load1_pd(a + m12 * (bi + 2) + q);
+                __m128d a3 = _mm_load1_pd(a + m12 * (bi + 3) + q);
+                __m128d b0 = _mm_loadu_pd(b + n2 * q + (bj));
+                __m128d b1 = _mm_loadu_pd(b + n2 * q + (bj + 2));
                 c00 = _mm_add_pd(c00, _mm_mul_pd(a0, b0));
                 c01 = _mm_add_pd(c01, _mm_mul_pd(a0, b1));
                 c10 = _mm_add_pd(c10, _mm_mul_pd(a1, b0));
@@ -314,72 +315,72 @@ void BlockMul(double* a, double* b, double* c,int n1, int m12, int n2) {
                 c30 = _mm_add_pd(c30, _mm_mul_pd(a3, b0));
                 c31 = _mm_add_pd(c31, _mm_mul_pd(a3, b1));
             }
-            _mm_storeu_pd(c + n2 * (i) + (j), c00);
-            _mm_storeu_pd(c + n2 * (i) + (j + 2), c01);
-            _mm_storeu_pd(c + n2 * (i + 1) + (j), c10);
-            _mm_storeu_pd(c + n2 * (i + 1) + (j + 2), c11);
-            _mm_storeu_pd(c + n2 * (i + 2) + (j), c20);
-            _mm_storeu_pd(c + n2 * (i + 2) + (j + 2), c21);
-            _mm_storeu_pd(c + n2 * (i + 3) + (j), c30);
-            _mm_storeu_pd(c + n2 * (i + 3) + (j + 2), c31);
+            _mm_storeu_pd(c + n2 * (bi) + (bj), c00);
+            _mm_storeu_pd(c + n2 * (bi) + (bj + 2), c01);
+            _mm_storeu_pd(c + n2 * (bi + 1) + (bj), c10);
+            _mm_storeu_pd(c + n2 * (bi + 1) + (bj + 2), c11);
+            _mm_storeu_pd(c + n2 * (bi + 2) + (bj), c20);
+            _mm_storeu_pd(c + n2 * (bi + 2) + (bj + 2), c21);
+            _mm_storeu_pd(c + n2 * (bi + 3) + (bj), c30);
+            _mm_storeu_pd(c + n2 * (bi + 3) + (bj + 2), c31);
         }
     }
 
     s = 0;
-    i_l = j;
-    for(;i < n1; ++i) 
+    i_l = bj;
+    for(;bi < n1; bi++) 
     {
-        for(j = 0; j < n2; ++j) 
+        for(bj = 0; bj < n2; bj++) 
         {
             s = 0;
-            for(q = 0; q < m12; ++q) 
+            for(q = 0; q < m12; q++) 
             {
-                s += a[m12 * i + q] * b[n2 * q + j];
+                s += a[m12 * bi + q] * b[n2 * q + bj];
             }
-            c[n2 * i + j] = s;
+            c[n2 * bi + bj] = s;
         }
     }
-    for(i = 0; i < _n1; ++i) 
+    for(bi = 0; bi < k_row; bi++) 
     {
-        for(j = i_l; j < n2; ++j) 
+        for(bj = i_l; bj < n2; bj++) 
         {
             s = 0;
-            for(q = 0; q < m12; ++q) 
+            for(q = 0; q < m12; q++) 
             {
-                s += a[m12 * i + q] * b[n2 * q + j];
+                s += a[m12 * bi + q] * b[n2 * q + bj];
             }
-            c[n2 * i + j] = s;
+            c[n2 * bi + bj] = s;
         }
     }
 }
 
 
 void MinusEqualBlockMul(double* c, double* a, double* b, int n1, int m12, int n2) {
-    int n1_reminder = n1 % 4;
-    int n2_reminder = n2 % 4;
+    int l_row = n1 % 4;
+    int l_col = n2 % 4;
     int i_l;
     double s;
-    int _n1 = n1 - n1_reminder;
-    int _n2 = n2 - n2_reminder;
-    int i = 0, j = 0, q = 0;
+    int k_row = n1 - l_row;
+    int k_col = n2 - l_col;
+    int bi = 0, bj = 0, q = 0;
     __m128d c00, c01, c10, c11, c20, c21, c30, c31;
-    for(i = 0; i < _n1; i += 4) 
+    for(bi = 0; bi < k_row; bi += 4) 
     {
-        for(j = 0; j < _n2; j+= 4) 
+        for(bj = 0; bj < k_col; bj+= 4) 
         {
-            c00 = _mm_loadu_pd(c + n2 * (i) + (j));     c01 = _mm_loadu_pd(c + n2 * (i) + (j + 2));
-            c10 = _mm_loadu_pd(c + n2 * (i + 1) + (j)); c11 = _mm_loadu_pd(c + n2 * (i + 1) + (j + 2));
-            c20 = _mm_loadu_pd(c + n2 * (i + 2) + (j)); c21 = _mm_loadu_pd(c + n2 * (i + 2) + (j + 2));
-            c30 = _mm_loadu_pd(c + n2 * (i + 3) + (j)); c31 = _mm_loadu_pd(c + n2 * (i + 3) + (j + 2));
+            c00 = _mm_loadu_pd(c + n2 * (bi) + (bj));     c01 = _mm_loadu_pd(c + n2 * (bi) + (bj + 2));
+            c10 = _mm_loadu_pd(c + n2 * (bi + 1) + (bj)); c11 = _mm_loadu_pd(c + n2 * (bi + 1) + (bj + 2));
+            c20 = _mm_loadu_pd(c + n2 * (bi + 2) + (bj)); c21 = _mm_loadu_pd(c + n2 * (bi + 2) + (bj + 2));
+            c30 = _mm_loadu_pd(c + n2 * (bi + 3) + (bj)); c31 = _mm_loadu_pd(c + n2 * (bi + 3) + (bj + 2));
 
             for(q = 0; q < m12; ++q) 
             {
-                __m128d a0 = _mm_load1_pd(a + m12 * (i) + q);
-                __m128d a1 = _mm_load1_pd(a + m12 * (i + 1) + q);
-                __m128d a2 = _mm_load1_pd(a + m12 * (i + 2) + q);
-                __m128d a3 = _mm_load1_pd(a + m12 * (i + 3) + q);
-                __m128d b0 = _mm_loadu_pd(b + n2 * q + (j));
-                __m128d b1 = _mm_loadu_pd(b + n2 * q + (j + 2));
+                __m128d a0 = _mm_load1_pd(a + m12 * (bi) + q);
+                __m128d a1 = _mm_load1_pd(a + m12 * (bi + 1) + q);
+                __m128d a2 = _mm_load1_pd(a + m12 * (bi + 2) + q);
+                __m128d a3 = _mm_load1_pd(a + m12 * (bi + 3) + q);
+                __m128d b0 = _mm_loadu_pd(b + n2 * q + (bj));
+                __m128d b1 = _mm_loadu_pd(b + n2 * q + (bj + 2));
                 c00 = _mm_sub_pd(c00, _mm_mul_pd(a0, b0));
                 c01 = _mm_sub_pd(c01, _mm_mul_pd(a0, b1));
                 c10 = _mm_sub_pd(c10, _mm_mul_pd(a1, b0));
@@ -389,33 +390,33 @@ void MinusEqualBlockMul(double* c, double* a, double* b, int n1, int m12, int n2
                 c30 = _mm_sub_pd(c30, _mm_mul_pd(a3, b0));
                 c31 = _mm_sub_pd(c31, _mm_mul_pd(a3, b1));
             }
-            _mm_storeu_pd(c + n2 * (i) + (j), c00);
-            _mm_storeu_pd(c + n2 * (i) + (j + 2), c01);
-            _mm_storeu_pd(c + n2 * (i + 1) + (j), c10);
-            _mm_storeu_pd(c + n2 * (i + 1) + (j + 2), c11);
-            _mm_storeu_pd(c + n2 * (i + 2) + (j), c20);
-            _mm_storeu_pd(c + n2 * (i + 2) + (j + 2), c21);
-            _mm_storeu_pd(c + n2 * (i + 3) + (j), c30);
-            _mm_storeu_pd(c + n2 * (i + 3) + (j + 2), c31);
+            _mm_storeu_pd(c + n2 * (bi) + (bj), c00);
+            _mm_storeu_pd(c + n2 * (bi) + (bj + 2), c01);
+            _mm_storeu_pd(c + n2 * (bi + 1) + (bj), c10);
+            _mm_storeu_pd(c + n2 * (bi + 1) + (bj + 2), c11);
+            _mm_storeu_pd(c + n2 * (bi + 2) + (bj), c20);
+            _mm_storeu_pd(c + n2 * (bi + 2) + (bj + 2), c21);
+            _mm_storeu_pd(c + n2 * (bi + 3) + (bj), c30);
+            _mm_storeu_pd(c + n2 * (bi + 3) + (bj + 2), c31);
         }
     }
-    i_l = j;
-    for(;i < n1; ++i) {
-        for(j = 0; j < n2; ++j) {
+    i_l = bj;
+    for(;bi < n1; bi++) {
+        for(bj = 0; bj < n2; bj++) {
             s = 0;
-            for(q = 0; q < m12; ++q) {
-                s += a[m12 * i + q] * b[n2 * q + j];
+            for(q = 0; q < m12; q++) {
+                s += a[m12 * bi + q] * b[n2 * q + bj];
             }
-            c[n2 * i + j] -= s;
+            c[n2 * bi + bj] -= s;
         }
     }
-    for(i = 0; i < _n1; ++i) {
-        for(j = i_l; j < n2; ++j) {
+    for(bi = 0; bi < k_row; bi++) {
+        for(bj = i_l; bj < n2; bj++) {
             s = 0;
             for(q = 0; q < m12; ++q) {
-                s += a[m12 * i + q] * b[n2 * q + j];
+                s += a[m12 * bi + q] * b[n2 * q + bj];
             }
-            c[n2 * i + j] -= s;
+            c[n2 * bi + bj] -= s;
         }
     }
 
@@ -1023,7 +1024,7 @@ void ZeroOut(double* Diag, double* Down, double* U, int m, int row_size, double 
     
 }
 
-void ApplyMatrixToPairPrev(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero, bool down_is_triungle)
+void ApplyMatrixToPairPrevSlow(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero, bool down_is_triungle)
 {
     double s;
     double* pu;
@@ -1286,8 +1287,8 @@ void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int ro
     
 }
 
-/*
-void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero, bool down_is_triungle)
+
+void ApplyMatrixToPairPrev(double* U, double* Up, double* Down, int col_size, int row_size, int amount_of_vectors, bool down_is_zero, bool down_is_triungle)
 {
     double s,s0,s1,s2,s3,s4,s5,s6,s7,s8;
     double* pu;
@@ -1423,7 +1424,7 @@ void ApplyMatrixToPair(double* U, double* Up, double* Down, int col_size, int ro
     }
     
 }
-*/
+
 int InverseTriungleBlock(double* A, double* B, int n, double norm)
 {
     double* pa = A, *pb = B;
@@ -2126,8 +2127,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
             {
                 down_block_size_col = (bj < k ? m : l);
                          
-                ApplyMatrixToPairPrev(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
-
+                ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row);
             }
 
             for (bj = 0, pb = B + s*m*n, pb_down = B + bi*m*n; bj < bi + 1; bj++, pb += m*m, pb_down += down_block_size_row*m)

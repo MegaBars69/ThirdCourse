@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
     t1 = get_full_time() - t1;
     
     MPI_Allreduce(&inv_res_l, &inv_res_g, 1, MPI_INT, MPI_MAX, comm);
-    if (inv_res_g == 0 && n <= 2000) 
+    if (inv_res_g == 0 && n <= 11000) 
     {
         if(proc_num == 0)
         {
@@ -240,6 +240,16 @@ int main(int argc, char* argv[])
         {
             cout<<"Matrix is singular"<<endl;
         }
+    }
+    else if( inv_res_g == 0 && n > 11000)
+    {
+        if(proc_num == 0)
+        {
+            cout<<"Inversed A"<<endl;
+        }
+        PrintMatrix(B, n, m, p, proc_num, r,buf, comm);
+        r1 = 0;
+        r2 = 0;
     }
     
 
