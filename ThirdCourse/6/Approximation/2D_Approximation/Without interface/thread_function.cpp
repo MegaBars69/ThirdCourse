@@ -20,13 +20,13 @@ double (*get_funk(int num))(double, double)
         return x + y;
     };
     static auto f4 = [](double x, double y) {
-        return std::sqrt(x * x + y * y);
+        return sqrt(x * x + y * y);
     };
     static auto f5 = [](double x, double y) {
         return x * x + y * y;
     };
     static auto f6 = [](double x, double y) {
-        return std::exp(x * x - y * y);
+        return exp(x * x - y * y);
     };
     static auto f7 = [](double x, double y) {
         return 1./(25. * (x * x + y * y) + 1);
@@ -53,6 +53,24 @@ double (*get_funk(int num))(double, double)
             return nullptr;
     }
     return nullptr;
+}
+
+void PrintMatrix(double*A, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        std::cout<<A[i]<<" ";
+    }
+    std::cout<<"\n";
+}
+
+void PrintMatrixInt(int*A, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        std::cout<<A[i]<<" ";
+    }
+    std::cout<<"\n";
 }
 
 void* thread_func(void *arg)
@@ -86,11 +104,11 @@ void* thread_func(void *arg)
     aa->hx = hx, aa->hy = hy;
     int N = aa->N;
     double t1 = -1, t2 = -1, r1 = -1, r2 = -1, r3 = -1, r4 = -1, err = 0;
-
     if(k == 0)
     {
         fill_I(nx, ny, I);
     }
+    reduce_sum(p);
 
     err = fill_IA(nx, ny, hx, hy, I, A, p, k);
     reduce_sum(p, &err, 1);
@@ -98,24 +116,21 @@ void* thread_func(void *arg)
     {
         return nullptr;
     }
+    fill_B (N, nx, ny, hx, hy, B, a, c, p, k, f);
+   
 
-    fill_B(a, c, nx, ny, hx, hy, B, p, k, f);
-    
+    //fill_B(a, c, nx, ny, hx, hy, B, p, k, f);
     reduce_sum(p);
 
     t1 = get_full_time();
-    its = minimal_resid_msr_matrix_full(N, A, I, B, x, r, u, v, eps, maxit, maxit, p, k); 
-    reduce_sum(p);
+    its = minimal_error_msr_matrix_full(N, A, I, B, x, r, u, v, eps, maxit, 100, p, k); 
     t1 = get_full_time() - t1;
 
     reduce_sum(p);
     t2 = get_full_time();
-    r1 = calc_r1(x, a, c, hx, hy, nx, ny, p, k, f);
-    r2 = calc_r2(x, a, c, hx, hy, nx, ny, p, k, f);
-    r3 = calc_r3(x, a, c, hx, hy, nx, ny, p, k, f);
-    r4 = calc_r4(x, a, c, hx, hy, nx, ny, p, k, f);
-    reduce_sum(p);
+    ResidualCalculation(&r1, &r2, &r3, &r4, x, a, c, hx, hy, nx, ny, p, k, f);
     t2 = get_full_time() - t2;
+    reduce_sum(p);
 
     aa->t1 = t1;
     aa->t2 = t2;

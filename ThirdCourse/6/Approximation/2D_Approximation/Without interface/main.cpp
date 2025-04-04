@@ -23,31 +23,12 @@ int main(int argc, char* argv[])
     int nx, ny, max_it, p, its; 
     double t1 = 0.0, t2 =0, r1 = -1,r2 = -1, r3 = -1, r4 = -1;
 
-    if (argc >= 11)
+    if (argc != 11 || sscanf(argv[1], "%lf", &a) != 1 || sscanf(argv[2], "%lf", &b) != 1 || sscanf(argv[3], "%lf", &c) != 1 || sscanf(argv[4], "%lf", &d) != 1 || sscanf(argv[5], "%d", &nx) != 1 || sscanf(argv[6], "%d", &ny) != 1|| sscanf(argv[7], "%d", &func_id) != 1 || sscanf(argv[8], "%lf", &eps) != 1 || sscanf(argv[9], "%d", &max_it) != 1 || sscanf(argv[10], "%d", &p) != 1) 
     {
-        a = atoi(argv[1]);
-        b = atoi(argv[2]);
-        c = atoi(argv[4]);
-        d = atoi(argv[3]);
-        nx = atoi(argv[5]);
-        ny = atoi(argv[6]);
-        func_id = atoi(argv[7]);
-        eps = atoi(argv[8]);
-        max_it = atoi(argv[9]);
-        p = atoi(argv[10]);
-
-        if (nx <= 0 || ny<= 0 || func_id<0 || func_id > 8 || eps < 0 || p <= 0 || argc < 11)
-        {
-            printf("Usage ./a.out a b c d nx ny func_id epsilon max_iterations p");
-           
-            return 4;
-        }
+        printf("Usage1 ./a.out a b c d nx ny func_id epsilon max_iterations p\n");
+        return 1;   
     }
-    else
-    {
-        printf("Usage ./a.out a b c d nx ny func_id epsilon max_iterations p");
-        return 1;
-    }
+    
     
     int N = (nx+1)*(ny+1);
 
@@ -63,17 +44,18 @@ int main(int argc, char* argv[])
         r = new double[N];
         u = new double[N];
         v = new double[N];
+        init_reduce_sum (p);
     }
     else
     {
         printf(" p >=0");
         return 4;
     }    
-    
     //Обработка массива. Распределение памяти.
     for (k = 0; k < p; k++)
     {
         aA[k].A = A;
+        aA[k].I = I;
         aA[k].B = B;
         aA[k].r = r;
         aA[k].u = u;
@@ -91,7 +73,7 @@ int main(int argc, char* argv[])
         aA[k].nx = nx;
         aA[k].ny = ny;
         aA[k].N = (nx + 1)*(ny + 1);
-
+        aA[k].len_msr = len_msr;
     }
 
     //Запуск потоков.
@@ -107,11 +89,12 @@ int main(int argc, char* argv[])
             delete[] v;
             delete[] r;
             delete[] I;
+            free_reduce_sum();
         
             return 1;
         }
     }
-    its = aA->its;
+    
     aA[0].tid = pthread_self();
 
     thread_func(aA+0);
@@ -122,22 +105,13 @@ int main(int argc, char* argv[])
         pthread_join(aA[k].tid, nullptr);
     }
 
-    if (aA[0].res > 0)
-    {
-        printf (
-            "%s : Task = %d R1 = %e R2 = %e R3 = %e R4 = %e T1 = %.2f T2 = %.2f\
-            It = %d E = %e K = %d Nx = %d Ny = %d P = %d\n",
-            argv[0], 5, r1, r2, r3, r4, t1, t2, its, eps, k, nx, ny, p);
-        
-        delete[] A;
-        delete[] B;
-        delete[] x;
-        delete[] u;
-        delete[] v;
-        delete[] r;
-        delete[] I;
-        return 2;
-    }
+    its = aA->its;
+    r1 = aA->r1;
+    r2 = aA->r2;
+    r3 = aA->r3;
+    r4 = aA->r4;
+    t1 = aA->t1;
+    t2 = aA->t2;
 
     printf (
         "%s : Task = %d R1 = %e R2 = %e R3 = %e R4 = %e T1 = %.2f T2 = %.2f\
@@ -151,5 +125,6 @@ int main(int argc, char* argv[])
     delete[] v;
     delete[] r;
     delete[] I;
+    free_reduce_sum();
     return 0;
 }

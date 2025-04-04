@@ -11,8 +11,8 @@ void l2ij (int nx, int /*ny*/, int &i,	int &j,	int l)
 	j = l / (nx + 1);
 	i = l - j*(nx + 1);
 }
-
-int IA_ij(int nx, int ny, double hx, double hy, int i, int j, int is, int js, int s, int */*I = nullptr*/, double*A = nullptr)
+/*
+int IA_ij(int nx, int ny, double hx, double hy, int i, int j, int is, int js, int s, int *I = nullptr, double*A = nullptr)
 {
     int l, ls; 
     double sq = hx*hy;
@@ -162,9 +162,105 @@ int IA_ij(int nx, int ny, double hx, double hy, int i, int j, int is, int js, in
 
     return -1;
 }
+*/
 
-#define F(IS, JS, S) \
-    (IA_ij(nx, ny, hx, hy, i, j, (IS), (JS), (S), I, A))
+int IA_ij(int nx, int ny, double hx, double hy, int i, int j, int is, int js, int s, int *I = nullptr, double *A = nullptr)
+{
+    int l, ls;
+    ij2l(nx, ny, i, j, l);
+    ij2l(nx, ny, is, js, ls);
+
+    if (I)
+    {
+        I[s] = ls;
+    }
+
+    if (A)
+    {
+        if (l == ls)
+        {
+            A[s] = 0; 
+            if (i < nx && j > 0)
+            {
+                A[s] += hx * hy / 12;
+            }
+            if (i > 0 && j > 0)
+            {
+                A[s] += 2 * hx * hy / 12;
+            }
+            if (i > 0 && j < ny)
+            {
+                A[s] += hx * hy / 12;
+            }
+            if (i < nx && j < ny)
+            {
+                A[s] += 2 * hx * hy / 12;
+            }
+        }
+        else
+        {
+            A[s] = 0;
+            if (is == i + 1 && js == j)
+            {
+                if (j < ny)
+                {
+                    A[s] += hx * hy / 24;
+                }
+                if (j > 0)
+                {
+                    A[s] += hx * hy / 24;
+                }
+            }
+            else if (is == i && js == j - 1)
+            {
+                if (i < nx)
+                {
+                    A[s] += hx * hy / 24;
+                }
+                if (i > 0)
+                {
+                    A[s] += hx * hy / 24;
+                }
+            }
+            else if (is == i - 1 && js == j - 1)
+            {
+                A[s] = 2 * hx * hy / 24;
+            }
+            else if (is == i - 1 && js == j)
+            {
+                if (j > 0)
+                {
+                    A[s] += hx * hy / 24;
+                }
+                if (j < ny)
+                {
+                    A[s] += hx * hy / 24;
+                }
+            }
+            else if (is == i && js == j + 1)
+            {
+                if (i > 0)
+                {
+                    A[s] += hx * hy / 24;
+                }
+                if (i < nx)
+                {
+                    A[s] += hx * hy / 24;
+                }
+            }
+            else if (is == i + 1 && js == j + 1)
+            {
+                A[s] = 2 * hx * hy / 24;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+    }
+
+    return 0;
+}
 
 void thread_rows (int n, int p, int k, int &i1, int &i2)
 {
@@ -183,6 +279,7 @@ int get_len_msr (int nx, int ny)
 }
 
 //возвращает количество внедиагональных точки (i, j)
+#define F(IS, JS, S) (IA_ij(nx, ny, hx, hy, i, j, (IS), (JS), (S), I, A))
 int get_off_diag(int nx, int ny, double hx, double hy, int i, int j, int *I, double *A)
 {
     int s = 0;
@@ -244,9 +341,9 @@ void fill_I(int nx, int ny, int *I)
     I[l] = r;
 }
 
+
 int get_diag(int nx, int ny, double hx, double hy, int i, int j, int */*I*/, double* A)
 {
-    //tut mb nuzhna l
     return IA_ij(nx, ny, hx, hy, i, j, i, j, 0, nullptr, A);
 }
 
@@ -262,7 +359,6 @@ int fill_IA(int nx, int ny, double hx, double hy, int *I, double* A, int p, int 
         s = I[l+1]-I[l];
         l2ij(nx, ny, i, j, l);
 
-        //Tut mb nado prosto A
         if(get_diag(nx, ny, hx, hy, i, j, I, A+l)!=0)
         {
             err = 1;
@@ -290,119 +386,53 @@ int fill_IA(int nx, int ny, double hx, double hy, int *I, double* A, int p, int 
     return 0;
 }
 
-#define Fb(I, J) (f(x0 + (I) * hx, y0 + (J) * hy))
+# define FUNC(F, A, C, I, J, HX, HY) (F ((A) + (I) * (HX), (C) + (J) * (HY)))
 
-double F_IJ(int nx, int ny, double hx, double hy, double x0, double y0, int i, int j, double (*f)(double, double)) {
-    double w = hx * hy / 192;
-    if (i > 0 && i < nx && j > 0 && j < ny) {
-        return w * (
-                36 * Fb(i, j)
-                + 20 * (
-                    Fb(i + 0.5, j) + Fb(i, j - 0.5) + Fb(i - 0.5, j - 0.5)
-                    + Fb(i - 0.5, j) + Fb(i, j + 0.5) + Fb(i + 0.5, j + 0.5)
-                    )
-                + 4 * (
-                    Fb(i + 0.5, j - 0.5) + Fb(i - 0.5, j - 1) + Fb(i - 1, j - 0.5)
-                    + Fb(i - 0.5, j + 0.5) + Fb(i + 0.5, j + 1) + Fb(i + 1, j + 0.5)
-                    )
-                + 2 * (
-                    Fb(i + 1, j) + Fb(i, j - 1) + Fb(i - 1, j - 1) 
-                    + Fb(i - 1, j) + Fb(i, j + 1) + Fb(i + 1, j + 1)
-                    )
-                );
-    }
-    if (i > 0 && i < nx && j == 0) {
-        return w * (
-                18 * Fb(i, j)
-                + 10 * (Fb(i + 0.5, j) + Fb(i - 0.5, j))
-                + 20 * (Fb(i, j + 0.5) + Fb(i + 0.5, j + 0.5))
-                + 4 * (Fb(i - 0.5, j + 0.5) + Fb(i + 0.5, j + 1) + Fb(i + 1, j + 0.5))
-                + 1 * (Fb(i - 1, j) + Fb(i + 1, j))
-                + 2 * (Fb(i, j + 1) + Fb(i + 1, j + 1))
-                );
-    }
-    if (i > 0 && i < nx && j == ny) {
-        return w * (
-                18 * Fb(i, j)
-                + 10 * (Fb(i - 0.5, j) + Fb(i + 0.5, j))
-                + 20 * (Fb(i, j - 0.5) + Fb(i - 0.5, j - 0.5))
-                + 4 * (Fb(i + 0.5, j - 0.5) + Fb(i - 0.5, j - 1) + Fb(i - 1, j - 0.5))
-                + 1 * (Fb(i - 1, j) + Fb(i + 1, j))
-                + 2 * (Fb(i, j - 1) + Fb(i - 1, j - 1))
-                );
-    }
-    if (i == 0 && j > 0 && j < ny) {
-        return w * (
-                18 * Fb(i, j)
-                + 10 * (Fb(i, j - 0.5) + Fb(i, j + 0.5))
-                + 20 * (Fb(i + 0.5, j) + Fb(i + 0.5, j + 0.5))
-                + 4 * (Fb(i + 0.5, j - 0.5) + Fb(i + 0.5, j + 1) + Fb(i + 1, j + 0.5))
-                + 1 * (Fb(i, j - 1) + Fb(i, j + 1))
-                + 2 * (Fb(i + 1, j) + Fb(i + 1, j + 1))
-                );
-    }
-    if (i == nx && j > 0 && j < ny) {
-        return w * (
-                18 * Fb(i, j)
-                + 10 * (Fb(i, j - 0.5) + Fb(i, j + 0.5))
-                + 20 * (Fb(i - 0.5, j) + Fb(i - 0.5, j + 0.5))
-                + 4 * (Fb(i - 0.5, j) + Fb(i - 1, j - 0.5) + Fb(i - 0.5, j + 0.5))
-                + 1 * (Fb(i, j - 1) + Fb(i, j + 1))
-                + 2 * (Fb(i - 1, j) + Fb(i - 1, j - 1))
-                );
-    }
-    if (i == 0 && j == 0) {
-        return w * (
-                12 * Fb(i, j)
-                + 10 * (Fb(i + 0.5, j) + Fb(i, j + 0.5))
-                + 20 * (Fb(i + 0.5, j + 0.5))
-                + 4 * (Fb(i + 1, j + 0.5) + Fb(i + 0.5, j + 1))
-                + 1 * (Fb(i + 1, j) + Fb(i, j + 1))
-                + 2 * (Fb(i + 1, j + 1))
-                );
-    }
-    if (i == nx && j == ny) {
-        return w * (
-                12 * Fb(i, j)
-                + 10 * (Fb(i - 0.5, j) + Fb(i, j - 0.5))
-                + 20 * (Fb(i - 0.5, j - 0.5))
-                + 4 * (Fb(i - 0.5, j - 1) + Fb(i - 1, j - 0.5))
-                + 1 * (Fb(i, j - 1) + Fb(i - 1, j))
-                + 2 * (Fb(i - 1, j - 1))
-                );
-    }
-    if (i == 0 && j == ny) {
-        return w * (
-                6 * Fb(i, j)
-                + 10 * (Fb(i + 0.5, j) + Fb(i, j - 0.5))
-                + 4 * (Fb(i + 0.5, j - 0.5))
-                + 1 * (Fb(i + 1, j) + Fb(i, j - 1))
-                );
-    }
-    if (i == nx && j == 0) {
-        return w * (
-                6 * Fb(i, j)
-                + 10 * (Fb(i - 0.5, j) + Fb(i, j + 0.5))
-                + 4 * (Fb(i - 0.5, j + 0.5))
-                + 1 * (Fb(i - 1, j) + Fb(i, j + 1))
-                );
-    }
-
-    return 1e308;
-}
-
-void fill_B(double a, double c, int nx, int ny, double hx, double hy, double* b, int p, int k, double (*f)(double, double))
+double F_ij(int nx, int ny, double hx, double hy, double a, double c, double (*f)(double, double), int l)
 {
-    int l1 = 0, l2 = 0, l = 0;
-    int N = (nx + 1) * (ny + 1);
     int i = 0, j = 0;
-    l1 = N * k;
-    l1 /= p;
-    l2 = N * (k + 1);
-    l2 /= p;
-    for(l = l1; l < l2; ++l) {
-        l2ij(nx, ny, i, j, l);
-        b[l] = F_IJ(nx, ny, hx, hy, a, c, i, j, f); 
+    l2ij(nx, ny, i, j, l);
+    double result = 0.0;
+
+    if (i < nx && j > 0)
+    {
+        result += 2 * FUNC(f, a, c, i, j, hx, hy);
+        result += FUNC(f, a, c, i + 1, j, hx, hy);
+        result += FUNC(f, a, c, i, j - 1, hx, hy);
     }
-    reduce_sum(p);
+
+    if (i > 0 && j > 0)
+    {
+        result += 4 * FUNC(f, a, c, i, j, hx, hy);
+        result += 2 * FUNC(f, a, c, i - 1, j - 1, hx, hy);
+        result += FUNC(f, a, c, i - 1, j, hx, hy);
+        result += FUNC(f, a, c, i, j - 1, hx, hy);
+    }
+
+    if (i > 0 && j < ny)
+    {
+        result += 2 * FUNC(f, a, c, i, j, hx, hy);
+        result += FUNC(f, a, c, i - 1, j, hx, hy);
+        result += FUNC(f, a, c, i, j + 1, hx, hy);
+    }
+
+    if (i < nx && j < ny)
+    {
+        result += 4 * FUNC(f, a, c, i, j, hx, hy);
+        result += 2 * FUNC(f, a, c, i + 1, j + 1, hx, hy);
+        result += FUNC(f, a, c, i, j + 1, hx, hy);
+        result += FUNC(f, a, c, i + 1, j, hx, hy);
+    }
+
+    return result * hx * hy / 24;
+}
+void fill_B (int n, int nx, int ny, double hx, double hy, double *b, double x0, double y0, int p, int k, double (*f)(double, double))
+{
+    int l1, l2;
+    thread_rows(n, p, k, l1, l2);
+    for (int l = l1; l < l2; l++)
+    {
+        b[l] = F_ij(nx, ny, hx, hy, x0, y0, f, l);
+    }
+    reduce_sum (p);
 }
