@@ -5,56 +5,61 @@
 
 #include "thread_function.hpp"
 
-double (*get_funk(int num))(double, double) 
+double func0(double, double)
 {
-    static auto f0 = [](double /*x*/, double /*y*/) {
-        return 1.;
-    };
-    static auto f1 = [](double x, double /*y*/) {
-        return x;
-    };
-    static auto f2 = [](double /*x*/, double y) {
-        return y;
-    };
-    static auto f3 = [](double x, double y) {
-        return x + y;
-    };
-    static auto f4 = [](double x, double y) {
-        return sqrt(x * x + y * y);
-    };
-    static auto f5 = [](double x, double y) {
-        return x * x + y * y;
-    };
-    static auto f6 = [](double x, double y) {
-        return exp(x * x - y * y);
-    };
-    static auto f7 = [](double x, double y) {
-        return 1./(25. * (x * x + y * y) + 1);
-    };
-
-    switch (num) {
-        case 0: 
-            return f0;
-        case 1:
-            return f1;
-        case 2:
-            return f2;
-        case 3:
-            return f3;
-        case 4:
-            return f4;
-        case 5:
-            return f5;
-        case 6:
-            return f6;
-        case 7:
-            return f7;
-        default :
-            return nullptr;
-    }
-    return nullptr;
+    return 1.0;
 }
 
+double func1(double x, double) 
+{
+    return x;
+}
+
+double func2(double, double y) 
+{
+    return y;
+}
+
+double func3(double x, double y) 
+{
+    return x + y;
+}
+
+double func4(double x, double y) 
+{
+    return sqrt(x * x + y * y);
+}
+
+double func5(double x, double y) 
+{
+    return x * x + y * y;
+}
+
+double func6(double x, double y) 
+{
+    return exp(x * x - y * y);
+}
+
+double func7(double x, double y) 
+{
+    return 1.0 / (25.0 * (x * x + y * y) + 1);
+}
+
+typedef double (*FuncPtr)(double, double);
+
+FuncPtr retrieve_function(int index) {
+    switch (index) {
+        case 0: return func0;
+        case 1: return func1;
+        case 2: return func2;
+        case 3: return func3;
+        case 4: return func4;
+        case 5: return func5;
+        case 6: return func6;
+        case 7: return func7;
+        default: return nullptr;
+    }
+}
 void PrintMatrix(double*A, int n)
 {
     for (int i = 0; i < n; i++)
@@ -97,8 +102,12 @@ void* thread_func(void *arg)
     double*u =aa->u;
     double*v =aa->v;
     int *I = aa->I;
-
-    double (*f)(double, double) = get_funk(func_id);
+    cpu_set_t cpu;
+    CPU_ZERO(&cpu);
+    pthread_t tid = aa->tid;
+    CPU_SET(p - 1 - (k % (p)), &cpu);
+    pthread_setaffinity_np(tid, sizeof(cpu), &cpu);
+    FuncPtr f = retrieve_function(func_id);
 
     double hx = (b - a)/nx, hy = (d - c)/ny;
     aa->hx = hx, aa->hy = hy;
@@ -117,9 +126,6 @@ void* thread_func(void *arg)
         return nullptr;
     }
     fill_B (N, nx, ny, hx, hy, B, a, c, p, k, f);
-   
-
-    //fill_B(a, c, nx, ny, hx, hy, B, p, k, f);
     reduce_sum(p);
 
     t1 = get_full_time();
