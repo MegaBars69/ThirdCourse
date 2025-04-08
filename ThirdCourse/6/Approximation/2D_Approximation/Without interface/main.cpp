@@ -8,12 +8,14 @@
 #include "initialize_matrix.hpp"
 #include "algorithm.hpp"
 #include "thread_function.hpp"
+#include <fenv.h>
 #define EPSILON 1e-16
 
 using namespace std;
 
 int main(int argc, char* argv[]) 
-{
+{ 
+    feenableexcept(FE_DIVBYZERO | FE_INVALID | FE_OVERFLOW | FE_UNDERFLOW);
     Args* aA;
     double* A, *B, *x,*u,*v,*r;
     int *I;
@@ -89,6 +91,7 @@ int main(int argc, char* argv[])
             delete[] v;
             delete[] r;
             delete[] I;
+            delete[] aA;
             free_reduce_sum();
         
             return 1;
@@ -116,7 +119,7 @@ int main(int argc, char* argv[])
     printf (
         "%s : Task = %d R1 = %e R2 = %e R3 = %e R4 = %e T1 = %.2f T2 = %.2f\
         It = %d E = %e K = %d Nx = %d Ny = %d P = %d\n",
-        argv[0], 5, r1, r2, r3, r4, t1, t2, its, eps, k, nx, ny, p);
+        argv[0], 5, r1, r2, r3, r4, t1, t2, its, eps, func_id, nx, ny, p);
     
     delete[] A;
     delete[] B;
@@ -125,6 +128,7 @@ int main(int argc, char* argv[])
     delete[] v;
     delete[] r;
     delete[] I;
+    delete[] aA;
     free_reduce_sum();
     return 0;
 }
