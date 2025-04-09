@@ -30,7 +30,11 @@ int main(int argc, char* argv[])
         printf("Usage1 ./a.out a b c d nx ny func_id epsilon max_iterations p\n");
         return 1;   
     }
-    
+    if(func_id < 0 || nx < 0|| ny < 0 || max_it < 0 || p < 0)
+    {
+        printf("Usage1 ./a.out a b c d nx ny func_id epsilon max_iterations p\n");
+        return 1;   
+    }
     
     int N = (nx+1)*(ny+1);
 

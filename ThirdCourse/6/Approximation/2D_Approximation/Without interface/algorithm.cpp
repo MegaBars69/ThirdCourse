@@ -161,8 +161,8 @@ int init_reduce_sum(int p)
 double reduce_sum_det(int p, int k, double s) 
 {
 	results[k] = s;
+        double sum = 0.;
 	reduce_sum(p); 
-	double sum = 0.;
 	for (int l = 0; l < p; l++) 
     {
 		sum += results[l];
@@ -509,7 +509,7 @@ double R2Calculation(double* x, double a, double c, double hx, double hy, int nx
         }
     }
     residual *= sq;
-    reduce_sum_det(p, k, residual);
+    reduce_sum(p,&residual, 1);
     return residual; 
 }
 
@@ -551,7 +551,7 @@ double R4Calculation(double* x, double a, double c, double hx, double hy, int nx
         }
     }
     residual *= sq;
-    reduce_sum_det(p, k, residual);
+    reduce_sum(p, &residual, 1);
     return residual; 
 }
 
