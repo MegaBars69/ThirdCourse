@@ -191,17 +191,7 @@ double get_cpu_time ()
   return buf.ru_utime.tv_sec + buf.ru_utime.tv_usec / 1.e6;
 }
 
-double scalar_product_slow (int n,double *x, double *y, int p, int k)
-{
-	int i, i1, i2;
-	double s = 0;
-	thread_rows(n, p, k, i1, i2);
-	for (i = i1; i < i2; i++) {
-		s += x[i] * y[i];
-	}
-    s = reduce_sum_det(p, k, s);
-	return s;
-}
+#include <emmintrin.h> // Для использования SSE2
 
 double scalar_product(int n, double *x, double *y, int p, int k) {
     int i, i1, i2;
@@ -209,11 +199,13 @@ double scalar_product(int n, double *x, double *y, int p, int k) {
     thread_rows(n, p, k, i1, i2);
 
     __m128d sum_vec = _mm_setzero_pd();
-    for (i = i1; i <= i2 - 2; i += 2) 
-    { 
-        __m128d x_vec = _mm_loadu_pd(&x[i]); 
-        __m128d y_vec = _mm_loadu_pd(&y[i]); 
-        sum_vec = _mm_add_pd(sum_vec, _mm_mul_pd(x_vec, y_vec)); 
+    for (i = i1; i <= i2 - 4; i += 4) { 
+        __m128d x_vec1 = _mm_loadu_pd(&x[i]); 
+        __m128d y_vec1 = _mm_loadu_pd(&y[i]); 
+        __m128d x_vec2 = _mm_loadu_pd(&x[i + 2]); 
+        __m128d y_vec2 = _mm_loadu_pd(&y[i + 2]); 
+        sum_vec = _mm_add_pd(sum_vec, _mm_mul_pd(x_vec1, y_vec1)); 
+        sum_vec = _mm_add_pd(sum_vec, _mm_mul_pd(x_vec2, y_vec2)); 
     }
 
     for (; i < i2; i++) {
@@ -228,6 +220,102 @@ double scalar_product(int n, double *x, double *y, int p, int k) {
 
     return s;
 }
+
+void apply_precenditiour_msr_matrix(int n, double *A, int* , double *v, double *r, int p, int k) {
+    int i, i1, i2;
+    thread_rows(n, p, k, i1, i2);
+    
+    for (i = i1; i <= i2 - 4; i += 4) {
+        __m128d r_vec1 = _mm_loadu_pd(&r[i]);
+        __m128d A_vec1 = _mm_loadu_pd(&A[i]);
+        __m128d r_vec2 = _mm_loadu_pd(&r[i + 2]);
+        __m128d A_vec2 = _mm_loadu_pd(&A[i + 2]);
+        __m128d v_vec1 = _mm_div_pd(r_vec1, A_vec1); 
+        __m128d v_vec2 = _mm_div_pd(r_vec2, A_vec2); 
+        _mm_storeu_pd(&v[i], v_vec1); 
+        _mm_storeu_pd(&v[i + 2], v_vec2); 
+    }
+
+    for (; i < i2; i++) {
+        v[i] = r[i] / A[i];
+    }
+
+    reduce_sum(p);
+}
+
+void mult_sub_vector(int n, double *x, double *y, double t, int p, int k) {
+    int l, l1, l2;
+    thread_rows(n, p, k, l1, l2);
+
+    __m128d t_vec = _mm_set1_pd(t);
+    for (l = l1; l <= l2 - 4; l += 4) {
+        __m128d y_vec1 = _mm_loadu_pd(&y[l]); 
+        __m128d x_vec1 = _mm_loadu_pd(&x[l]); 
+        __m128d y_vec2 = _mm_loadu_pd(&y[l + 2]); 
+        __m128d x_vec2 = _mm_loadu_pd(&x[l + 2]); 
+        __m128d t_y_vec1 = _mm_mul_pd(t_vec, y_vec1); 
+        __m128d t_y_vec2 = _mm_mul_pd(t_vec, y_vec2); 
+        __m128d result_vec1 = _mm_sub_pd(x_vec1, t_y_vec1); 
+        __m128d result_vec2 = _mm_sub_pd(x_vec2, t_y_vec2); 
+        _mm_storeu_pd(&x[l], result_vec1); 
+        _mm_storeu_pd(&x[l + 2], result_vec2); 
+    }
+
+    for (; l < l2; l++) {
+        x[l] -= t * y[l];
+    }
+
+    reduce_sum(p);
+}
+void mult_msr_matrix_vector(double *A, int *I, int n, double *x, double *y, int p, int k) {
+    int i, j, l, J;
+    int i1, i2;
+    double s;
+    i1 = n * k; i1 /= p;
+    i2 = n * (k + 1); i2 /= p;
+
+    for (i = i1; i < i2; i++) {
+        s = A[i] * x[i]; // A_ii * x_i
+
+        l = I[i + 1] - I[i];
+        J = I[i];
+
+        __m128d sum_vec = _mm_setzero_pd();
+        for (j = 0; j <= l - 4; j += 4) {
+            __m128d A_vec = _mm_loadu_pd(&A[J + j]); 
+            __m128d x_vec = _mm_set_pd(x[I[J + j + 1]], x[I[J + j]]); 
+            sum_vec = _mm_add_pd(sum_vec, _mm_mul_pd(A_vec, x_vec));
+            __m128d A_vec1 = _mm_loadu_pd(&A[J + j + 2]); 
+            __m128d x_vec1 = _mm_set_pd(x[I[J + j + 3]], x[I[J + j + 2]]); 
+            sum_vec = _mm_add_pd(sum_vec, _mm_mul_pd(A_vec1, x_vec1));
+        }
+
+        double temp[2];
+        _mm_storeu_pd(temp, sum_vec);
+        s += temp[0] + temp[1];
+
+        for (; j < l; j++) {
+            s += A[J + j] * x[I[J + j]];
+        }
+
+        y[i] = s;
+    }
+
+    reduce_sum(p);
+}
+
+double scalar_product_slow (int n,double *x, double *y, int p, int k)
+{
+	int i, i1, i2;
+	double s = 0;
+	thread_rows(n, p, k, i1, i2);
+	for (i = i1; i < i2; i++) {
+		s += x[i] * y[i];
+	}
+    s = reduce_sum_det(p, k, s);
+	return s;
+}
+
 void apply_precenditiour_msr_matrix_slow(int n, double *A, int* , double *v, double *r, int p, int k) 
 {
 	int i, i1, i2;
@@ -241,25 +329,6 @@ void apply_precenditiour_msr_matrix_slow(int n, double *A, int* , double *v, dou
 	reduce_sum(p);
 }
 
-void apply_precenditiour_msr_matrix(int n, double *A, int* , double *v, double *r, int p, int k) {
-    int i,i1, i2;
-    thread_rows(n, p, k, i1, i2);
-    
-    // Якоби M = diag(A)
-    for (i = i1; i <= i2 - 2; i += 2) {
-        __m128d r_vec = _mm_loadu_pd(&r[i]);
-        __m128d A_vec = _mm_loadu_pd(&A[i]);
-        __m128d v_vec = _mm_div_pd(r_vec, A_vec); 
-        _mm_storeu_pd(&v[i], v_vec); 
-    }
-
-    for (; i < i2; i++) {
-        v[i] = r[i] / A[i];
-    }
-
-    reduce_sum(p);
-}
-
 void mult_sub_vector_slow(int n, double * x, double * y, double t, int p, int k)
 {
     int l1,l2;
@@ -269,26 +338,7 @@ void mult_sub_vector_slow(int n, double * x, double * y, double t, int p, int k)
 
   reduce_sum (p);
 }
-void mult_sub_vector(int n, double *x, double *y, double t, int p, int k) {
-    int l, l1, l2;
-    thread_rows(n, p, k, l1, l2);
 
-    __m128d t_vec = _mm_set1_pd(t);
-    for ( l = l1; l <= l2 - 2; l += 2) 
-    {
-        __m128d y_vec = _mm_loadu_pd(&y[l]); 
-        __m128d x_vec = _mm_loadu_pd(&x[l]); 
-        __m128d t_y_vec = _mm_mul_pd(t_vec, y_vec); 
-        __m128d result_vec = _mm_sub_pd(x_vec, t_y_vec); 
-        _mm_storeu_pd(&x[l], result_vec); 
-    }
-
-    for (; l < l2; l++) {
-        x[l] -= t * y[l];
-    }
-
-    reduce_sum(p);
-}
 void mult_msr_matrix_vector_slow(double *A, int *I, int n, double *x, double *y, int p, int k) 
 {
 	int i, j, l, J;
@@ -311,40 +361,6 @@ void mult_msr_matrix_vector_slow(double *A, int *I, int n, double *x, double *y,
 		y[i] = s;
 	}
 	reduce_sum(p);
-}
-
-void mult_msr_matrix_vector(double *A, int *I, int n, double *x, double *y, int p, int k) {
-    int i, j, l, J;
-    int i1, i2;
-    double s;
-    i1 = n * k; i1 /= p;
-    i2 = n * (k + 1); i2 /= p;
-
-    for (i = i1; i < i2; i++) {
-        s = A[i] * x[i]; // A_ii * x_i
-
-        l = I[i + 1] - I[i];
-        J = I[i];
-
-        __m128d sum_vec = _mm_setzero_pd();
-        for (j = 0; j <= l - 2; j += 2) {
-            __m128d A_vec = _mm_loadu_pd(&A[J + j]); 
-            __m128d x_vec = _mm_set_pd(x[I[J + j + 1]], x[I[J + j]]); 
-            sum_vec = _mm_add_pd(sum_vec, _mm_mul_pd(A_vec, x_vec));
-        }
-
-        double temp[2];
-        _mm_storeu_pd(temp, sum_vec);
-        s += temp[0] + temp[1];
-
-        for (; j < l; j++) {
-            s += A[J + j] * x[I[J + j]];
-        }
-
-        y[i] = s;
-    }
-
-    reduce_sum(p);
 }
 
 int minim_error_msr_matrix(int n, double *A, int *I, double *b, double *x, /*нач знач, а потом результат*/ double *r, double *u, double *v,	double eps,	int max_it, int p, int k) 
@@ -404,48 +420,55 @@ int minimal_error_msr_matrix_full (int n, double *A, int *I, double *b,	double *
 
 //xi = a+ i*hx, hx = (b−a)/nx, y j = c+ j*hy, hy = (d− c)/ny
 double Pf(double* res, double x, double y, double a, double c, double hx, double hy, int nx, int ny) {
-    int i = (x - a) / hx;
-    int j = (y - c) / hx;
+    int i, j;
     int l0, l1, l2;
-    ij2l(nx, ny, i, j, l0);
-    ij2l(nx, ny, i + 1, j + 1, l2);
-    
-    double x0 = a + i * hx;
-    double y0 = c + j * hy;
-    double z0 = res[l0];
-    
+    double x0, y0, z0;
     double x1, y1, z1;
+    double x2, y2, z2;
+    double dx0, dy0, dx1, dy1, dz1, dx2, dy2, dz2;
+    double num, den;
 
-    if (hy / hx * (y - y0) >= (x - x0)) 
-    {
-        ij2l(nx, ny, i + 1, j, l1);
+    i = (x - a) / hx;
+    j = (y - c) / hy;
+
+    ij2l(nx, ny, i + 0, j + 0, l0);
+    ij2l(nx, ny, i + 1, j + 1, l2);
+
+    x0 = a + (i + 0) * hx;
+    y0 = c + (j + 0) * hy;
+    z0 = res[l0];
+
+    if (hy * (x - x0) / hx + y0 - y >= 0) {
+        ij2l(nx, ny, i + 1, j + 0, l1);
         x1 = a + (i + 1) * hx;
-        y1 = y0;
-    } 
-    else 
-    {
-        ij2l(nx, ny, i, j + 1, l1);
-        x1 = x0;
+        y1 = c + (j + 0) * hy;
+    } else {
+        ij2l(nx, ny, i + 0, j + 1, l1);
+        x1 = a + (i + 0) * hx;
         y1 = c + (j + 1) * hy;
     }
-    
     z1 = res[l1];
-    double x2 = a + (i + 1) * hx;
-    double y2 = c + (j + 1) * hy;
-    double z2 = res[l2];
 
-    double dx0 = x - x0;
-    double dy0 = y - y0;
-    double dx1 = x1 - x0;
-    double dy1 = y1 - y0;
-    double dz1 = z1 - z0;
-    double dx2 = x2 - x0;
-    double dy2 = y2 - y0;
-    double dz2 = z2 - z0;
+    ij2l(nx, ny, i + 1, j + 1, l2);
+    x2 = a + (i + 1) * hx;
+    y2 = c + (j + 1) * hy;
+    z2 = res[l2];
 
-    return (dy1 * dx2 * z0 - dx1 * dy2 * z0 + dy0 * dz1 * dx2 - dx0 * dz1 * dy2 - dy0 * dx1 * dz2 + dx0 * dy1 * dz2) / (dy1 * dx2 - dx1 * dy2);
+    dx0 = x - x0;
+    dy0 = y - y0;
+    dx1 = x1 - x0;
+    dy1 = y1 - y0;
+    dz1 = z1 - z0;
+    dx2 = x2 - x0;
+    dy2 = y2 - y0;
+    dz2 = z2 - z0;
+
+    num = dy1 * dx2 * z0 - dx1 * dy2 * z0 + dy0 * dz1 * dx2 - dx0 * dz1 * dy2 
+          - dy0 * dx1 * dz2 + dx0 * dy1 * dz2;
+    den = dy1 * dx2 - dx1 * dy2;
+
+    return num / den;
 }
-
 double R1Calculation(double* x, double a, double c, double hx, double hy, int nx, int ny, int p, int k, double (*f)(double, double)) {
     int rowIndex = 0, startRow = 0, endRow = 0;
     double residual = -1, currentValue = 0;
