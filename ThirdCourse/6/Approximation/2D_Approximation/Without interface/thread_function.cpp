@@ -2,7 +2,7 @@
 #include <cmath>
 #include "algorithm.hpp"
 #include "initialize_matrix.hpp"
-
+#include "string.h"
 #include "thread_function.hpp"
 
 double func0(double, double)
@@ -113,6 +113,10 @@ void* thread_func(void *arg)
     aa->hx = hx, aa->hy = hy;
     int N = aa->N;
     double t1 = -1, t2 = -1, r1 = -1, r2 = -1, r3 = -1, r4 = -1, err = 0;
+
+    memset(x, 0, N*sizeof(double));
+    t1 = get_full_time();
+
     if(k == 0)
     {
         fill_I(nx, ny, I);
@@ -128,7 +132,6 @@ void* thread_func(void *arg)
     fill_B (N, nx, ny, hx, hy, B, a, c, p, k, f);
     reduce_sum(p);
 
-    t1 = get_full_time();
     its = minimal_error_msr_matrix_full(N, A, I, B, x, r, u, v, eps, maxit, 100, p, k); 
     t1 = get_full_time() - t1;
 
