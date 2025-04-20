@@ -58,10 +58,9 @@ int main(int argc, char* argv[])
 
     a.n = n;
     a.m = m;
-    a.active_procceses = a.p = (n/m + (l == 0 ? 0 : 1) >= p ? p : n/m + (l == 0 ? 0 : 1));
+    a.active_procceses = a.p = (n/m + (l == 0 ? 0 : 1) >= p ? p : n/m + (l == 0 ? 0 : 1)); a.s = s;
     a.k = proc_num;
     a.l = l;
-    a.s = s;
     a.K = k;
     a.r = r;
     a.nomer_v_okne = proc_num;

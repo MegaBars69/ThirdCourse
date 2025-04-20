@@ -1687,14 +1687,14 @@ void SecondStep(Args* aA)
                 {
                     down_block_size_col = (bj < k ? m : l);
                                 
-                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                    ApplyMatrixToPairPrevSlow(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                 }
 
                 for (bj = 0; bj < up_bound; bj++, pb += m*m, pb_down += down_block_size_row*m)
                 {
                     down_block_size_col = (bj < k ? m : l);
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                    ApplyMatrixToPairPrevSlow(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                     ZerosMatrix[s*(k+1) + bj] = 1;
                 }
             }
@@ -1727,7 +1727,7 @@ void SecondStep(Args* aA)
                 {
                     down_block_size_col = (bj < k ? m : l);
                                 
-                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                    ApplyMatrixToPairPrevSlow(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                 }
 
@@ -1735,7 +1735,7 @@ void SecondStep(Args* aA)
                 {
                     down_block_size_col = (bj < k ? m : l);
 
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                    ApplyMatrixToPairPrevSlow(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                     if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                     {
                         ZerosMatrix[s*(k + 1) + bj] = 1; 
@@ -1780,7 +1780,7 @@ void SecondStep(Args* aA)
                 {
                     down_block_size_col = (bj < k ? m : l);
                                 
-                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                    ApplyMatrixToPairPrevSlow(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                 }
 
@@ -1788,7 +1788,7 @@ void SecondStep(Args* aA)
                 {
                     down_block_size_col = (bj < k ? m : l);
                 
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                    ApplyMatrixToPairPrevSlow(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                     ZerosMatrix[s*(k+1) + bj] = 1;
                 } 
             }
@@ -1824,7 +1824,7 @@ void SecondStep(Args* aA)
                 {
                     down_block_size_col = (bj < k ? m : l);
                                 
-                    ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                    ApplyMatrixToPairPrevSlow(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                 }
 
@@ -1832,7 +1832,7 @@ void SecondStep(Args* aA)
                 {
                     down_block_size_col = (bj < k ? m : l);
                 
-                    ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                    ApplyMatrixToPairPrevSlow(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                     if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                     {
                         ZerosMatrix[s*(k + 1) + bj] = 1; 
@@ -1877,7 +1877,7 @@ void SecondStep(Args* aA)
                     {
                         down_block_size_col = (bj < k ? m : l);
                                     
-                        ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                        ApplyMatrixToPairPrevSlow(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                     }
 
@@ -1885,7 +1885,7 @@ void SecondStep(Args* aA)
                     {
                         down_block_size_col = (bj < k ? m : l);
 
-                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                        ApplyMatrixToPairPrevSlow(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                         ZerosMatrix[s*(k+1) + bj] = 1;
                     } 
                 }
@@ -1921,7 +1921,7 @@ void SecondStep(Args* aA)
                     {
                         down_block_size_col = (bj < k ? m : l);
                                     
-                        ApplyMatrixToPair(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                        ApplyMatrixToPairPrevSlow(U, pa_side, pa_down_side, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
 
                     }
 
@@ -1929,7 +1929,7 @@ void SecondStep(Args* aA)
                     {
                         down_block_size_col = (bj < k ? m : l);
 
-                        ApplyMatrixToPair(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
+                        ApplyMatrixToPairPrevSlow(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, false, down_is_triangle);
                         ZerosMatrix[s*(k+1) + bj] = 1;
                         if (!MatrixIsZero(pb_down, down_block_size_col, down_block_size_row, eps))
                         {
@@ -2134,7 +2134,7 @@ int InverseMatrix(double* A, double* B, double* U, double* ProductResult, double
             {
                 down_block_size_col = (bj < k ? m : l);
 
-                ApplyMatrixToPairPrev(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, ((s == 0) && (bi > bj)));
+                ApplyMatrixToPairPrevSlow(U, pb, pb_down, down_block_size_col, down_block_size_row, block_size_row, ((s == 0) && (bi > bj)));
             }   
         }  
 
