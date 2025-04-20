@@ -4,7 +4,9 @@
 #include <QWheelEvent>
 #include <QMouseEvent>
 #include <QPainterPath>
-
+#include "algorithm.hpp"
+#include "thread_function.hpp"
+#include "initialize_matrix.hpp"
 
 static
 double f_0(double /*x*/, double)
@@ -136,10 +138,6 @@ void SurfaceWindow::toggle_approximation()
     update();
 }
 
-void SurfaceWindow::clearApproximationData()
-{
-    //approxData.clear();
-}
 
 void SurfaceWindow::zoom_in()
 {
@@ -280,37 +278,58 @@ void SurfaceWindow::calculateSurface()
     vertices.clear();
     triangles.clear();
 
-    double hx = (b - a) / mx;
-    double hy = (d - c) / my;
+    double xi, yj, z;
 
+    double hx_loc = (b - a) / mx;
+    double hy_loc = (d - c) / my;
+    double hx = (b - a) / nx;
+    double hy = (d - c) / ny;
     // Инициализация min/max
     m_minZ = std::numeric_limits<double>::max();
     m_maxZ = std::numeric_limits<double>::lowest();
+    if(currentFunc == APPROX && approxData.calc_status != CALCULATED)
+    {
+        approxData.calc_status = CALCULATING;
+        ApproximateFunction();
+        approxData.calc_status = CALCULATED;
+    }
 
     // Generate vertices
-    for (int i = 0; i <= mx; ++i) {
-        for (int j = 0; j <= my; ++j) {
-            double x = a + i * hx;
-            double y = c + j * hy;
-            double z = f(x,y);
-            
+    for (int i = 0; i < mx; ++i) {
+        for (int j = 0; j < my; ++j) {
+            xi = a + i * hx_loc;
+            yj = c + j * hy_loc;
+            if(currentFunc == FUNC)
+            {
+                z = f(xi,yj);
+            }
+            else if(currentFunc == APPROX && approxData.calc_status == CALCULATED)
+            {
+                z = Pf(approxData.x, xi, yj, a, c, hx, hy, nx, ny);
+            }
+            else
+            {
+                z = f(xi,yj);
+            }
+                
             // Обновляем min/max
             if (z < m_minZ) m_minZ = z;
             if (z > m_maxZ) m_maxZ = z;
-            
-            vertices.append(QVector3D(x, y, z));
+            norm = (fabs(m_maxZ) > fabs(m_minZ) ? fabs(m_maxZ) : fabs(m_minZ));
+
+            vertices.append(QVector3D(xi, yj, z));
         }
     }
 
     // Защита от деления на ноль
     if (qFuzzyCompare(m_minZ, m_maxZ)) {
-        m_maxZ = m_minZ + 1.0;
+        m_maxZ = m_minZ + 0.001;
     }
 
     // Create triangles
     for (int i = 0; i < mx; ++i) {
         for (int j = 0; j < my; ++j) {
-            int idx = i * (ny + 1) + j;
+            int idx = i * (my + 1) + j;
             Triangle t1, t2;
             
             t1.points[0] = vertices[idx];
@@ -331,11 +350,12 @@ void SurfaceWindow::paintEvent(QPaintEvent *) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.fillRect(rect(), Qt::white);
-    update_function();
     calculateSurface();
+
+    update_function();
     updateProjection();
     QPen pen_black(Qt::black, 2, Qt::SolidLine);
-    double normalizedZ, max, delta_y;
+    double normalizedZ, delta_y;
 
     const char* prefix = "max{|Fmax||,|Fmin|} = ";
     char* strochka = new char[strlen(prefix) + 20];
@@ -375,12 +395,11 @@ void SurfaceWindow::paintEvent(QPaintEvent *) {
     painter.drawText(0, 20, f_name);
     
     delta_y = 0.01 * (m_maxZ - m_minZ);
-    max = (fabs(m_maxZ) > fabs(m_minZ) ? fabs(m_maxZ) : fabs(m_minZ));
 
     prefix = "max{|Fmax||,|Fmin|} = ";
     m_minZ -= delta_y;
     m_maxZ += delta_y;
-    sprintf(strochka, "%s%e", prefix, max);
+    sprintf(strochka, "%s%e", prefix, norm);
     painter.drawText(0, 130, strochka);
     
     prefix = "(nx, ny) = ";
@@ -426,6 +445,7 @@ QVector3D SurfaceWindow::project(const QVector3D &point) const {
     proj.setY((1 - proj.y()) * height() / 2);
     return proj;
 }
+
 void SurfaceWindow::updateProjection()
 {
     projection.setToIdentity();
@@ -573,4 +593,104 @@ void SurfaceWindow::drawCube(QPainter &painter) {
         painter.drawLine(QPointF(p1.x(), p1.y()),
                          QPointF(p2.x(), p2.y()));
     }
+}
+
+void SurfaceWindow::clearApproximationData()
+{
+    approxData.clear();
+}
+
+void SurfaceWindow::ApproximationData::clear() 
+{
+    if (A) {delete [] A; A = nullptr;}
+    if (I) {delete [] I; I = nullptr;}
+    if (B) {delete [] B; B = nullptr;}
+    if (x) {delete [] x; x = nullptr;}
+    if (r) {delete [] r; r = nullptr;}
+    if (u) {delete [] u; u = nullptr;}
+    if (v) {delete [] v; v = nullptr;}
+    if (aA) {delete[] aA; aA = nullptr;}
+    free_reduce_sum();
+    calc_status = UNDEF;
+}
+
+void SurfaceWindow::ApproximationData::allocate(int nx, int ny, int p) 
+{
+    //clear();
+    N = (nx + 1)*(ny + 1);
+    len_msr =  N + 1 + get_len_msr (nx, ny);
+
+    calc_status = UNDEF;
+    aA = new Args[p];
+    A = new double[len_msr];
+    I = new int[len_msr];
+    B = new double[N];
+    x = new double[N];
+    r = new double[N];
+    u = new double[N];
+    v = new double[N];
+    init_reduce_sum (p);
+}
+
+void SurfaceWindow::ApproximateFunction()
+{
+    if(approxData.calc_status == CALCULATED) {return;}
+    if(!approxData.A) approxData.allocate(nx, ny, p);
+
+    Args* aA = approxData.aA;
+    int k;
+
+    for (k = 0; k < p; k++)
+    {
+        aA[k].A = approxData.A;
+        aA[k].I = approxData.I;
+        aA[k].B = approxData.B;
+        aA[k].r = approxData.r;
+        aA[k].u = approxData.u;
+        aA[k].v = approxData.v;
+        aA[k].x = approxData.x;
+        aA[k].a = a;
+        aA[k].b = b;
+        aA[k].c = c;
+        aA[k].d = d;
+        aA[k].func_id = func_id;
+        aA[k].maxit = max_it;
+        aA[k].p = p;
+        aA[k].k = k;
+        aA[k].eps = eps;
+        aA[k].nx = nx;
+        aA[k].ny = ny;
+        aA[k].N = (nx + 1)*(ny + 1);
+        aA[k].len_msr = approxData.len_msr;
+    }
+
+    //Запуск потоков.
+    for (k = 0; k < p; k++)
+    {
+        if (pthread_create(&aA[k].tid, nullptr, thread_func, aA+k))
+        {
+            std::cerr << "Error creating thread " << k <<std::endl;
+            clearApproximationData();
+            return;
+        }
+    }
+
+    //Прибиваем потоки молотком.
+    for (k = 0; k < p; k++)
+    {
+        pthread_join(aA[k].tid, nullptr);
+    }
+
+    its = aA->its;
+    r1 = aA->r1;
+    r2 = aA->r2;
+    r3 = aA->r3;
+    r4 = aA->r4;
+    t1 = aA->t1;
+    t2 = aA->t2;
+    printf (
+        "%s : Task = %d R1 = %e R2 = %e R3 = %e R4 = %e T1 = %.2f T2 = %.2f\
+        It = %d E = %e K = %d Nx = %d Ny = %d P = %d\n",
+        "./a.out", 5, r1, r2, r3, r4, t1, t2, its, eps, func_id, nx, ny, p);
+    
 }

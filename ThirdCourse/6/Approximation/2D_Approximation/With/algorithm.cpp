@@ -11,7 +11,7 @@
 
 double fabs(double a)
 {
-    return (a > 0 ? a : -a);
+    return (a > -1e-14 ? a : -a);
 }
 
 void reduce_sum(int p,double * a, int n)

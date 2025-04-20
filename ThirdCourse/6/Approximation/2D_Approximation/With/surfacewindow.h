@@ -3,6 +3,7 @@
 #define SURFACEWINDOW_H
 #define EPSILON 1e-15
 #include "algorithm.hpp"
+#include "thread_function.hpp"
 #include "initialize_matrix.hpp"
 
 #include <QWidget>
@@ -13,14 +14,21 @@
 #include <QWheelEvent>
 #include <QMouseEvent>
 
+enum CalculationStatus
+{
+    UNDEF,
+    CALCULATING,
+    CALCULATED
+};
+
 class SurfaceWindow : public QWidget {
     Q_OBJECT
 public:
     explicit SurfaceWindow(QWidget *parent = nullptr);
     void calculateSurface();
 
-    QSize minimumSizeHint() const override { return QSize(400, 400); }
-    QSize sizeHint() const override { return QSize(800, 600); }
+    QSize minimumSizeHint() const override { return QSize(100, 100); }
+    QSize sizeHint() const override { return QSize(1000, 1000); }
     int parse_command_line(int argc, char *argv[]);
 
 public slots:
@@ -53,10 +61,11 @@ protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void clearApproximationData();
     void keyPressEvent(QKeyEvent *event) override;
+    void ApproximateFunction();
 
 private:
     double a = -1, b = 1, c = -1, d = 1, eps = 1e-10;
-    int nx = 5, ny = 5, func_id = 0, max_it = 100, p=1; 
+    int nx = 5, ny = 5, func_id = 0, max_it = 100, p=1, its = 0; 
     double r1 = -1, r2 = -1, r3 = -1, r4 = -1, t1 = 0.0, t2 = 0.0;
     int mx = 5, my = 5, point;
     double (*f)(double,double) = nullptr;
@@ -66,12 +75,15 @@ private:
     double m_minZ = -1;
     double m_maxZ = 1;
     double norm = 1;
-    struct Triangle {
+
+    struct Triangle 
+    {
         QVector3D points[3];
         double depth;
     };
 
-    enum CurrentGraph {
+    enum CurrentGraph 
+    {
         FUNC,
         APPROX,
         ERRORS
@@ -88,6 +100,26 @@ private:
 
     QVector3D project(const QVector3D &point) const;
     void updateProjection();
+
+    struct ApproximationData 
+    {
+        Args* aA = nullptr;
+        double* A = nullptr, *B = nullptr, *x = nullptr, *u = nullptr, *v = nullptr, *r = nullptr;
+        int *I = nullptr;
+        int len_msr = 1;
+        int N = 1;
+        
+
+        CalculationStatus calc_status = UNDEF;
+        
+        ~ApproximationData() { clear(); }
+    
+        void clear();
+        void allocate(int nx, int ny, int p);
+        
+      };
+    
+      ApproximationData approxData;
 };
 
 #endif // SURFACEWINDOW_H

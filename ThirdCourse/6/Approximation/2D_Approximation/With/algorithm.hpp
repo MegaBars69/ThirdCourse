@@ -144,5 +144,6 @@ double get_cpu_time();
 double get_full_time();
 int minimal_error_msr_matrix_full (int n, double *A, int *I, double *b,	double *x /*Начальное, а в конце будет ответ*/,	double *r,	double *u,	double *v,	double eps,	int max_it,	int max_step, int p, int k);
 void ResidualCalculation(double *r1, double *r2, double *r3, double *r4, double* x, double a, double c, double hx, double hy, int nx, int ny, int p, int k, double (*f)(double, double));
+double Pf(double* res, double x, double y, double a, double c, double hx, double hy, int nx, int ny);
 
 #endif 
