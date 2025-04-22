@@ -4,6 +4,7 @@
 #include <QWheelEvent>
 #include <QMouseEvent>
 #include <QPainterPath>
+#include <QMessageBox>
 #include "algorithm.hpp"
 #include "thread_function.hpp"
 #include "initialize_matrix.hpp"
@@ -191,7 +192,6 @@ void SurfaceWindow::increase_draw_points()
 {
     mx *= 2;
     my *= 2;
-    clearApproximationData();
     update();
 }
 
@@ -201,7 +201,6 @@ void SurfaceWindow::decrease_draw_points()
     {
         mx /= 2;
         my /= 2;
-        clearApproximationData();
         update();
     }
 }
@@ -220,8 +219,29 @@ void SurfaceWindow::point_up()
 }
 
 void SurfaceWindow::keyPressEvent(QKeyEvent *event) {
+    // Проверяем статус вычислений
+    //pthread_mutex_lock(&p_mutex);    
+    if (approxData.calc_status == CALCULATING) 
+    {
+        printf("В данный момент производятся вычисления. Пожалуйста, подождите.\n");
+        QMessageBox::information(this, 
+                                "Вычисление", 
+                                "В данный момент производятся вычисления. Пожалуйста, подождите.");
+        return;  // Прерываем обработку нажатия
+    }
+    else if (approxData.calc_status == CALCULATED) {
+        std::cout<<"Calculated'\n";
+    }
+    else{
+        std::cout<<"Undef'\n";
+    }
+    //pthread_mutex_unlock(&p_mutex);
+
+
+    // Если вычислений нет - обрабатываем клавиши как обычно
+    //pthread_mutex_lock(&p_mutex);
     switch(event->key()) {
-        case Qt::Key_0: change_func(); break;
+        case Qt::Key_0: change_func(); break;            
         case Qt::Key_1: toggle_approximation(); break;
         case Qt::Key_2: zoom_in(); break;
         case Qt::Key_3: zoom_out(); break;
@@ -234,6 +254,8 @@ void SurfaceWindow::keyPressEvent(QKeyEvent *event) {
         case Qt::Key_R: reset_view(); break;
         default: QWidget::keyPressEvent(event);
     }
+    /*pthread_mutex_unlock(&p_mutex);
+    pthread_cond_broadcast(&p_cond);*/
 }
 
 void SurfaceWindow::reset_view() {
@@ -278,7 +300,7 @@ void SurfaceWindow::calculateSurface()
     vertices.clear();
     triangles.clear();
 
-    double xi, yj, z;
+    double xi, yj, z = 0;
 
     double hx_loc = (b - a) / mx;
     double hy_loc = (d - c) / my;
@@ -287,16 +309,17 @@ void SurfaceWindow::calculateSurface()
     // Инициализация min/max
     m_minZ = std::numeric_limits<double>::max();
     m_maxZ = std::numeric_limits<double>::lowest();
-    if(currentFunc == APPROX && approxData.calc_status != CALCULATED)
+    if(currentFunc != FUNC && approxData.calc_status != CALCULATED)
     {
         approxData.calc_status = CALCULATING;
         ApproximateFunction();
+
         approxData.calc_status = CALCULATED;
     }
 
     // Generate vertices
-    for (int i = 0; i < mx; ++i) {
-        for (int j = 0; j < my; ++j) {
+    for (int i = 0; i <= mx; ++i) {
+        for (int j = 0; j <= my; ++j) {
             xi = a + i * hx_loc;
             yj = c + j * hy_loc;
             if(currentFunc == FUNC)
@@ -307,9 +330,9 @@ void SurfaceWindow::calculateSurface()
             {
                 z = Pf(approxData.x, xi, yj, a, c, hx, hy, nx, ny);
             }
-            else
+            else if(currentFunc == ERRORS && approxData.calc_status == CALCULATED)
             {
-                z = f(xi,yj);
+                z = fabs(f(xi,yj) - Pf(approxData.x, xi, yj, a, c, hx, hy, nx, ny));
             }
                 
             // Обновляем min/max
@@ -601,35 +624,41 @@ void SurfaceWindow::clearApproximationData()
 }
 
 void SurfaceWindow::ApproximationData::clear() 
-{
-    if (A) {delete [] A; A = nullptr;}
-    if (I) {delete [] I; I = nullptr;}
-    if (B) {delete [] B; B = nullptr;}
-    if (x) {delete [] x; x = nullptr;}
-    if (r) {delete [] r; r = nullptr;}
-    if (u) {delete [] u; u = nullptr;}
-    if (v) {delete [] v; v = nullptr;}
-    if (aA) {delete[] aA; aA = nullptr;}
-    free_reduce_sum();
-    calc_status = UNDEF;
+{   
+    /*if(calc_status != CALCULATING)
+    {*/
+        if (A) {delete [] A; A = nullptr;}
+        if (I) {delete [] I; I = nullptr;}
+        if (B) {delete [] B; B = nullptr;}
+        if (x) {delete [] x; x = nullptr;}
+        if (r) {delete [] r; r = nullptr;}
+        if (u) {delete [] u; u = nullptr;}
+        if (v) {delete [] v; v = nullptr;}
+        if (aA) {delete[] aA; aA = nullptr;}
+        free_reduce_sum();
+        calc_status = UNDEF;
+    //}
 }
 
 void SurfaceWindow::ApproximationData::allocate(int nx, int ny, int p) 
 {
     //clear();
-    N = (nx + 1)*(ny + 1);
-    len_msr =  N + 1 + get_len_msr (nx, ny);
+   /*if(calc_status == UNDEF)
+    {*/
+        N = (nx + 1)*(ny + 1);
+        len_msr =  N + 1 + get_len_msr (nx, ny);
 
-    calc_status = UNDEF;
-    aA = new Args[p];
-    A = new double[len_msr];
-    I = new int[len_msr];
-    B = new double[N];
-    x = new double[N];
-    r = new double[N];
-    u = new double[N];
-    v = new double[N];
-    init_reduce_sum (p);
+        calc_status = UNDEF;
+        aA = new Args[p];
+        A = new double[len_msr];
+        I = new int[len_msr];
+        B = new double[N];
+        x = new double[N];
+        r = new double[N];
+        u = new double[N];
+        v = new double[N];
+        init_reduce_sum (p);
+    //}
 }
 
 void SurfaceWindow::ApproximateFunction()
@@ -674,7 +703,7 @@ void SurfaceWindow::ApproximateFunction()
             return;
         }
     }
-
+    
     //Прибиваем потоки молотком.
     for (k = 0; k < p; k++)
     {

@@ -95,7 +95,7 @@ void* thread_func(void *arg)
     int maxit = aa->maxit;
     int k = aa->k;
     int its;
-    
+    aa->working = true;
     double* A = aa->A;
     double* B = aa->B;
     double*x =aa->x;
@@ -149,6 +149,6 @@ void* thread_func(void *arg)
     aa->r3 = r3;
     aa->r4 = r4;
     aa->its = its;
-
+    aa->working = false;
     return nullptr;
 }

@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
     surface->setWindowTitle("Graph");
     
     // Инициализация поверхности
-    surface->calculateSurface();
+    //surface->calculateSurface();
 
     mainWindow->show();
     app.exec();

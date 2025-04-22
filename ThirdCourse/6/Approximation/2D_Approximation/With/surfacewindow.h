@@ -118,8 +118,9 @@ private:
         void allocate(int nx, int ny, int p);
         
       };
-    
       ApproximationData approxData;
+      pthread_mutex_t p_mutex = PTHREAD_MUTEX_INITIALIZER;
+      pthread_cond_t p_cond = PTHREAD_COND_INITIALIZER;
 };
 
 #endif // SURFACEWINDOW_H

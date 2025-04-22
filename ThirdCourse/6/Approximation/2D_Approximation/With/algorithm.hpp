@@ -112,6 +112,7 @@ class Args
         double astr_time = 0.0;
         io_status status = io_status::not_working;
         double res = 0;
+		bool working = false;
 
         /*
         void free_memory ()
