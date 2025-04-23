@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
     action = menuBar->addAction("&Reset View (r)", surface, SLOT(reset_view()));
     action->setShortcut(QString("r"));
    
-    action = menuBar->addAction("&Exit", mainWindow, SLOT(close()));
+    action = menuBar->addAction("&Exit", mainWindow, SLOT(closeEvent()));
     action->setShortcut(QString("Ctrl+X"));
 
     QObject::connect(zoomIn, &QAction::triggered, surface, &SurfaceWindow::zoomIn);

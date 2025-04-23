@@ -95,7 +95,6 @@ void* thread_func(void *arg)
     int maxit = aa->maxit;
     int k = aa->k;
     int its;
-    aa->working = true;
     double* A = aa->A;
     double* B = aa->B;
     double*x =aa->x;
@@ -103,6 +102,7 @@ void* thread_func(void *arg)
     double*u =aa->u;
     double*v =aa->v;
     int *I = aa->I;
+    bool* working = aa->working;
     cpu_set_t cpu;
     CPU_ZERO(&cpu);
     pthread_t tid = aa->tid;
@@ -110,10 +110,20 @@ void* thread_func(void *arg)
     pthread_setaffinity_np(tid, sizeof(cpu), &cpu);
     FuncPtr f = retrieve_function(func_id);
 
+    pthread_mutex_t* p_mutex = aa->p_mutex;
+    //pthread_cond_t* p_cond = aa->p_cond;
+
     double hx = (b - a)/nx, hy = (d - c)/ny;
     aa->hx = hx, aa->hy = hy;
     int N = aa->N;
     double t1 = -1, t2 = -1, r1 = -1, r2 = -1, r3 = -1, r4 = -1, err = 0;
+
+    if(k==0)
+    {
+        pthread_mutex_lock(p_mutex);
+        *working = true;
+        pthread_mutex_unlock(p_mutex);
+    }
 
     memset(x, 0, N*sizeof(double));
     t1 = get_full_time();
@@ -149,6 +159,17 @@ void* thread_func(void *arg)
     aa->r3 = r3;
     aa->r4 = r4;
     aa->its = its;
-    aa->working = false;
-    return nullptr;
+    if(k == 0)
+    {
+        printf (
+            "%s : Task = %d R1 = %e R2 = %e R3 = %e R4 = %e T1 = %.2f T2 = %.2f\
+            It = %d E = %e K = %d Nx = %d Ny = %d P = %d\n",
+            "./a.out", 5, r1, r2, r3, r4, t1, t2, its, eps, func_id, nx, ny, p);
+    }
+    if(k==0)
+    {
+        pthread_mutex_lock(p_mutex);
+        *working = false;
+        pthread_mutex_unlock(p_mutex);
+    }    return nullptr;
 }

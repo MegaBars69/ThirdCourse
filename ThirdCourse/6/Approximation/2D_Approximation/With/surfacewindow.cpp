@@ -75,6 +75,15 @@ int SurfaceWindow::parse_command_line(int argc, char* argv[])
 
 void SurfaceWindow::change_func()
 {
+    if (threads_working[0] == true) 
+    {
+        printf("В данный момент производятся вычисления. Пожалуйста, подождите.\n");
+        QMessageBox::information(this, 
+                                "Вычисление", 
+                                "В данный момент производятся вычисления. Пожалуйста, подождите.");
+        return;  // Прерываем обработку нажатия
+    }
+    
     if (!first)
     {
         func_id = (func_id + 1) % 8;
@@ -129,6 +138,15 @@ void SurfaceWindow::update_function()
 
 void SurfaceWindow::toggle_approximation()
 {
+    if (threads_working[0] == true) 
+    {
+        printf("В данный момент производятся вычисления. Пожалуйста, подождите.\n");
+        QMessageBox::information(this, 
+                                "Вычисление", 
+                                "В данный момент производятся вычисления. Пожалуйста, подождите.");
+        return;  // Прерываем обработку нажатия
+    }
+
     if (currentFunc == FUNC)
         currentFunc = APPROX;
     else if (currentFunc == APPROX)
@@ -142,6 +160,15 @@ void SurfaceWindow::toggle_approximation()
 
 void SurfaceWindow::zoom_in()
 {
+    if (threads_working[0] == true) 
+    {
+        printf("В данный момент производятся вычисления. Пожалуйста, подождите.\n");
+        QMessageBox::information(this, 
+                                "Вычисление", 
+                                "В данный момент производятся вычисления. Пожалуйста, подождите.");
+        return;  // Прерываем обработку нажатия
+    }
+
     double center = (a + b) / 2.0;
     double half_length = (b - a) / 4.0;
     a = center - half_length;
@@ -157,6 +184,15 @@ void SurfaceWindow::zoom_in()
 
 void SurfaceWindow::zoom_out()
 {
+    if (threads_working[0] == true) 
+    {
+        printf("В данный момент производятся вычисления. Пожалуйста, подождите.\n");
+        QMessageBox::information(this, 
+                                "Вычисление", 
+                                "В данный момент производятся вычисления. Пожалуйста, подождите.");
+        return;  // Прерываем обработку нажатия
+    }
+
     double center = (a + b) / 2.0;
     double half_length = (b - a);
     a = center - half_length;
@@ -172,6 +208,15 @@ void SurfaceWindow::zoom_out()
 
 void SurfaceWindow::increase_points()
 {
+    if (threads_working[0] == true) 
+    {
+        printf("В данный момент производятся вычисления. Пожалуйста, подождите.\n");
+        QMessageBox::information(this, 
+                                "Вычисление", 
+                                "В данный момент производятся вычисления. Пожалуйста, подождите.");
+        return;  // Прерываем обработку нажатия
+    }
+
     nx *= 2;
     ny *= 2;
     clearApproximationData();
@@ -180,6 +225,15 @@ void SurfaceWindow::increase_points()
 
 void SurfaceWindow::decrease_points()
 {
+    if (threads_working[0] == true) 
+    {
+        printf("В данный момент производятся вычисления. Пожалуйста, подождите.\n");
+        QMessageBox::information(this, 
+                                "Вычисление", 
+                                "В данный момент производятся вычисления. Пожалуйста, подождите.");
+        return;  // Прерываем обработку нажатия
+    }
+
     if (nx > 3 && ny > 3)
     {
         nx /= 2;
@@ -206,22 +260,7 @@ void SurfaceWindow::decrease_draw_points()
 }
 void SurfaceWindow::point_down()
 {
-    point--;
-    clearApproximationData();
-    update();
-}
-
-void SurfaceWindow::point_up()
-{
-    point++;
-    clearApproximationData();
-    update();
-}
-
-void SurfaceWindow::keyPressEvent(QKeyEvent *event) {
-    // Проверяем статус вычислений
-    //pthread_mutex_lock(&p_mutex);    
-    if (approxData.calc_status == CALCULATING) 
+    if (threads_working[0] == true) 
     {
         printf("В данный момент производятся вычисления. Пожалуйста, подождите.\n");
         QMessageBox::information(this, 
@@ -229,17 +268,31 @@ void SurfaceWindow::keyPressEvent(QKeyEvent *event) {
                                 "В данный момент производятся вычисления. Пожалуйста, подождите.");
         return;  // Прерываем обработку нажатия
     }
-    else if (approxData.calc_status == CALCULATED) {
-        std::cout<<"Calculated'\n";
-    }
-    else{
-        std::cout<<"Undef'\n";
-    }
-    //pthread_mutex_unlock(&p_mutex);
+    point--;
+    clearApproximationData();
+    update();
+}
 
+void SurfaceWindow::point_up()
+{
+    if (threads_working[0] == true) 
+    {
+        printf("В данный момент производятся вычисления. Пожалуйста, подождите.\n");
+        QMessageBox::information(this, 
+                                "Вычисление", 
+                                "В данный момент производятся вычисления. Пожалуйста, подождите.");
+        return;  // Прерываем обработку нажатия
+    }
+    point++;
+    clearApproximationData();
+    update();
+}
+
+
+void SurfaceWindow::keyPressEvent(QKeyEvent *event) {
+    // Проверяем статус вычислений
 
     // Если вычислений нет - обрабатываем клавиши как обычно
-    //pthread_mutex_lock(&p_mutex);
     switch(event->key()) {
         case Qt::Key_0: change_func(); break;            
         case Qt::Key_1: toggle_approximation(); break;
@@ -254,8 +307,7 @@ void SurfaceWindow::keyPressEvent(QKeyEvent *event) {
         case Qt::Key_R: reset_view(); break;
         default: QWidget::keyPressEvent(event);
     }
-    /*pthread_mutex_unlock(&p_mutex);
-    pthread_cond_broadcast(&p_cond);*/
+
 }
 
 void SurfaceWindow::reset_view() {
@@ -272,6 +324,7 @@ SurfaceWindow::SurfaceWindow(QWidget *parent) : QWidget(parent) {
     nx = 5, ny = 5, func_id = 7, max_it = 100, p=1;
     first = true;
     point = 0;
+    threads_working = new bool(false) ;
     currentFunc = FUNC;
     change_func();
 }
@@ -313,10 +366,8 @@ void SurfaceWindow::calculateSurface()
     {
         approxData.calc_status = CALCULATING;
         ApproximateFunction();
-
-        approxData.calc_status = CALCULATED;
     }
-
+    
     // Generate vertices
     for (int i = 0; i <= mx; ++i) {
         for (int j = 0; j <= my; ++j) {
@@ -334,7 +385,19 @@ void SurfaceWindow::calculateSurface()
             {
                 z = fabs(f(xi,yj) - Pf(approxData.x, xi, yj, a, c, hx, hy, nx, ny));
             }
-                
+            else if(currentFunc == APPROX && approxData.calc_status == CALCULATING)
+            {
+                z = f(xi,yj);
+            }
+            else if(currentFunc == ERRORS && approxData.calc_status == UNDEF)
+            {
+                z = f(xi,yj);
+            }
+            else
+            {
+                z = f(xi,yj);
+            }
+            
             // Обновляем min/max
             if (z < m_minZ) m_minZ = z;
             if (z > m_maxZ) m_maxZ = z;
@@ -367,10 +430,17 @@ void SurfaceWindow::calculateSurface()
             triangles.append(t2);
         }
     }
-    //update();
+    update();
 }
-void SurfaceWindow::paintEvent(QPaintEvent *) {
+void SurfaceWindow::paintEvent(QPaintEvent *) 
+{
     QPainter painter(this);
+    pthread_mutex_lock(&p_mutex); 
+    if(approxData.calc_status == CALCULATING)
+    {
+        approxData.calc_status = (*threads_working ? CALCULATING : CALCULATED);
+    }
+    pthread_mutex_unlock(&p_mutex);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.fillRect(rect(), Qt::white);
     calculateSurface();
@@ -664,6 +734,7 @@ void SurfaceWindow::ApproximationData::allocate(int nx, int ny, int p)
 void SurfaceWindow::ApproximateFunction()
 {
     if(approxData.calc_status == CALCULATED) {return;}
+    if(*threads_working == true){return;}
     if(!approxData.A) approxData.allocate(nx, ny, p);
 
     Args* aA = approxData.aA;
@@ -690,36 +761,26 @@ void SurfaceWindow::ApproximateFunction()
         aA[k].nx = nx;
         aA[k].ny = ny;
         aA[k].N = (nx + 1)*(ny + 1);
+        aA[k].working = threads_working;
         aA[k].len_msr = approxData.len_msr;
+        aA[k].p_mutex = &p_mutex;
+        aA[k].p_cond = &p_cond;
     }
 
-    //Запуск потоков.
     for (k = 0; k < p; k++)
     {
-        if (pthread_create(&aA[k].tid, nullptr, thread_func, aA+k))
+        if (pthread_create(&aA[k].tid, nullptr, thread_func, aA + k))
         {
-            std::cerr << "Error creating thread " << k <<std::endl;
+            std::cerr << "Error creating thread " << k << std::endl;
             clearApproximationData();
             return;
         }
-    }
-    
-    //Прибиваем потоки молотком.
-    for (k = 0; k < p; k++)
-    {
-        pthread_join(aA[k].tid, nullptr);
+        
+        // Отделяем поток
+        pthread_detach(aA[k].tid);
     }
 
-    its = aA->its;
-    r1 = aA->r1;
-    r2 = aA->r2;
-    r3 = aA->r3;
-    r4 = aA->r4;
-    t1 = aA->t1;
-    t2 = aA->t2;
-    printf (
-        "%s : Task = %d R1 = %e R2 = %e R3 = %e R4 = %e T1 = %.2f T2 = %.2f\
-        It = %d E = %e K = %d Nx = %d Ny = %d P = %d\n",
-        "./a.out", 5, r1, r2, r3, r4, t1, t2, its, eps, func_id, nx, ny, p);
     
 }
+
+

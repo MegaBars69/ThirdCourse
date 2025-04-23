@@ -112,8 +112,9 @@ class Args
         double astr_time = 0.0;
         io_status status = io_status::not_working;
         double res = 0;
-		bool working = false;
-
+		bool* working = nullptr;
+		pthread_mutex_t* p_mutex = nullptr;
+		pthread_cond_t* p_cond = nullptr;
         /*
         void free_memory ()
         {

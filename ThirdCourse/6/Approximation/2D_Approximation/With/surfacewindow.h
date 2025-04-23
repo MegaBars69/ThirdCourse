@@ -70,12 +70,14 @@ private:
     int mx = 5, my = 5, point;
     double (*f)(double,double) = nullptr;
     const char *f_name = nullptr;
+    bool* threads_working = nullptr;
 
     bool first = true;
     double m_minZ = -1;
     double m_maxZ = 1;
     double norm = 1;
-
+    pthread_mutex_t p_mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_cond_t p_cond = PTHREAD_COND_INITIALIZER;
     struct Triangle 
     {
         QVector3D points[3];
@@ -119,8 +121,7 @@ private:
         
       };
       ApproximationData approxData;
-      pthread_mutex_t p_mutex = PTHREAD_MUTEX_INITIALIZER;
-      pthread_cond_t p_cond = PTHREAD_COND_INITIALIZER;
+      
 };
 
 #endif // SURFACEWINDOW_H
