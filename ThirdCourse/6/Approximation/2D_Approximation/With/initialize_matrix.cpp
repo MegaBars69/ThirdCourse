@@ -386,9 +386,10 @@ int fill_IA(int nx, int ny, double hx, double hy, int *I, double* A, int p, int 
     return 0;
 }
 
-#define Fb(I, J) (f(x0 + (I) * hx, y0 + (J) * hy))
+#define Fb(I, J) (I == nx/2 && J == ny/2? f(x0 + (I) * hx, y0 + (J) * hy) + 0.1*point*norm: f(x0 + (I) * hx, y0 + (J) * hy))
 
-double F_IJ(int nx, int ny, double hx, double hy, double x0, double y0, int i, int j, double (*f)(double, double)) {
+double F_IJ(int nx, int ny, double hx, double hy, double x0, double y0, int i, int j, double (*f)(double, double), int point, double norm) 
+{
     double w = hx * hy / 192;
     if (i > 0 && i < nx && j > 0 && j < ny) 
     {
@@ -496,13 +497,14 @@ double F_IJ(int nx, int ny, double hx, double hy, double x0, double y0, int i, i
     return 1e308;
 }
 
-void fill_B(int N, int nx, int ny, double hx, double hy, double* b, double a, double c, int p, int k, double (*f)(double, double)) {
+void fill_B(int N, int nx, int ny, double hx, double hy, double* b, double a, double c, int p, int k, double (*f)(double, double), int point, double norm) 
+{
     int l1, l2, l, i = 0, j = 0;
     thread_rows(N, p, k, l1, l2);
     for(l = l1; l < l2; l++)
     {
         l2ij(nx, ny, i, j, l);
-        b[l] = F_IJ(nx, ny, hx, hy, a, c, i, j, f); 
+        b[l] = F_IJ(nx, ny, hx, hy, a, c, i, j, f, point, norm); 
     }
     reduce_sum(p);
 }

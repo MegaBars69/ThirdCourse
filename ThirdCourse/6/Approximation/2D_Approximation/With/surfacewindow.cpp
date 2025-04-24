@@ -2,6 +2,7 @@
 #include <cmath>
 #include <algorithm>
 #include <QWheelEvent>
+#include <QCloseEvent>
 #include <QMouseEvent>
 #include <QPainterPath>
 #include <QMessageBox>
@@ -92,6 +93,7 @@ void SurfaceWindow::change_func()
     {
         first = false;
     }
+    norm = 0;
     clearApproximationData();
     update_function();
     update();
@@ -173,6 +175,7 @@ void SurfaceWindow::zoom_in()
     double half_length = (b - a) / 4.0;
     a = center - half_length;
     b = center + half_length;
+    point = 0;
     
     center = (c + d) / 2.0;
     half_length = (d - c) / 4.0;
@@ -324,6 +327,7 @@ SurfaceWindow::SurfaceWindow(QWidget *parent) : QWidget(parent) {
     nx = 5, ny = 5, func_id = 7, max_it = 100, p=1;
     first = true;
     point = 0;
+    norm = 0;
     threads_working = new bool(false) ;
     currentFunc = FUNC;
     change_func();
@@ -348,6 +352,34 @@ void drawSmiley(QPainter &painter, int x, int y, int size)
     */
 }
 
+void SurfaceWindow::CalcNorm()
+{
+    double xi, yj, z = 0;
+
+    double hx_loc = (b - a) / mx;
+    double hy_loc = (d - c) / my;
+   
+    // Инициализация min/max
+    m_minZ = std::numeric_limits<double>::max();
+    m_maxZ = std::numeric_limits<double>::lowest();
+    
+    // Generate vertices
+    for (int i = 0; i <= mx; ++i) 
+    {
+        for (int j = 0; j <= my; ++j) 
+        {
+            xi = a + i * hx_loc;
+            yj = c + j * hy_loc;
+            z = f(xi,yj);
+            
+            // Обновляем min/max
+            if (z < m_minZ) m_minZ = z;
+            if (z > m_maxZ) m_maxZ = z;
+            norm = (fabs(m_maxZ) > fabs(m_minZ) ? fabs(m_maxZ) : fabs(m_minZ));
+        }
+    }
+}
+
 void SurfaceWindow::calculateSurface() 
 {
     vertices.clear();
@@ -359,18 +391,23 @@ void SurfaceWindow::calculateSurface()
     double hy_loc = (d - c) / my;
     double hx = (b - a) / nx;
     double hy = (d - c) / ny;
-    // Инициализация min/max
-    m_minZ = std::numeric_limits<double>::max();
-    m_maxZ = std::numeric_limits<double>::lowest();
+
+    if(fabs(norm) < EPSILON)
+    {
+        CalcNorm();
+    }
     if(currentFunc != FUNC && approxData.calc_status != CALCULATED)
     {
         approxData.calc_status = CALCULATING;
         ApproximateFunction();
     }
-    
+    m_minZ = std::numeric_limits<double>::max();
+    m_maxZ = std::numeric_limits<double>::lowest();
     // Generate vertices
-    for (int i = 0; i <= mx; ++i) {
-        for (int j = 0; j <= my; ++j) {
+    for (int i = 0; i <= mx; ++i) 
+    {
+        for (int j = 0; j <= my; ++j) 
+        {
             xi = a + i * hx_loc;
             yj = c + j * hy_loc;
             if(currentFunc == FUNC)
@@ -401,7 +438,6 @@ void SurfaceWindow::calculateSurface()
             // Обновляем min/max
             if (z < m_minZ) m_minZ = z;
             if (z > m_maxZ) m_maxZ = z;
-            norm = (fabs(m_maxZ) > fabs(m_minZ) ? fabs(m_maxZ) : fabs(m_minZ));
 
             vertices.append(QVector3D(xi, yj, z));
         }
@@ -506,7 +542,7 @@ void SurfaceWindow::paintEvent(QPaintEvent *)
     painter.drawText(0, 115, strochka);
 
     prefix = "p = ";
-    sprintf(strochka, "%s%d", prefix, p);
+    sprintf(strochka, "%s%d", prefix, point);
     painter.drawText(0, 155, strochka);
     
     painter.setPen(pen_black);
@@ -688,6 +724,19 @@ void SurfaceWindow::drawCube(QPainter &painter) {
     }
 }
 
+void SurfaceWindow::closeEvent(QCloseEvent *event) 
+{   
+    if (threads_working[0] == true) {
+        // Если вычисления еще идут, показываем сообщение и отменяем закрытие окна
+        QMessageBox::information(this, 
+                                "Вычисление", 
+                                "В данный момент производятся вычисления. Пожалуйста, подождите.");
+        event->ignore();  // Отменяем закрытие окна
+    } else {
+        event->accept();  // Разрешаем закрытие окна
+    }
+}
+
 void SurfaceWindow::clearApproximationData()
 {
     approxData.clear();
@@ -765,6 +814,8 @@ void SurfaceWindow::ApproximateFunction()
         aA[k].len_msr = approxData.len_msr;
         aA[k].p_mutex = &p_mutex;
         aA[k].p_cond = &p_cond;
+        aA[k].norm = norm;
+        aA[k].point = point;
     }
 
     for (k = 0; k < p; k++)

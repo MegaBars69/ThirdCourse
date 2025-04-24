@@ -92,7 +92,8 @@ class Args
     public:
         int nx = 0, ny = 0, N = 0, len_msr = 0, func_id;
         double a = 0, b = 0, c = 0, d = 0, hx = 0, hy = 0;
-        int p = 0, k = 0;
+        int p = 0, k = 0, point = 0;
+		double norm = 0;
 
         double* A = nullptr;
         int* I = nullptr;

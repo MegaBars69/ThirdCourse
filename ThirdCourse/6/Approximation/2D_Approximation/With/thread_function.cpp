@@ -118,6 +118,9 @@ void* thread_func(void *arg)
     int N = aa->N;
     double t1 = -1, t2 = -1, r1 = -1, r2 = -1, r3 = -1, r4 = -1, err = 0;
 
+    int point = aa->point;
+    double norm = aa->norm;
+
     if(k==0)
     {
         pthread_mutex_lock(p_mutex);
@@ -140,7 +143,7 @@ void* thread_func(void *arg)
     {
         return nullptr;
     }
-    fill_B (N, nx, ny, hx, hy, B, a, c, p, k, f);
+    fill_B (N, nx, ny, hx, hy, B, a, c, p, k, f, point, norm);
     reduce_sum(p);
 
     its = minimal_error_msr_matrix_full(N, A, I, B, x, r, u, v, eps, maxit, 100, p, k); 

@@ -30,7 +30,7 @@ public:
     QSize minimumSizeHint() const override { return QSize(100, 100); }
     QSize sizeHint() const override { return QSize(1000, 1000); }
     int parse_command_line(int argc, char *argv[]);
-
+    void CalcNorm();
 public slots:
     void zoomIn() { zoom *= 1.1; update(); }
     void zoomOut() { zoom *= 0.9; update(); }
@@ -62,12 +62,12 @@ protected:
     void clearApproximationData();
     void keyPressEvent(QKeyEvent *event) override;
     void ApproximateFunction();
-
+    void closeEvent(QCloseEvent *event) override;
 private:
     double a = -1, b = 1, c = -1, d = 1, eps = 1e-10;
     int nx = 5, ny = 5, func_id = 0, max_it = 100, p=1, its = 0; 
     double r1 = -1, r2 = -1, r3 = -1, r4 = -1, t1 = 0.0, t2 = 0.0;
-    int mx = 5, my = 5, point;
+    int mx = 5, my = 5, point = 0;
     double (*f)(double,double) = nullptr;
     const char *f_name = nullptr;
     bool* threads_working = nullptr;
