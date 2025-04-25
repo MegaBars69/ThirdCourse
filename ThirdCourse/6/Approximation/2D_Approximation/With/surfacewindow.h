@@ -24,6 +24,7 @@ enum CalculationStatus
 class SurfaceWindow : public QWidget {
     Q_OBJECT
 public:
+    int p = 1; 
     explicit SurfaceWindow(QWidget *parent = nullptr);
     void calculateSurface();
 
@@ -36,6 +37,8 @@ public slots:
     void zoomOut() { zoom *= 0.9; update(); }
     void rotateLeft() { rotationY -= 10; update(); }
     void rotateRight() { rotationY += 10; update(); }
+    void rotateClockwise();  // Вращение по часовой стрелке
+    void rotateCounterClockwise();
     void change_func();
     void update_function();
     void toggle_approximation();
@@ -47,7 +50,7 @@ public slots:
     void decrease_draw_points();
     void point_down();
     void point_up();
-    void reset_view();  
+    void reset_view(); 
     void drawCoordinateSystem(QPainter &painter);
     void drawAxis(QPainter &painter, 
                  const QVector3D &start, 
@@ -65,7 +68,7 @@ protected:
     void closeEvent(QCloseEvent *event) override;
 private:
     double a = -1, b = 1, c = -1, d = 1, eps = 1e-10;
-    int nx = 5, ny = 5, func_id = 0, max_it = 100, p=1, its = 0; 
+    int nx = 5, ny = 5, func_id = 0, max_it = 100, its = 0; 
     double r1 = -1, r2 = -1, r3 = -1, r4 = -1, t1 = 0.0, t2 = 0.0;
     int mx = 5, my = 5, point = 0;
     double (*f)(double,double) = nullptr;
@@ -75,7 +78,11 @@ private:
     bool first = true;
     double m_minZ = -1;
     double m_maxZ = 1;
+    double draw_m_minZ = -1;
+    double draw_m_maxZ = 1;
+    double max = 1;
     double norm = 1;
+    bool strochka_printed  = false;
     pthread_mutex_t p_mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_cond_t p_cond = PTHREAD_COND_INITIALIZER;
     struct Triangle 
@@ -98,6 +105,7 @@ private:
     double zoom = 1.33;
     double rotationX = -68.5;
     double rotationY = -0.5;
+    double rotationZ = 0.0; 
     QPoint lastMousePos;
 
     QVector3D project(const QVector3D &point) const;

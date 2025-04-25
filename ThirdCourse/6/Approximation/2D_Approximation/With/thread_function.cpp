@@ -164,15 +164,13 @@ void* thread_func(void *arg)
     aa->its = its;
     if(k == 0)
     {
-        printf (
-            "%s : Task = %d R1 = %e R2 = %e R3 = %e R4 = %e T1 = %.2f T2 = %.2f\
+        printf ("%s : Task = %d R1 = %e R2 = %e R3 = %e R4 = %e T1 = %.2f T2 = %.2f\
             It = %d E = %e K = %d Nx = %d Ny = %d P = %d\n",
             "./a.out", 5, r1, r2, r3, r4, t1, t2, its, eps, func_id, nx, ny, p);
-    }
-    if(k==0)
-    {
+
         pthread_mutex_lock(p_mutex);
         *working = false;
         pthread_mutex_unlock(p_mutex);
-    }    return nullptr;
+    }    
+    return nullptr;
 }

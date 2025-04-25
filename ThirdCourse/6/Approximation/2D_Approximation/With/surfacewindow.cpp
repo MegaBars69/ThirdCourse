@@ -6,6 +6,7 @@
 #include <QMouseEvent>
 #include <QPainterPath>
 #include <QMessageBox>
+#include <QPixmap>
 #include "algorithm.hpp"
 #include "thread_function.hpp"
 #include "initialize_matrix.hpp"
@@ -94,6 +95,9 @@ void SurfaceWindow::change_func()
         first = false;
     }
     norm = 0;
+    strochka_printed = false;
+
+    currentFunc = FUNC;
     clearApproximationData();
     update_function();
     update();
@@ -154,8 +158,10 @@ void SurfaceWindow::toggle_approximation()
     else if (currentFunc == APPROX)
         currentFunc = ERRORS;
     else
+    {
         currentFunc = FUNC;
-
+    }
+    strochka_printed = false;
     update();
 }
 
@@ -181,6 +187,8 @@ void SurfaceWindow::zoom_in()
     half_length = (d - c) / 4.0;
     c = center - half_length;
     d = center + half_length;
+    strochka_printed = false;
+
     clearApproximationData();
     update();
 }
@@ -205,6 +213,8 @@ void SurfaceWindow::zoom_out()
     half_length = (d - c);
     c = center - half_length;
     d = center + half_length;
+    strochka_printed = false;
+
     clearApproximationData();
     update();
 }
@@ -222,6 +232,8 @@ void SurfaceWindow::increase_points()
 
     nx *= 2;
     ny *= 2;
+    strochka_printed = false;
+
     clearApproximationData();
     update();
 }
@@ -241,6 +253,7 @@ void SurfaceWindow::decrease_points()
     {
         nx /= 2;
         ny /= 2;
+        strochka_printed = false;
         clearApproximationData();
         update();
     }
@@ -272,6 +285,7 @@ void SurfaceWindow::point_down()
         return;  // Прерываем обработку нажатия
     }
     point--;
+    strochka_printed = false;
     clearApproximationData();
     update();
 }
@@ -287,6 +301,8 @@ void SurfaceWindow::point_up()
         return;  // Прерываем обработку нажатия
     }
     point++;
+    strochka_printed = false;
+
     clearApproximationData();
     update();
 }
@@ -294,7 +310,6 @@ void SurfaceWindow::point_up()
 
 void SurfaceWindow::keyPressEvent(QKeyEvent *event) {
     // Проверяем статус вычислений
-
     // Если вычислений нет - обрабатываем клавиши как обычно
     switch(event->key()) {
         case Qt::Key_0: change_func(); break;            
@@ -308,11 +323,26 @@ void SurfaceWindow::keyPressEvent(QKeyEvent *event) {
         case Qt::Key_8: increase_draw_points(); break;
         case Qt::Key_9: decrease_draw_points(); break;
         case Qt::Key_R: reset_view(); break;
+        case Qt::Key_Left: rotateLeft(); break;   // Вращение влево
+        case Qt::Key_Right: rotateRight(); break; // Вращение вправо
+        case Qt::Key_Up: rotateClockwise(); break; // Вращение по часовой стрелке
+        case Qt::Key_Down: rotateCounterClockwise(); break; // Вращение против часовой стрелки
         default: QWidget::keyPressEvent(event);
     }
 
 }
 
+
+
+void SurfaceWindow::rotateClockwise() {
+    rotationZ += 10; // Увеличиваем угол вращения по оси Z
+    update(); // Обновляем окно
+}
+
+void SurfaceWindow::rotateCounterClockwise() {
+    rotationZ -= 10; // Уменьшаем угол вращения по оси Z
+    update(); // Обновляем окно
+}
 void SurfaceWindow::reset_view() {
     zoom = 1.33;
     rotationX = -68.5;
@@ -330,6 +360,9 @@ SurfaceWindow::SurfaceWindow(QWidget *parent) : QWidget(parent) {
     norm = 0;
     threads_working = new bool(false) ;
     currentFunc = FUNC;
+    max = 1;
+    strochka_printed = false;
+
     change_func();
 }
 
@@ -375,13 +408,20 @@ void SurfaceWindow::CalcNorm()
             // Обновляем min/max
             if (z < m_minZ) m_minZ = z;
             if (z > m_maxZ) m_maxZ = z;
-            norm = (fabs(m_maxZ) > fabs(m_minZ) ? fabs(m_maxZ) : fabs(m_minZ));
         }
     }
+    norm = (fabs(m_maxZ) > fabs(m_minZ) ? fabs(m_maxZ) : fabs(m_minZ));
+
 }
 
 void SurfaceWindow::calculateSurface() 
 {
+    pthread_mutex_lock(&p_mutex); 
+    if(approxData.calc_status == CALCULATING)
+    {
+        approxData.calc_status = (*threads_working ? CALCULATING : CALCULATED);
+    }
+    pthread_mutex_unlock(&p_mutex);
     vertices.clear();
     triangles.clear();
 
@@ -404,9 +444,9 @@ void SurfaceWindow::calculateSurface()
     m_minZ = std::numeric_limits<double>::max();
     m_maxZ = std::numeric_limits<double>::lowest();
     // Generate vertices
-    for (int i = 0; i <= mx; ++i) 
+    for (int i = 0; i <= mx; ++i)
     {
-        for (int j = 0; j <= my; ++j) 
+        for (int j = 0; j <= my; ++j)
         {
             xi = a + i * hx_loc;
             yj = c + j * hy_loc;
@@ -414,13 +454,17 @@ void SurfaceWindow::calculateSurface()
             {
                 z = f(xi,yj);
             }
-            else if(currentFunc == APPROX && approxData.calc_status == CALCULATED)
+            else if(currentFunc == APPROX && approxData.calc_status == CALCULATED && j < my && i < mx)
             {
                 z = Pf(approxData.x, xi, yj, a, c, hx, hy, nx, ny);
             }
-            else if(currentFunc == ERRORS && approxData.calc_status == CALCULATED)
+            else if(currentFunc == ERRORS && approxData.calc_status == CALCULATED && j < my && i < mx)
             {
                 z = fabs(f(xi,yj) - Pf(approxData.x, xi, yj, a, c, hx, hy, nx, ny));
+            }
+            else if(currentFunc == ERRORS && approxData.calc_status == CALCULATED && (j == my || i == mx))
+            {
+                z = fabs(f(xi,yj) - f(xi, yj));
             }
             else if(currentFunc == APPROX && approxData.calc_status == CALCULATING)
             {
@@ -435,13 +479,17 @@ void SurfaceWindow::calculateSurface()
                 z = f(xi,yj);
             }
             
-            // Обновляем min/max
-            if (z < m_minZ) m_minZ = z;
-            if (z > m_maxZ) m_maxZ = z;
+            if(i < mx && j < my)
+            {
+                // Обновляем min/max
+                if (z < m_minZ) m_minZ = z;
+                if (z > m_maxZ) m_maxZ = z;
+            }
 
             vertices.append(QVector3D(xi, yj, z));
         }
     }
+    max = fabs(m_maxZ) > fabs(m_minZ) ? fabs(m_maxZ) : fabs(m_minZ);
 
     // Защита от деления на ноль
     if (qFuzzyCompare(m_minZ, m_maxZ)) {
@@ -471,12 +519,7 @@ void SurfaceWindow::calculateSurface()
 void SurfaceWindow::paintEvent(QPaintEvent *) 
 {
     QPainter painter(this);
-    pthread_mutex_lock(&p_mutex); 
-    if(approxData.calc_status == CALCULATING)
-    {
-        approxData.calc_status = (*threads_working ? CALCULATING : CALCULATED);
-    }
-    pthread_mutex_unlock(&p_mutex);
+    
     painter.setRenderHint(QPainter::Antialiasing);
     painter.fillRect(rect(), Qt::white);
     calculateSurface();
@@ -488,7 +531,6 @@ void SurfaceWindow::paintEvent(QPaintEvent *)
 
     const char* prefix = "max{|Fmax||,|Fmin|} = ";
     char* strochka = new char[strlen(prefix) + 20];
-    // Sort triangles by depth
     for (Triangle &tri : triangles) {
         QVector3D center = (tri.points[0] + tri.points[1] + tri.points[2]) / 3;
         tri.depth = (projection * center).z();
@@ -507,7 +549,6 @@ void SurfaceWindow::paintEvent(QPaintEvent *)
             polygon << QPointF(proj.x(), proj.y());
         }
         
-        // Нормализованная высота для цвета
         double avgZ = (tri.points[0].z() + tri.points[1].z() + tri.points[2].z()) / 3;
         normalizedZ = (avgZ - m_minZ) / (m_maxZ - m_minZ);
         normalizedZ = qBound(0.0, normalizedZ, 1.0); 
@@ -524,13 +565,18 @@ void SurfaceWindow::paintEvent(QPaintEvent *)
     painter.drawText(0, 20, f_name);
     
     delta_y = 0.01 * (m_maxZ - m_minZ);
-
     prefix = "max{|Fmax||,|Fmin|} = ";
     m_minZ -= delta_y;
     m_maxZ += delta_y;
-    sprintf(strochka, "%s%e", prefix, norm);
-    painter.drawText(0, 130, strochka);
     
+    sprintf(strochka, "%s%e", prefix, max);
+    if(!strochka_printed && approxData.calc_status != CALCULATING)
+    {
+        printf("%s\n", strochka);  
+        strochka_printed = true;
+    }
+    painter.drawText(0, 130, strochka);
+
     prefix = "(nx, ny) = ";
     sprintf(strochka, "%s%d", prefix, nx);
     sprintf(strochka, "%s%d", prefix, ny);
@@ -560,7 +606,30 @@ void SurfaceWindow::paintEvent(QPaintEvent *)
         painter.setPen(pen_black);
         painter.drawText(0, 45, "ERRORS");
     }
-    delete[] strochka;
+    QPixmap controlsPixmap("mouse.png"); // Путь к изображению
+    QSize newSize(100, 100); // Укажите желаемый размер
+    QPixmap scaledPixmap = controlsPixmap.scaled(newSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    // Отображение в правом верхнем углу
+    int xPos = width() - scaledPixmap.width() - 10; 
+    int yPos = 10; 
+    painter.drawPixmap(xPos, yPos, scaledPixmap); 
+    painter.setPen(Qt::black); 
+    painter.setFont(QFont("Arial", 12, QFont::Bold)); 
+    painter.drawText(xPos-25, yPos + scaledPixmap.height()+ 20, "Mouse Available"); 
+
+    QPixmap arrowsPixmap("arrows.png"); 
+    QSize new2Size(125, 125); 
+    QPixmap scaledarrowsPixmap = arrowsPixmap.scaled(new2Size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    xPos = width() - scaledarrowsPixmap.width()+10; 
+    yPos = 150; 
+    painter.drawPixmap(xPos, yPos, scaledarrowsPixmap);
+
+    painter.setPen(Qt::black); 
+    painter.setFont(QFont("Arial", 12, QFont::Bold));
+    painter.drawText(xPos-25, yPos + scaledarrowsPixmap.height()+ 20, "Arrows Available");
+
 }
 
 QVector3D SurfaceWindow::project(const QVector3D &point) const {
@@ -568,7 +637,8 @@ QVector3D SurfaceWindow::project(const QVector3D &point) const {
     view.translate(0, 0, -5 * zoom);
     view.rotate(rotationX, 1, 0, 0);
     view.rotate(rotationY, 0, 1, 0);
-    
+    view.rotate(rotationZ, 0, 0, 1); 
+
     QVector3D proj = projection * view * point;
     proj.setX((proj.x() + 1) * width() / 2);
     proj.setY((1 - proj.y()) * height() / 2);
@@ -579,24 +649,20 @@ void SurfaceWindow::updateProjection()
 {
     projection.setToIdentity();
     
-    // Рассчитываем границы с учетом Z
     QSize viewport = size();
     double aspect = static_cast<double>(viewport.width()) / viewport.height();
     
-    // Ортографическая проекция с автоматическим масштабированием
     QVector3D sceneSize(b - a, d - c, m_maxZ - m_minZ);
     double maxSceneSize = qMax(sceneSize.x(), qMax(sceneSize.y(), sceneSize.z()));
     
-    // Применяем масштабирование (zoom)
     maxSceneSize *= zoom;
     
     projection.ortho(
-        -maxSceneSize * aspect/2, maxSceneSize * aspect/2, // left/right
-        -maxSceneSize/2,         maxSceneSize/2,          // bottom/top
-        -maxSceneSize*2,          maxSceneSize*2           // near/far
+        -maxSceneSize * aspect/2, maxSceneSize * aspect/2, 
+        -maxSceneSize/2,         maxSceneSize/2,         
+        -maxSceneSize*2,          maxSceneSize*2         
     );
     
-    // Центрируем сцену
     projection.translate(
         -((a + b)/2 + c + d)/2, 
         -((c + d)/2 + m_minZ + m_maxZ)/2, 
@@ -653,7 +719,6 @@ void SurfaceWindow::drawCoordinateSystem(QPainter &painter) {
     drawAxis(painter, proj_y_start, proj_y, "Y");
     drawAxis(painter, proj_z_start, proj_z, "Z");
 
-    // Рисуем куб (опционально)
     drawCube(painter);
 }
 
@@ -726,15 +791,16 @@ void SurfaceWindow::drawCube(QPainter &painter) {
 
 void SurfaceWindow::closeEvent(QCloseEvent *event) 
 {   
+    pthread_mutex_lock(&p_mutex);
     if (threads_working[0] == true) {
-        // Если вычисления еще идут, показываем сообщение и отменяем закрытие окна
         QMessageBox::information(this, 
                                 "Вычисление", 
                                 "В данный момент производятся вычисления. Пожалуйста, подождите.");
-        event->ignore();  // Отменяем закрытие окна
+        event->ignore();  
     } else {
-        event->accept();  // Разрешаем закрытие окна
+        event->accept(); 
     }
+    pthread_mutex_unlock(&p_mutex); 
 }
 
 void SurfaceWindow::clearApproximationData()
@@ -744,40 +810,33 @@ void SurfaceWindow::clearApproximationData()
 
 void SurfaceWindow::ApproximationData::clear() 
 {   
-    /*if(calc_status != CALCULATING)
-    {*/
-        if (A) {delete [] A; A = nullptr;}
-        if (I) {delete [] I; I = nullptr;}
-        if (B) {delete [] B; B = nullptr;}
-        if (x) {delete [] x; x = nullptr;}
-        if (r) {delete [] r; r = nullptr;}
-        if (u) {delete [] u; u = nullptr;}
-        if (v) {delete [] v; v = nullptr;}
-        if (aA) {delete[] aA; aA = nullptr;}
-        free_reduce_sum();
-        calc_status = UNDEF;
-    //}
+    if (A) {delete [] A; A = nullptr;}
+    if (I) {delete [] I; I = nullptr;}
+    if (B) {delete [] B; B = nullptr;}
+    if (x) {delete [] x; x = nullptr;}
+    if (r) {delete [] r; r = nullptr;}
+    if (u) {delete [] u; u = nullptr;}
+    if (v) {delete [] v; v = nullptr;}
+    if (aA) {delete[] aA; aA = nullptr;}
+    calc_status = UNDEF;
 }
 
 void SurfaceWindow::ApproximationData::allocate(int nx, int ny, int p) 
 {
-    //clear();
-   /*if(calc_status == UNDEF)
-    {*/
-        N = (nx + 1)*(ny + 1);
-        len_msr =  N + 1 + get_len_msr (nx, ny);
+    
+    N = (nx + 1)*(ny + 1);
+    len_msr =  N + 1 + get_len_msr (nx, ny);
 
-        calc_status = UNDEF;
-        aA = new Args[p];
-        A = new double[len_msr];
-        I = new int[len_msr];
-        B = new double[N];
-        x = new double[N];
-        r = new double[N];
-        u = new double[N];
-        v = new double[N];
-        init_reduce_sum (p);
-    //}
+    calc_status = UNDEF;
+    aA = new Args[p];
+    A = new double[len_msr];
+    I = new int[len_msr];
+    B = new double[N];
+    x = new double[N];
+    r = new double[N];
+    u = new double[N];
+    v = new double[N];
+
 }
 
 void SurfaceWindow::ApproximateFunction()

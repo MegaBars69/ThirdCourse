@@ -1,6 +1,7 @@
 #include <iostream>
+#include <cmath>
 #include "initialize_matrix.hpp"
-
+#define EPSILON 1e-15
 void ij2l (int nx, int /*ny*/, int i, int j, int &l) 
 {
 	l = i + j *(nx + 1);
@@ -386,7 +387,7 @@ int fill_IA(int nx, int ny, double hx, double hy, int *I, double* A, int p, int 
     return 0;
 }
 
-#define Fb(I, J) (I == nx/2 && J == ny/2? f(x0 + (I) * hx, y0 + (J) * hy) + 0.1*point*norm: f(x0 + (I) * hx, y0 + (J) * hy))
+#define Fb(I, J) (fabs(I - nx/2)<EPSILON && fabs(J - ny/2) <EPSILON? f(x0 + (I) * hx, y0 + (J) * hy) + 0.1*point*norm: f(x0 + (I) * hx, y0 + (J) * hy))
 
 double F_IJ(int nx, int ny, double hx, double hy, double x0, double y0, int i, int j, double (*f)(double, double), int point, double norm) 
 {

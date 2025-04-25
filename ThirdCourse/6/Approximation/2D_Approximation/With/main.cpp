@@ -83,9 +83,11 @@ int main(int argc, char *argv[]) {
     
     // Инициализация поверхности
     //surface->calculateSurface();
+    init_reduce_sum (surface->p);
 
     mainWindow->show();
     app.exec();
+    free_reduce_sum();
     //delete surface;
     return 0;
 }
