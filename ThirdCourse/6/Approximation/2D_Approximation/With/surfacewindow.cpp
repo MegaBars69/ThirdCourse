@@ -797,6 +797,7 @@ void SurfaceWindow::closeEvent(QCloseEvent *event)
                                 "В данный момент производятся вычисления. Пожалуйста, подождите.");
         event->ignore();  
     } else {
+        delete threads_working;
         event->accept(); 
     }
 }
@@ -890,5 +891,4 @@ void SurfaceWindow::ApproximateFunction()
 
     
 }
-
 
