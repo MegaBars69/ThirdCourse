@@ -629,7 +629,7 @@ void SurfaceWindow::paintEvent(QPaintEvent *)
     painter.setPen(Qt::black); 
     painter.setFont(QFont("Arial", 12, QFont::Bold));
     painter.drawText(xPos-25, yPos + scaledarrowsPixmap.height()+ 20, "Arrows Available");
-
+    delete[] strochka;
 }
 
 QVector3D SurfaceWindow::project(const QVector3D &point) const {
@@ -791,7 +791,6 @@ void SurfaceWindow::drawCube(QPainter &painter) {
 
 void SurfaceWindow::closeEvent(QCloseEvent *event) 
 {   
-    pthread_mutex_lock(&p_mutex);
     if (threads_working[0] == true) {
         QMessageBox::information(this, 
                                 "Вычисление", 
@@ -800,7 +799,6 @@ void SurfaceWindow::closeEvent(QCloseEvent *event)
     } else {
         event->accept(); 
     }
-    pthread_mutex_unlock(&p_mutex); 
 }
 
 void SurfaceWindow::clearApproximationData()

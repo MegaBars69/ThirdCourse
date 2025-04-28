@@ -13,6 +13,8 @@
 #include <QPainter>
 #include <QWheelEvent>
 #include <QMouseEvent>
+#include <QMainWindow>
+#include <QMessageBox>
 
 enum CalculationStatus
 {
@@ -57,7 +59,7 @@ public slots:
                  const QVector3D &end,
                  const QString &label);
     void drawCube(QPainter &painter);
-protected:
+public:
     void paintEvent(QPaintEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
@@ -132,4 +134,22 @@ private:
       
 };
 
+class MyMainWindow : public QMainWindow {
+    Q_OBJECT
+
+public:
+    MyMainWindow(SurfaceWindow *surface, QWidget *parent = nullptr) 
+        : QMainWindow(parent), surfaceWindow(surface) {
+        // Ваши настройки окна
+    }
+
+protected:
+    void closeEvent(QCloseEvent *event) override {
+        // Вызываем closeEvent у объекта SurfaceWindow
+        surfaceWindow->closeEvent(event);
+    }
+
+private:
+    SurfaceWindow *surfaceWindow; // Указатель на объект SurfaceWindow
+};
 #endif // SURFACEWINDOW_H

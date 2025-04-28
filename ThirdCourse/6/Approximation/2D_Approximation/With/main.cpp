@@ -1,14 +1,9 @@
-// main.cpp
 #include <QApplication>
 #include <QMainWindow>
 #include <QMenuBar>
 #include <QVBoxLayout>
-#include <QtWidgets/QApplication>
-#include <QtWidgets/QMainWindow>
-#include <QtWidgets/QVBoxLayout>
-#include <QtWidgets/QAction>
-#include <QtWidgets/QMenuBar>
-#include <QtWidgets/QMessageBox>
+#include <QMessageBox>
+#include <QCloseEvent>
 #include "surfacewindow.h"
 #include <fenv.h>
 
@@ -17,8 +12,8 @@ int main(int argc, char *argv[]) {
 
     QApplication app(argc, argv);
 
-    QMainWindow *mainWindow = new QMainWindow;
-    SurfaceWindow *surface = new SurfaceWindow(mainWindow);
+    SurfaceWindow *surface = new SurfaceWindow(nullptr);
+    MyMainWindow *mainWindow = new MyMainWindow(surface);
     if (surface->parse_command_line(argc, argv)) {
         QMessageBox::warning(0, "Wrong input arguments!", "Wrong input arguments!");
         return -1;
@@ -79,15 +74,17 @@ int main(int argc, char *argv[]) {
     menuBar->setMaximumHeight(30);
     mainWindow->setMenuBar(menuBar);
     mainWindow->setCentralWidget(surface);
-    surface->setWindowTitle("Graph");
+    mainWindow->setWindowTitle("Graph");
     
     // Инициализация поверхности
     //surface->calculateSurface();
-    init_reduce_sum (surface->p);
+    init_reduce_sum(surface->p);
 
     mainWindow->show();
     app.exec();
     free_reduce_sum();
-    //delete surface;
+    delete surface;
+    delete menuBar;
+    delete mainWindow;
     return 0;
 }
