@@ -58,23 +58,6 @@ double f_7(double x, double y)
     return 1/(25*(x*x + y*y) + 1);
 }
 
-
-int SurfaceWindow::parse_command_line(int argc, char* argv[])
-{
-
-    if (argc != 13 || sscanf(argv[1], "%lf", &a) != 1 || sscanf(argv[2], "%lf", &b) != 1 || sscanf(argv[3], "%lf", &c) != 1 || sscanf(argv[4], "%lf", &d) != 1 || sscanf(argv[5], "%d", &nx) != 1 || sscanf(argv[6], "%d", &ny) != 1|| sscanf(argv[7], "%d", &mx) != 1 || sscanf(argv[8], "%d", &my) != 1 || sscanf(argv[9], "%d", &func_id) != 1 || sscanf(argv[10], "%lf", &eps) != 1 || sscanf(argv[11], "%d", &max_it) != 1 || sscanf(argv[12], "%d", &p) != 1) 
-    {
-        printf("Usage1 ./a.out a b c d nx ny mx my func_id epsilon max_iterations p\n");
-        return 1;   
-    }
-    if(func_id < 0 || nx < 0|| ny < 0 || max_it < 0 || p < 0 || func_id > 7)
-    {
-        printf("Usage1 ./a.out a b c d nx ny mx my func_id epsilon max_iterations p\n");
-        return 1;   
-    }
-    return 0;
-}
-
 void SurfaceWindow::change_func()
 {
     if (threads_working[0] == true) 
@@ -349,23 +332,6 @@ void SurfaceWindow::reset_view() {
     rotationY = -0.5;
     update();
 }
-
-SurfaceWindow::SurfaceWindow(QWidget *parent) : QWidget(parent) {
-    setFocusPolicy(Qt::StrongFocus);
-    updateProjection();
-    a = -1, b = 1, c = -1, d = 1, eps = 1e-10;
-    nx = 5, ny = 5, func_id = 7, max_it = 100, p=1;
-    first = true;
-    point = 0;
-    norm = 0;
-    threads_working = new bool(false) ;
-    currentFunc = FUNC;
-    max = 1;
-    strochka_printed = false;
-
-    change_func();
-}
-
 
 void drawSmiley(QPainter &painter, int x, int y, int size)
 {
@@ -797,9 +763,19 @@ void SurfaceWindow::closeEvent(QCloseEvent *event)
                                 "В данный момент производятся вычисления. Пожалуйста, подождите.");
         event->ignore();  
     } else {
-        delete threads_working;
+        *threads_quiting = true;
         event->accept(); 
     }
+}
+SurfaceWindow::~SurfaceWindow()
+{
+    for (int i = 0; i < p; i++)
+    {
+        pthread_join(aA[i].tid, nullptr);
+    }
+    delete[] aA;
+    delete threads_working;
+    delete threads_quiting;
 }
 
 void SurfaceWindow::clearApproximationData()
@@ -816,18 +792,16 @@ void SurfaceWindow::ApproximationData::clear()
     if (r) {delete [] r; r = nullptr;}
     if (u) {delete [] u; u = nullptr;}
     if (v) {delete [] v; v = nullptr;}
-    if (aA) {delete[] aA; aA = nullptr;}
     calc_status = UNDEF;
 }
 
-void SurfaceWindow::ApproximationData::allocate(int nx, int ny, int p) 
+void SurfaceWindow::ApproximationData::allocate(int nx, int ny, int /*p*/) 
 {
     
     N = (nx + 1)*(ny + 1);
     len_msr =  N + 1 + get_len_msr (nx, ny);
 
     calc_status = UNDEF;
-    aA = new Args[p];
     A = new double[len_msr];
     I = new int[len_msr];
     B = new double[N];
@@ -835,7 +809,6 @@ void SurfaceWindow::ApproximationData::allocate(int nx, int ny, int p)
     r = new double[N];
     u = new double[N];
     v = new double[N];
-
 }
 
 void SurfaceWindow::ApproximateFunction()
@@ -844,7 +817,6 @@ void SurfaceWindow::ApproximateFunction()
     if(*threads_working == true){return;}
     if(!approxData.A) approxData.allocate(nx, ny, p);
 
-    Args* aA = approxData.aA;
     int k;
 
     for (k = 0; k < p; k++)
@@ -869,6 +841,79 @@ void SurfaceWindow::ApproximateFunction()
         aA[k].ny = ny;
         aA[k].N = (nx + 1)*(ny + 1);
         aA[k].working = threads_working;
+        aA[k].quiting_app = threads_quiting;
+        aA[k].len_msr = approxData.len_msr;
+        aA[k].p_mutex = &p_mutex;
+        aA[k].p_cond = &p_cond;
+        aA[k].norm = norm;
+        aA[k].point = point;
+    }
+
+    *threads_working = true;
+
+}
+
+SurfaceWindow::SurfaceWindow(QWidget *parent) : QWidget(parent) {
+    setFocusPolicy(Qt::StrongFocus);
+    updateProjection();
+    a = -1, b = 1, c = -1, d = 1, eps = 1e-10;
+    nx = 5, ny = 5, func_id = 7, max_it = 100, p=1;
+    first = true;
+    point = 0;
+    norm = 0;
+    threads_working = new bool(false);
+    threads_quiting = new bool(false);
+    currentFunc = FUNC;
+    max = 1;
+    strochka_printed = false;
+
+
+    change_func();
+}
+
+int SurfaceWindow::parse_command_line(int argc, char* argv[])
+{
+
+    if (argc != 13 || sscanf(argv[1], "%lf", &a) != 1 || sscanf(argv[2], "%lf", &b) != 1 || sscanf(argv[3], "%lf", &c) != 1 || sscanf(argv[4], "%lf", &d) != 1 || sscanf(argv[5], "%d", &nx) != 1 || sscanf(argv[6], "%d", &ny) != 1|| sscanf(argv[7], "%d", &mx) != 1 || sscanf(argv[8], "%d", &my) != 1 || sscanf(argv[9], "%d", &func_id) != 1 || sscanf(argv[10], "%lf", &eps) != 1 || sscanf(argv[11], "%d", &max_it) != 1 || sscanf(argv[12], "%d", &p) != 1) 
+    {
+        printf("Usage ./a.out a b c d nx ny mx my func_id epsilon max_iterations p\n");
+        return 1;   
+    }
+    if(func_id < 0 || nx < 0|| ny < 0 || max_it < 0 || p < 0 || func_id > 7)
+    {
+        printf("Usage ./a.out a b c d nx ny mx my func_id epsilon max_iterations p\n");
+        return 1;   
+    }
+    
+    aA = new Args[p];
+    
+    approxData.allocate(nx, ny, p);
+
+    int k;
+    *threads_working = false;
+    for (k = 0; k < p; k++)
+    {
+        aA[k].A = approxData.A;
+        aA[k].I = approxData.I;
+        aA[k].B = approxData.B;
+        aA[k].r = approxData.r;
+        aA[k].u = approxData.u;
+        aA[k].v = approxData.v;
+        aA[k].x = approxData.x;
+        aA[k].a = a;
+        aA[k].b = b;
+        aA[k].c = c;
+        aA[k].d = d;
+        aA[k].func_id = func_id;
+        aA[k].maxit = max_it;
+        aA[k].p = p;
+        aA[k].k = k;
+        aA[k].eps = eps;
+        aA[k].nx = nx;
+        aA[k].ny = ny;
+        aA[k].N = (nx + 1)*(ny + 1);
+        aA[k].working = threads_working;
+        aA[k].quiting_app = threads_quiting;
         aA[k].len_msr = approxData.len_msr;
         aA[k].p_mutex = &p_mutex;
         aA[k].p_cond = &p_cond;
@@ -882,13 +927,8 @@ void SurfaceWindow::ApproximateFunction()
         {
             std::cerr << "Error creating thread " << k << std::endl;
             clearApproximationData();
-            return;
+            return 1;
         }
-        
-        // Отделяем поток
-        pthread_detach(aA[k].tid);
     }
-
-    
+    return 0;
 }
-

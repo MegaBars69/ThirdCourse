@@ -114,6 +114,7 @@ class Args
         io_status status = io_status::not_working;
         double res = 0;
 		bool* working = nullptr;
+		bool* quiting_app = nullptr;
 		pthread_mutex_t* p_mutex = nullptr;
 		pthread_cond_t* p_cond = nullptr;
         /*

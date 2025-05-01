@@ -28,6 +28,8 @@ class SurfaceWindow : public QWidget {
 public:
     int p = 1; 
     explicit SurfaceWindow(QWidget *parent = nullptr);
+    ~SurfaceWindow();
+
     void calculateSurface();
 
     QSize minimumSizeHint() const override { return QSize(100, 100); }
@@ -39,7 +41,7 @@ public slots:
     void zoomOut() { zoom *= 0.9; update(); }
     void rotateLeft() { rotationY -= 10; update(); }
     void rotateRight() { rotationY += 10; update(); }
-    void rotateClockwise();  // Вращение по часовой стрелке
+    void rotateClockwise(); 
     void rotateCounterClockwise();
     void change_func();
     void update_function();
@@ -76,6 +78,8 @@ private:
     double (*f)(double,double) = nullptr;
     const char *f_name = nullptr;
     bool* threads_working = nullptr;
+    bool* threads_quiting = nullptr;
+    Args* aA = nullptr;
 
     bool first = true;
     double m_minZ = -1;
@@ -115,7 +119,6 @@ private:
 
     struct ApproximationData 
     {
-        Args* aA = nullptr;
         double* A = nullptr, *B = nullptr, *x = nullptr, *u = nullptr, *v = nullptr, *r = nullptr;
         int *I = nullptr;
         int len_msr = 1;
