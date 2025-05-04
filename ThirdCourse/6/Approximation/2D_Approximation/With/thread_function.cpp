@@ -84,16 +84,21 @@ void* thread_func(void *arg)
     Args *  aa = (Args *) arg; 
     bool* working = aa->working;
     bool* threads_quiting = aa->quiting_app;
-
+    pthread_mutex_t* p_mutex = aa->p_mutex;
+	pthread_cond_t* p_cond = aa->p_cond;
     while (1)
     {
-        while (!working[0])
-        {
-            if(threads_quiting[0])
-            {
-                return nullptr;
-            }
+        pthread_mutex_lock(p_mutex);
+        // Ожидание, пока есть работа или требуется выход
+        while (!(*working) && !(*threads_quiting)) {
+            pthread_cond_wait(p_cond, p_mutex);
         }
+        // Проверка на необходимость завершения
+        if (*threads_quiting) {
+            pthread_mutex_unlock(p_mutex);
+            return nullptr;
+        }
+        pthread_mutex_unlock(p_mutex);
     
         int nx = aa->nx;
         int ny = aa->ny;
@@ -180,6 +185,9 @@ void* thread_func(void *arg)
                 "./a.out", 5, r1, r2, r3, r4, t1, t2, its, eps, func_id, nx, ny, p);
 
         }   
+
+    
+    
         *working = false;
     } 
     return nullptr;

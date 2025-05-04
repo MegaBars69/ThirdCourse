@@ -143,16 +143,15 @@ class MyMainWindow : public QMainWindow {
 public:
     MyMainWindow(SurfaceWindow *surface, QWidget *parent = nullptr) 
         : QMainWindow(parent), surfaceWindow(surface) {
-        // Ваши настройки окна
+
     }
 
 protected:
     void closeEvent(QCloseEvent *event) override {
-        // Вызываем closeEvent у объекта SurfaceWindow
         surfaceWindow->closeEvent(event);
     }
 
 private:
-    SurfaceWindow *surfaceWindow; // Указатель на объект SurfaceWindow
+    SurfaceWindow *surfaceWindow; 
 };
-#endif // SURFACEWINDOW_H
+#endif 

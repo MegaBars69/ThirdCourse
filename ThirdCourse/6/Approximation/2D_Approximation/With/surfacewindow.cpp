@@ -544,13 +544,11 @@ void SurfaceWindow::paintEvent(QPaintEvent *)
     painter.drawText(0, 130, strochka);
 
     prefix = "(nx, ny) = ";
-    sprintf(strochka, "%s%d", prefix, nx);
-    sprintf(strochka, "%s%d", prefix, ny);
+    sprintf(strochka, "(nx, ny) = (%d, %d)", nx, ny);
     painter.drawText(0, 95, strochka);
-    
-    prefix = "(mx, my) = ";
-    sprintf(strochka, "%s%d", prefix, mx);
-    sprintf(strochka, "%s%d", prefix, my);
+
+    // For (mx, my)
+    sprintf(strochka, "(mx, my) = (%d, %d)", mx, my);
     painter.drawText(0, 115, strochka);
 
     prefix = "p = ";
@@ -763,7 +761,10 @@ void SurfaceWindow::closeEvent(QCloseEvent *event)
                                 "В данный момент производятся вычисления. Пожалуйста, подождите.");
         event->ignore();  
     } else {
+        pthread_mutex_lock(&p_mutex);
         *threads_quiting = true;
+        pthread_cond_broadcast(&p_cond);
+        pthread_mutex_unlock(&p_mutex);
         event->accept(); 
     }
 }
@@ -849,8 +850,10 @@ void SurfaceWindow::ApproximateFunction()
         aA[k].point = point;
     }
 
+    pthread_mutex_lock(&p_mutex);
     *threads_working = true;
-
+    pthread_cond_broadcast(&p_cond);
+    pthread_mutex_unlock(&p_mutex);
 }
 
 SurfaceWindow::SurfaceWindow(QWidget *parent) : QWidget(parent) {
