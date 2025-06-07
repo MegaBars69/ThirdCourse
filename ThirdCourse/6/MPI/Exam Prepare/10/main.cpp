@@ -96,6 +96,7 @@ int main(int argc, char *argv[])
 {
     int k, p;
     int n, loc_len, l;
+    double time = 0;
     double *array = nullptr, *buf = nullptr;
 
     MPI_Comm comm = MPI_COMM_WORLD;
@@ -159,7 +160,9 @@ int main(int argc, char *argv[])
         printf("\n");
     }
 
+    time = MPI_Wtime();
     upd_array(array, n, p, k);
+    time = MPI_Wtime() - time;
 
     for (int pn = p-1; pn > 0; pn--)
     {
@@ -176,13 +179,29 @@ int main(int argc, char *argv[])
     }
     if(k == 0)
     {
-        printf("Process %d upd array: ", k);
+        printf("Upd Array: ", k);
         for (int i = 0; i < n; i++) {
-            printf("%.0f ", array[i]);
+            printf("%.2f ", array[i]);
         }
         printf("\n");
     }
     delete[] array;
+
+    for (int i = 0; i < p; i++)
+    {
+        MPI_Barrier(comm);
+        if(i == k)
+        {
+            std::cout<<"Proc "<<k<<" time "<<time<<"\n";
+        }
+        MPI_Barrier(comm);
+    }
+    double all_time = 0;
+    MPI_Reduce(&time, &all_time, 1, MPI_DOUBLE, MPI_SUM, 0, comm);
+    if(k == 0)
+    {
+        std::cout<<"All time: "<<all_time<<'\n';
+    }
     MPI_Finalize();
     return 0;
 }
